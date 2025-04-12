@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Espace Administratif - Login</title>
+</head>
+
+<body class="bg-gray-100 font-sans min-h-screen">
+    <main class="h-screen flex items-center justify-center">
+        <!-- CONTENT -->
+        <article class="w-full h-full flex flex-col md:flex-row">
+            <!-- Right side (welcome banner) -->
+            <section class="w-full md:w-1/2 bg-gradient-to-r from-blue-800 to-blue-600 flex items-center justify-center p-8">
+                <header class="text-center text-white">
+                    <h1 class="text-4xl font-bold mb-6">Espace Administratif</h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-32 w-32 mx-auto text-white opacity-75" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </header>
+            </section>
+
+            <!-- Left side (form) -->
+            <section class="w-full md:w-1/2 bg-white flex items-center justify-center p-8">
+                <div class="w-full max-w-md">
+
+                    <form id="formLogin" action="/moutamadris/Account" method="post" role="form" class="space-y-6">
+                        <fieldset class="space-y-4">
+                            <legend class="sr-only">Formulaire de connexion</legend>
+                            
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input id="email" name="email" placeholder="Votre email" required="required" type="email"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"/>
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Mot de Passe</label>
+                                <input id="password" name="password" placeholder="Votre mot de passe" required="required" type="password"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150"/>
+                            </div>
+
+                            <div class="pt-2">
+                                <button id="btnSubmit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md transition duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                    type="button">CONNEXION</button>
+                            </div>
+
+                            <div class="text-center pt-2">
+                                <a href="/moutamadris/MotPassOublieEleve" class="text-sm text-blue-600 hover:text-blue-800 font-medium transition duration-150">
+                                    Mot de passe oublié ?
+                                </a>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                    <footer class="mt-8 pt-6 border-t border-gray-200 text-center text-sm text-gray-600">
+                        <p>© 2025 Système de Gestion Scolaire</p>
+                    </footer>
+                </div>
+            </section>
+        </article>
+    </main>
+</body>
+
+</html>
