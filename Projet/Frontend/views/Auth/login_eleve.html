@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Espace Elève - Login</title>
+</head>
+
+<body class="bg-gray-100 flex flex-col h-screen overflow-hidden">
+    <main class="flex-grow flex items-center justify-center">
+        <!-- Principal Container -->
+        <article class="w-full h-full flex flex-col md:flex-row">
+            <!-- Form Section -->
+            <section class="w-full md:w-1/2 flex flex-col items-center justify-center p-8">
+                <!-- appears only on mobile -->
+                <div class="md:hidden mb-8 text-center">
+                    <h1 class="text-3xl font-bold text-gray-800">Espace Elève</h1>
+                    <p class="text-gray-600">Accédez à votre espace Elève</p>
+                </div>
+
+                <!-- Form -->
+                <div class="w-full max-w-md">
+                    <form id="eleveLoginForm"  action="#">
+                        <fieldset class="space-y-6">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="email" id="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe <span class="text-red-500">*</span></label>
+                                <input type="password" name="password" id="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    CONNEXION
+                                </button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Landing Section -->
+            <section class="w-full md:w-1/2 relative hidden md:block">
+                <div class="absolute inset-0">
+                    <img src="./../../asset/espace_personnel.jpg" alt="Espace Personnel" class="w-full h-full object-cover">
+                </div>
+                <!-- Overlay en haut de l'image -->
+                <div class="h-full absolute top-0 left-0 right-0 text-center bg-black bg-opacity-50 text-white p-8">
+                    <h1 class="text-3xl font-bold">Espace Elève</h1>
+                    <p class="text-xl">Accédez à votre espace Elève</p>
+                </div>
+            </section>
+        </article>
+    </main>
+    <footer class="py-1 text-center text-gray-600 text-sm">
+        <p>Système de Gestion Scolaire &copy; 2025</p>
+    </footer>
+</body>
+
+</html>
