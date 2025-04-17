@@ -54,5 +54,44 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function login(Request $request)
+    {
+        try {
+            $credentials = $request->validate([
+                'email' => ['required', 'email', 'string', 'max:60', 'exists:users,email'],
+                'password' => ['required', 'string', 'min:8']
+            ]);
+            
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json([
+                    'message' => 'Email ou mot de passe incorrect',
+                ], 401);
+            }
+    
+            $user = JWTAuth::user();
+    
+            return response()->json([
+                'message' => 'Connexion réussie',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email
+                ],
+                'token' => $token,
+                'token_type' => 'bearer'
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Erreur de validation',
+                'errors' => $e->validator->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la connexion',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     
 }
