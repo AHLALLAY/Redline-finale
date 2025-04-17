@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -94,4 +95,32 @@ class AuthController extends Controller
         }
     }
     
+    public function logout() {
+        try {
+            
+            if (!JWTAuth::check()) {
+                return response()->json([
+                    "message" => "No authenticated user to log out"
+                ], 401);
+            }
+            
+            $token = JWTAuth::getToken() ?? request()->bearerToken();
+            
+            if ($token) {
+                JWTAuth::setToken($token)->invalidate();
+            }
+            
+            Auth::logout();
+            
+            return response()->json([
+                "message" => "Successfully logged out"
+            ], 200);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Unexpected Error (Logout failed)",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
 }
