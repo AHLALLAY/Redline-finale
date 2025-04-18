@@ -20,7 +20,7 @@ class AuthController extends Controller
                 'name' => ['required', 'string', 'max:50'],
                 'email' => ['required', 'string', 'email:rfc,dns', 'max:60', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'max:10'],
-                'roles' => ['required', 'string', 'in:Enseignant(e),Secrétaire,Comptable'],
+                'roles' => ['required', 'string', 'in:Enseignant,Secrétaire,Comptable'],
                 'birth_date' => ['required', 'date']
             ]);
 
