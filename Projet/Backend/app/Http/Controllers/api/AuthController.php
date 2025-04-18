@@ -21,7 +21,7 @@ class AuthController extends Controller
                 'email' => ['required', 'string', 'email:rfc,dns', 'max:60', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'max:10'],
                 'roles' => ['required', 'string', 'in:Enseignant(e),Secrétaire,Comptable'],
-                'birth_date' => ['required', 'date', 'before_or_equal:' . now()->subYears(18)->format('Y-m-d')]
+                'birth_date' => ['required', 'date']
             ]);
 
             $user = User::create([
@@ -32,18 +32,13 @@ class AuthController extends Controller
                 'birth_date' => $validatedData['birth_date']
             ]);
 
-            $token = JWTAuth::fromUser($user);
 
             return response()->json([
-                'success' => true,
                 'message' => 'Inscription réussie',
-                'user' => $user,
-                'token' => $token,
-                'token_type' => 'bearer'
+                'user' => $user
             ], 201);
         } catch (ValidationException $e) {
             return response()->json([
-                'success' => false,
                 'message' => 'Validation error',
                 'errors' => $e->errors()
             ], 422);
@@ -74,18 +69,14 @@ class AuthController extends Controller
     
             return response()->json([
                 'message' => 'Connexion réussie',
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email
-                ],
+                'user' => $user,
                 'token' => $token,
                 'token_type' => 'bearer'
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Erreur de validation',
-                'errors' => $e->validator->errors()
+                'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
