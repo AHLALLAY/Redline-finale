@@ -23,7 +23,7 @@ class RegisterStudentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'email', 'max:70', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:70', 'unique:students'],
             'password' => ['required', 'string', 'min:8'],
             'birth_date' => ['required', 'date', 'before:-6 years'],
             'birth_place' => ['required', 'string', 'max:50'],
