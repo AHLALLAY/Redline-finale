@@ -17,5 +17,10 @@ class AuthService
     {
         return $this->authRepository->RegisterStaff($dataStaff);
     }
-
+    
+    public function LoginStaff($identStaff)
+    {
+        return $this->authRepository->LoginStaff($identStaff);
+    }
+    
 }
