@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class JournalRequest extends FormRequest
+class AccountantRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,6 +26,7 @@ class JournalRequest extends FormRequest
             'amount' => ['required', 'decimal'],
             'type' => ['required', 'string', 'in:Charge,Produit'],
             'reference' => ['required', 'string', 'max:50'],
+            'client' => ['required', 'integer', 'min:1']
         ];
     }
 }
