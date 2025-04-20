@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginStaffRequest;
 use App\Http\Requests\LoginStudentRequest;
+use App\Http\Requests\RegisterStaffRequest;
 use App\Services\AuthService;
 use Illuminate\Validation\ValidationException;
 
@@ -61,6 +62,32 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Échec de la connexion',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
+
+    public function RegisterStaff(RegisterStaffRequest $registerStaffRequest)
+    {
+        try {
+            $validated_data = $registerStaffRequest->validated();
+            $user = $this->authService->RegisterStaff($validated_data);
+
+            return response()->json([
+                'message' => $validated_data['role'] . ' enregistré avec succès',
+                'user' => $user,
+                'status' => 'success'
+            ], 201);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Erreur de validation',
+                'errors' => $e->errors(),
+                'status' => 'error'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de l\'enregistrement',
                 'error' => $e->getMessage(),
                 'status' => 'error'
             ], 500);
