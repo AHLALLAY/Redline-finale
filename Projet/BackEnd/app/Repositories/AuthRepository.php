@@ -76,5 +76,14 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function Logout() {}
+    public function Logout()
+    {
+        try {
+            Auth::logout();
+            JWTAuth::invalidate(JWTAuth::getToken());
+            return true;
+        } catch (Exception $e) {
+            throw new Exception('Logout failed: ' . $e->getMessage());
+        }
+    }
 }
