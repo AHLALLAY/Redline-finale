@@ -27,5 +27,9 @@ class AuthService
     {
         return $this->authRepository->RegisterStudent($dataStudent);
     }
-     
+    public function LoginStudent($identStudent)
+    {
+        return $this->authRepository->LoginStudent($identStudent);
+    }
+
 }
