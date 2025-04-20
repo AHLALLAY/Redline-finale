@@ -120,4 +120,28 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function Logout()
+    {
+        try {
+            $logoutResult = $this->authService->logout();
+
+            if (!$logoutResult) {
+                return response()->json([
+                    "message" => "No authenticated user"
+                ], 200);
+            }
+
+            return response()->json([
+                "message" => "Good bye",
+                "success" => true
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Logout failed",
+                "error" => $e->getMessage(),
+                "success" => false
+            ], 500);
+        }
+    }
 }
