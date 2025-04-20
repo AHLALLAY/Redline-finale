@@ -44,7 +44,15 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function RegisterStudent($dataStudent) {}
+    public function RegisterStudent($dataStudent)
+    {
+        try {
+            $dataStudent['password'] = Hash::make($dataStudent['password']);
+            return Student::create($dataStudent);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 
     public function LoginStudent($identStudent) {}
 
