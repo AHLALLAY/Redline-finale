@@ -29,6 +29,8 @@ class RegisterStaffRequest extends FormRequest
             'role' => ['required', 'in:Enseignant,Comptable,Secrétaire,Admin'],
             'birth_date' => ['required', 'date', 'before:-18 years'],
             'phone' => ['required', 'string', 'regex:/^(\+212|0)[\s\-\.]?[5-7][\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}$/'],
+            'last_diplomat' =>['required', 'string'],
+            'obtained_at' => ['required','date']
         ];
     }
 }
