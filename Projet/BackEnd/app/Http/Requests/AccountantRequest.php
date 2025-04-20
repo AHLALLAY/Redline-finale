@@ -23,10 +23,11 @@ class AccountantRequest extends FormRequest
     {
         return [
             'label' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'decimal'],
+            'amount' => ['required', 'numeric', 'between:0,999999.99'],
             'type' => ['required', 'string', 'in:Charge,Produit'],
-            'reference' => ['required', 'string', 'max:50'],
-            'client' => ['required', 'integer', 'min:1']
+            'reference' => ['required', 'string', 'max:50', 'unique:journals'],
+            'ressource' => ['required', 'string', 'max:255'],
+            'ressource_type' => ['required', 'string', 'in:Client,Fournisseur']
         ];
     }
 }

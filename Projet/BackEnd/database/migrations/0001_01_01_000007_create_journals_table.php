@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('label');
             $table->decimal('amount', 8, 2);
-            $table->emun('type',['Charge', 'Produit']);
+            $table->enum('type',['Charge', 'Produit']);
             $table->string('reference');
+            $table->string('ressource');
+            $table->enum('ressource_type',['Client', 'Fournisseur']);
             $table->timestamps();
         });
     }
