@@ -24,6 +24,7 @@ class RegisterStaffRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'string', 'email', 'max:70', 'unique:users'],
+            'cin' => ['required', 'string', 'max:9'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:Enseignant,Comptable,Secrétaire,Admin'],
             'birth_date' => ['required', 'date', 'before:-18 years'],

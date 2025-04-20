@@ -12,7 +12,7 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
     
-    protected $fillable = ['name','email','password','role','birth_date', 'phone'];
+    protected $fillable = ['name', 'cin', 'email','password','role','birth_date', 'phone'];
     protected $hidden = ['password','remember_token',];
     protected function casts(): array { return [ 'email_verified_at' => 'datetime', 'password' => 'hashed', ]; }
 
