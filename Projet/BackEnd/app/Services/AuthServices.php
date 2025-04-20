@@ -17,12 +17,12 @@ class AuthService
     {
         return $this->authRepository->RegisterStaff($dataStaff);
     }
-    
+
     public function LoginStaff($identStaff)
     {
         return $this->authRepository->LoginStaff($identStaff);
     }
- 
+
     public function RegisterStudent($dataStudent)
     {
         return $this->authRepository->RegisterStudent($dataStudent);
@@ -32,4 +32,8 @@ class AuthService
         return $this->authRepository->LoginStudent($identStudent);
     }
 
+    public function Logout()
+    {
+        return $this->authRepository->Logout();
+    }
 }
