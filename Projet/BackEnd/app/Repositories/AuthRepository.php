@@ -54,7 +54,27 @@ class AuthRepository implements AuthInterface
         }
     }
 
-    public function LoginStudent($identStudent) {}
+    public function LoginStudent($identStudent)
+    {
+        try {
+            if (!$token = JWTAuth::attempt($identStudent)) {
+                return null;
+            }
+
+            $student = JWTAuth::student();
+            if (!$student) {
+                throw new Exception("Student not found !!!");
+            } else {
+                return [
+                    'student' => $student,
+                    'token' => $token,
+                    'token_type' => 'bearer',
+                ];
+            }
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 
     public function Logout() {}
 }
