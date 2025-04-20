@@ -17,7 +17,8 @@ return new class extends Migration
             $table->decimal('amount', 8, 2);
             $table->enum('type',['Charge', 'Produit']);
             $table->string('reference');
-            $table->foreignId('client')->constrained('students')->onDelete('cascade');
+            $table->string('ressource');
+            $table->enum('ressource_type',['Client', 'Fournisseur']);
             $table->timestamps();
         });
     }
