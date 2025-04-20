@@ -3,13 +3,13 @@
 namespace App\Repositories;
 
 use App\Interfaces\AccountantInterface;
-use App\Models\Journal;
+use App\Models\Accountant;
 
 class AccountantRepository implements AccountantInterface{
     public function AddRecord($RecordData)
     {
         try{
-            return Journal::create($RecordData);
+            return Accountant::create($RecordData);
         }catch(\Exception $e){
             throw $e;
         }
