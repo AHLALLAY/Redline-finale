@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('absences', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->enum('status', ['Présent', 'Absent', 'Retard'])->default('Présent');
+            $table->integer('delay')->nullable();
+            $table->date('date');
+            $table->enum('period', ['Matin', 'Après-midi', 'Journée'])->default('Journée');
+            $table->enum('justification', ['Non justifié', 'Justifié', 'En attente'])->default('En attente');
+            $table->foreignId('recorded_by')->constrained('users');
             $table->timestamps();
         });
     }
