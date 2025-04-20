@@ -61,7 +61,7 @@ class AuthRepository implements AuthInterface
                 return null;
             }
 
-            $student = JWTAuth::student();
+            $student = JWTAuth::user();
             if (!$student) {
                 throw new Exception("Student not found !!!");
             } else {

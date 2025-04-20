@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('role', ['Enseignant', 'Comptable', 'Secrétaire', 'Admin']);
             $table->date('birth_date');
             $table->string('phone')->nullable();
-            $table->string('last_deplomat');
+            $table->string('last_diplomat');
             $table->date('obtained_at');
             $table->timestamps();
         });

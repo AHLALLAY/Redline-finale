@@ -23,13 +23,14 @@ class RegisterStudentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:50'],
-            'email' => ['required', 'string', 'email', 'max:70', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:70', 'unique:students'],
             'password' => ['required', 'string', 'min:8'],
             'birth_date' => ['required', 'date', 'before:-6 years'],
             'birth_place' => ['required', 'string', 'max:50'],
             'gender' => ['required', 'in:Masculin,Féminin'],
             'level' => ['required', 'in:1ére année,2ème année,3ème année,4ème année,5ème année,6ème année'],
             'parent' => ['required', 'string', 'max:50'],
+            'cin' => ['required', 'string', 'max:9'],
             'address' => ['required', 'string', 'max:150'],
             'phone' => ['required', 'string', 'regex:/^(\+212|0)[\s\-\.]?[5-7][\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}$/'],
         ];
