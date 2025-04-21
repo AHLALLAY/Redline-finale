@@ -20,6 +20,7 @@ class AccountantController extends Controller
         try {
             $validated_data = $accountantRequest->validated();
             if ($validated_data) {
+                $this->accountantService->AddRecord($validated_data);
                 return response()->json([
                     'message' => 'enregistré avec succès',
                     'data' => $validated_data,
