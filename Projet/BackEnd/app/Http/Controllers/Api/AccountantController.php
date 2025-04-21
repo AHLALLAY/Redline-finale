@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AccountantRequest;
 use App\Services\AccountantService;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class AccountantController extends Controller
@@ -37,6 +36,30 @@ class AccountantController extends Controller
             return response()->json([
                 'message' => 'Une erreur est survenue lors de l\'enregistrement',
                 'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
+
+    public function CalculateChargesOfMonth($month)
+    {
+        try {
+
+            $result = $this->accountantService->CalculateChargesOfMonth($month);
+
+            return response()->json([
+                'message' => 'Calcul effectué avec succès',
+                'data' => $result,
+                'status' => 'success'
+            ], 200);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'status' => 'error'
+            ], 400);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors du calcul',
                 'status' => 'error'
             ], 500);
         }
