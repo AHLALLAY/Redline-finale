@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import Header from './components/Home/Header'
 
 function App() {
 
   return (
     <>
-
+      <Header />
     </>
   )
 }
