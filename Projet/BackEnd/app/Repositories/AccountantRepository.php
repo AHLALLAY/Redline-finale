@@ -5,13 +5,19 @@ namespace App\Repositories;
 use App\Interfaces\AccountantInterface;
 use App\Models\Accountant;
 
-class AccountantRepository implements AccountantInterface{
+class AccountantRepository implements AccountantInterface
+{
     public function AddRecord($RecordData)
     {
-        try{
+        try {
             return Accountant::create($RecordData);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    public function CalculatChargesOfMonth($month)
+    {
+
     }
 }
