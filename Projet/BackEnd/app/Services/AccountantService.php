@@ -9,7 +9,7 @@ class AccountantService{
 
     public function __construct(AccountantInterface $accantantRepository)
     {
-        return $this->accantantRepository = $accantantRepository;
+        $this->accantantRepository = $accantantRepository;
     }
 
     public function AddRecord($RecordData){

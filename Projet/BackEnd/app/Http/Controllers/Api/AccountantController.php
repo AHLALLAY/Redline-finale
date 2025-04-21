@@ -12,7 +12,7 @@ class AccountantController extends Controller
     protected $accountantService;
     public function __construct(AccountantService $accountantService)
     {
-        return $this->accountantService = $accountantService;
+        $this->accountantService = $accountantService;
     }
 
     public function AddRecord(AccountantRequest $accountantRequest)
