@@ -9,10 +9,14 @@ class AccountantService{
 
     public function __construct(AccountantInterface $accantantRepository)
     {
-        return $this->accantantRepository = $accantantRepository;
+        $this->accantantRepository = $accantantRepository;
     }
 
     public function AddRecord($RecordData){
         return $this->accantantRepository->AddRecord($RecordData);
+    }
+
+    public function CalculateChargesOfMonth($month){
+        return $this->accantantRepository->CalculateChargesOfMonth($month);
     }
 }

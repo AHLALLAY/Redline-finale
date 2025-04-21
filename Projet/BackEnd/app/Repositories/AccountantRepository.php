@@ -18,7 +18,7 @@ class AccountantRepository implements AccountantInterface
         }
     }
 
-    public function CalculatChargesOfMonth($month)
+    public function CalculateChargesOfMonth($month)
     {
         try {
             // Validation du mois AVEC CARBON
