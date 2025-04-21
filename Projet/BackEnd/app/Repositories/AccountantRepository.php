@@ -18,18 +18,16 @@ class AccountantRepository implements AccountantInterface
         }
     }
 
-    public function CalculateChargesOfMonth($month)
+    public function CalculateStatisticsOfMonth($month)
     {
         try {
-            // Validation du mois AVEC CARBON
             try {
-                $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+                $start = Carbon::createFromFormat('m', $month)->startOfMonth();
                 $end = $start->copy()->endOfMonth();
             } catch (\Exception $e) {
                 throw new InvalidArgumentException("Format de mois invalide. Utiliser YYYY-MM (ex: 2023-12)");
             }
 
-            // Récupération des charges (version compacte)
             $charges = Accountant::where('type', 'Charge')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();

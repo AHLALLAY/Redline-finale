@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface AccountantInterface{
     public function AddRecord($RecordData);
-    public function CalculateChargesOfMonth($month);
+    public function CalculateStatisticsOfMonth($month);
 }
