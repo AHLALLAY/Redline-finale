@@ -16,12 +16,13 @@ function Carousel (){
     }, [images.length]);
 
     return (
-        <div>
+        <div className="relative h-96 overflow-hidden mt-16">
             {images.map((img, index) => {
                 <img
                     key={index}
                     src={img}
                     alt={`slide ${index + 1}`}
+                    className={`absolute w-full h-full object-cover transition-opacity duration-300 ${index === currentImage ? 'opacity-100' : 'opacity-0'}`}
                 />
             })}
         </div>
