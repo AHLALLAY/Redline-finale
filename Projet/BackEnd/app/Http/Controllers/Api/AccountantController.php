@@ -42,11 +42,11 @@ class AccountantController extends Controller
         }
     }
 
-    public function CalculateChargesOfMonth($month)
+    public function CalculateStatisticsOfMonth($month)
     {
         try {
 
-            $result = $this->accountantService->CalculateChargesOfMonth($month);
+            $result = $this->accountantService->CalculateStatisticsOfMonth($month);
 
             return response()->json([
                 'message' => 'Calcul effectué avec succès',
