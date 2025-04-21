@@ -31,17 +31,30 @@ class AccountantRepository implements AccountantInterface
             $charges = Accountant::where('type', 'Charge')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();
+            $produits = Accountant::where('type', 'Produit')
+                ->whereBetween('created_at', [$start, $end])
+                ->get();
 
             return [
                 'month' => $start->format('F Y'),
-                'total' => $charges->sum('amount'),
                 'currency' => 'MAD',
-                'charges' => $charges,
-                'stats' => [
-                    'count' => $charges->count(),
-                    'average' => round($charges->avg('amount'), 2),
-                    'max' => $charges->max('amount'),
-                    'min' => $charges->min('amount')
+                'charges' => [
+                    'data' => $charges,
+                    'stats' => [
+                        'count' => $charges->count(),
+                        'average' => round($charges->avg('amount'), 2),
+                        'max' => $charges->max('amount'),
+                        'min' => $charges->min('amount')
+                    ]
+                ],
+                'produit' => [
+                    'data' => $produits,
+                    'stats' => [
+                        'count' => $produits->count(),
+                        'average' => round($produits->avg('amount'), 2),
+                        'max' => $produits->max('amount'),
+                        'min' => $produits->min('amount')
+                    ]
                 ]
             ];
         } catch (\Exception $e) {
