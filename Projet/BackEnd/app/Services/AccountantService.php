@@ -15,4 +15,8 @@ class AccountantService{
     public function AddRecord($RecordData){
         return $this->accantantRepository->AddRecord($RecordData);
     }
+
+    public function CalculatChargesOfMonth($month){
+        return $this->accantantRepository->CalculatChargesOfMonth($month);
+    }
 }
