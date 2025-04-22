@@ -9,8 +9,13 @@ function Header() {
     ];
 
     const scrollToSection = (id) => {
-        // Implémentez la logique de défilement vers la section ici
-        console.log(`Scrolling to ${id}`);
+        const element = document.getElementById(id);
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     };
 
     return (
