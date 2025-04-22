@@ -26,7 +26,7 @@ function LoginStaff() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Erreur de connexion');
+                throw new Error(data.message);
             }
 
             localStorage.setItem('authToken', data.token);
@@ -34,7 +34,7 @@ function LoginStaff() {
 
             // Redirection après un délai pour laisser voir le message
             setTimeout(() => {
-                window.location.href = '/dashboard'; // Redirection standard sans Next.js
+                window.location.href = data.user.role.toLowerCase()+'/dashboard'; // Redirection standard sans Next.js
             }, 1500);
 
         } catch (err) {
