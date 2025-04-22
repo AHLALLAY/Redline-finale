@@ -6,7 +6,7 @@ function Propos() {
             <div className="container mx-auto px-4">
                 <h2 className="text-4xl font-bold text-center mb-16 text-gray-800 relative">
                     Notre École
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-green-600 mt-6"></div>
+                    <div className="w-20 h-1 bg-green-600 mx-auto mt-4"></div>
                 </h2>
                 
                 <div className="flex flex-col lg:flex-row gap-8 h-[600px]"> {/* Hauteur fixe pour le conteneur */}
