@@ -17,5 +17,5 @@ Route::controller(AuthController::class)->group(function() {
 Route::controller(AccountantController::class)->group(function(){
     Route::post('/accountant/journal/new','AddRecord');
     Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth');
-    Route::get('/accountant/journal/all/{month}','CalculateStatisticsOfMonth');
+    Route::get('/accountant/journal/all','GetAllRecord');
 });

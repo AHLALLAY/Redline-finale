@@ -19,4 +19,8 @@ class AccountantService{
     public function CalculateStatisticsOfMonth($month){
         return $this->accantantRepository->CalculateStatisticsOfMonth($month);
     }
+
+    public function GetAllRecord(){
+        return $this->accantantRepository->GetAllRecord();
+    }
 }
