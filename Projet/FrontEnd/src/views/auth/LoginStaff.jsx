@@ -26,15 +26,15 @@ function LoginStaff() {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message);
+                throw new Error(data.message || 'Erreur de connexion');
             }
 
-            localStorage.setItem('authToken', data.token);
+            localStorage.setItem('authToken', data.data.token);
             setSuccess('Connexion réussie! Redirection en cours...');
 
             // Redirection après un délai pour laisser voir le message
             setTimeout(() => {
-                window.location.href = data.user.role.toLowerCase()+'/dashboard'; // Redirection standard sans Next.js
+                window.location.href = data.data.staff.role.toLowerCase()+'/dashboard'; // Redirection standard sans Next.js
             }, 1500);
 
         } catch (err) {
