@@ -1,4 +1,4 @@
-function DashboardAdmin (){
+function DashboardAdmin(){
     return (
         <div>
             this is DashboardAdmin

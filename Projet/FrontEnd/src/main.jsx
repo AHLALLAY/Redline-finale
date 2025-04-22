@@ -4,13 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import LoginStaff from './views/auth/LoginStaff.jsx'
 import DashboardAdmin from './views/admin/DashboardAdmin.jsx'
-
-import { Navigate } from 'react-router-dom';
-
-const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem('authToken');
-  return token ? children : <Navigate to="/login/staff" replace />;
-};
+import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,12 +13,11 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<App />} />
         <Route path="/login/staff" element={<LoginStaff />} />
         <Route path="/admin/dashboard" element={
-            <ProtectedRoute>
+            <ProtecteAdminDashboard>
               <DashboardAdmin />
-            </ProtectedRoute>
+            </ProtecteAdminDashboard>
           }
         />
-
         
       </Routes>
     </BrowserRouter>
