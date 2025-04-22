@@ -5,6 +5,7 @@ import App from './App.jsx'
 import LoginStaff from './views/auth/LoginStaff.jsx'
 import DashboardAdmin from './views/admin/DashboardAdmin.jsx'
 import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboard.jsx'
+import DashboardComptable from './views/comptable/DashboardComptable.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -19,6 +20,7 @@ createRoot(document.getElementById('root')).render(
           }
         />
         
+        <Route path="/comptable/dashboard" element={<DashboardComptable />}/>
       </Routes>
     </BrowserRouter>
   </StrictMode>
