@@ -19,7 +19,12 @@ function Header() {
                 {/* Menu Desktop */}
                 <div className="flex justify-between items-center pr-8">
                     {/* Logo */}
-                    <h1 className="hidden md:flex text-3xl font-bold text-green-600">OMEAGR Schoole</h1>
+                    <div className="inline-flex items-center mb-4">
+                        <span className="hidden md:flex text-5xl font-bold text-green-600 mr-2">Ω</span>
+                        <h1 className="hidden md:flex text-3xl font-bold text-green-600">
+                            OMEGA SCHOOL
+                        </h1>
+                    </div>
 
                     {/* Menu Desktop */}
                     <nav className="hidden md:flex space-x-8">
@@ -38,7 +43,9 @@ function Header() {
                 {/* Menu Mobile */}
                 <div className="flex justify-between items-center md:hidden">
                     {/* Logo */}
-                    <h1 className="text-3xl font-bold text-green-600">OMEAGR Schoole</h1>
+                    <div className="inline-flex items-center mb-4">
+                        <span className="text-5xl font-bold text-green-600 mr-2">Ω</span>
+                    </div>
                     {/* Bouton Mobile */}
                     <button
                         className="text-gray-800"
