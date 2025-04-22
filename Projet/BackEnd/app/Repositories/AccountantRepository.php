@@ -18,11 +18,19 @@ class AccountantRepository implements AccountantInterface
         }
     }
 
-    public function CalculateStatisticsOfMonth($month)
+    public function CalculateStatisticsOfMonth($month = null)
     {
         try {
             try {
-                $start = Carbon::createFromFormat('m', $month)->startOfMonth();
+                if($month === null){
+                    $start = Carbon::now()->startOfMonth();
+                }else{
+                    try{
+                        $start = Carbon::createFromFormat('m', $month)->startOfMonth();
+                    }catch(\Exception $e){
+                        throw new InvalidArgumentException($e);
+                    }
+                }
                 $end = $start->copy()->endOfMonth();
             } catch (\Exception $e) {
                 throw new InvalidArgumentException("Format de mois invalide. Utiliser YYYY-MM (ex: 2023-12)");
@@ -42,6 +50,7 @@ class AccountantRepository implements AccountantInterface
                     'data' => $charges,
                     'stats' => [
                         'count' => $charges->count(),
+                        'total' => round($charges->sum('amount'), 2),
                         'average' => round($charges->avg('amount'), 2),
                         'max' => $charges->max('amount'),
                         'min' => $charges->min('amount')
@@ -51,6 +60,7 @@ class AccountantRepository implements AccountantInterface
                     'data' => $produits,
                     'stats' => [
                         'count' => $produits->count(),
+                        'total' => round($charges->sum('amount'), 2),
                         'average' => round($produits->avg('amount'), 2),
                         'max' => $produits->max('amount'),
                         'min' => $produits->min('amount')
