@@ -59,4 +59,13 @@ class AccountantRepository implements AccountantInterface
             throw $e;
         }
     }
+
+    public function GetAllRecord()
+    {
+        try{
+            return Accountant::all();
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
 }

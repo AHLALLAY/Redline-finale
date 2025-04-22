@@ -65,4 +65,20 @@ class AccountantController extends Controller
             ], 500);
         }
     }
+
+    public function GetAllRecord(){
+        try{
+            $result = $this->accountantService->GetAllRecord();
+            return response()->json([
+                'message' => 'Donner trouvé avec succès',
+                'data' => $result,
+                'status' => 'success'
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                "message" => "Unexpected Error",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
 }
