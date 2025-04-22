@@ -33,7 +33,7 @@ class AccountantRepository implements AccountantInterface
                 }
                 $end = $start->copy()->endOfMonth();
             } catch (\Exception $e) {
-                throw new InvalidArgumentException("Format de mois invalide. Utiliser YYYY-MM (ex: 2023-12)");
+                throw new InvalidArgumentException("Format de mois invalide. Utiliser MM (ex: 12)");
             }
 
             $charges = Accountant::where('type', 'Charge')
@@ -60,7 +60,7 @@ class AccountantRepository implements AccountantInterface
                     'data' => $produits,
                     'stats' => [
                         'count' => $produits->count(),
-                        'total' => round($charges->sum('amount'), 2),
+                        'total' => round($produits->sum('amount'), 2),
                         'average' => round($produits->avg('amount'), 2),
                         'max' => $produits->max('amount'),
                         'min' => $produits->min('amount')
