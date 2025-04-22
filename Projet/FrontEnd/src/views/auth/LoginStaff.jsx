@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import FooterGlobal from '../../components/Global/FooterGlobal';
 
 function LoginStaff() {
@@ -7,6 +8,8 @@ function LoginStaff() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +37,7 @@ function LoginStaff() {
 
             // Redirection après un délai pour laisser voir le message
             setTimeout(() => {
-                window.location.href = data.data.staff.role.toLowerCase()+'/dashboard'; // Redirection standard sans Next.js
+                navigate(`/${data.data.staff.role.toLowerCase()}/dashboard`);
             }, 1500);
 
         } catch (err) {
