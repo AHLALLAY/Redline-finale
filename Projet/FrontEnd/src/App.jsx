@@ -1,6 +1,7 @@
 import Carousel from './components/Home/Carousel'
 import Header from './components/Home/Header'
 import Offres from './components/Home/Offres'
+import Propos from './components/Home/Propos'
 
 function App() {
 
@@ -9,6 +10,7 @@ function App() {
       <Header />
       <Carousel />
       <Offres />
+      <Propos />
     </>
   )
 }
