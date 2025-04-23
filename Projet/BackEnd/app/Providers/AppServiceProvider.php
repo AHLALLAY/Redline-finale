@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Interfaces\AbsenceInterface;
 use App\Interfaces\AccountantInterface;
 use App\Interfaces\AdminInterface;
 use App\Interfaces\AuthInterface;
+use App\Repositories\AbsenceRepository;
 use App\Repositories\AccountantRepository;
 use App\Repositories\AdminRepository;
 use App\Repositories\AuthRepository;
@@ -20,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AuthInterface::class, AuthRepository::class);
         $this->app->bind(AccountantInterface::class, AccountantRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
+        $this->app->bind(AbsenceInterface::class, AbsenceRepository::class);
     }
 
     /**
