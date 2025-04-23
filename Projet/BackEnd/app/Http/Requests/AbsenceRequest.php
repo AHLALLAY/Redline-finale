@@ -24,10 +24,10 @@ class AbsenceRequest extends FormRequest
         return [
             'student_id' => ['required', 'integer', 'min:1'],
             'status' => ['required', 'in:Présent,Absent,Retard', 'string'],
-            'delay' => ['integer'],
+            'delay' => ['nullable', 'integer'],
             'date' => ['required', 'date'],
-            'period' => ['required', 'in:Matin,Après-midi,Journée', 'string'],
-            'justification' => ['required', 'in:Non justifié,Justifié,En attente', 'string'],
+            'period' => ['nullable', 'in:Matin,Après-midi,Journée', 'string'],
+            'justification' => ['nullable', 'in:Non justifié,Justifié,En attente', 'string'],
             'recorded_by' => ['required', 'integer', 'min:1'],
         ];
     }
