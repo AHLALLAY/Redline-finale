@@ -4,5 +4,5 @@ namespace App\Interfaces;
 
 interface AbsenceInterface
 {
-    public function AddAbsence();
+    public function AddAbsence($data);
 }
