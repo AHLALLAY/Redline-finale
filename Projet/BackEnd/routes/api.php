@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AccountantController;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Requests\AccountantRequest;
 use Illuminate\Support\Facades\Route;
@@ -18,4 +19,9 @@ Route::controller(AccountantController::class)->group(function(){
     Route::post('/accountant/journal/new','AddRecord');
     Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth');
     Route::get('/accountant/journal/all','GetAllRecord');
+});
+
+
+Route::controller(AdminController::class)->group(function(){
+    Route::get('/admin/staff','DisplayStaff');
 });
