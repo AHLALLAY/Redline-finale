@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface ProfInterface
+interface AbsenceInterface
 {
     public function AddAbsence();
 }
