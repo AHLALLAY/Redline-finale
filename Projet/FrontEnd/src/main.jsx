@@ -19,8 +19,12 @@ createRoot(document.getElementById('root')).render(
             </ProtecteAdminDashboard>
           }
         />
-        
-        <Route path="/comptable/dashboard" element={<DashboardComptable />}/>
+        <Route path="/comptable/dashboard" element={
+            <ProtecteEnseignantDashboard>
+              <DashboardComptable />
+            </ProtecteEnseignantDashboard>
+          }
+        />
       </Routes>
     </BrowserRouter>
   </StrictMode>
