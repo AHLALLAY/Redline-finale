@@ -17,8 +17,8 @@ return new class extends Migration
             $table->enum('status', ['Présent', 'Absent', 'Retard'])->default('Présent');
             $table->integer('delay')->nullable();
             $table->date('date');
-            $table->enum('period', ['Matin', 'Après-midi', 'Journée'])->default('Journée');
-            $table->enum('justification', ['Non justifié', 'Justifié', 'En attente'])->default('En attente');
+            $table->enum('period', ['Matin', 'Après-midi', 'Journée'])->nullable();
+            $table->enum('justification', ['Non justifié', 'Justifié', 'En attente'])->nullable();
             $table->foreignId('recorded_by')->constrained('users');
             $table->timestamps();
         });
