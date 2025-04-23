@@ -9,7 +9,7 @@ const RecordTable = () => {
     fetch("http://127.0.0.1:8000/api/accountant/journal/all")
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Erreur lors du chargement");
+          throw new Error("Erreur lors du chargement des données");
         }
         return res.json();
       })
@@ -23,48 +23,117 @@ const RecordTable = () => {
       });
   }, []);
 
-  // Fonction simple pour afficher la date en format jour/mois/année
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
-      .toString()
-      .padStart(2, "0")}/${date.getFullYear()}`;
+    return date.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
 
-  if (loading) return <div>Chargement...</div>;
-  if (error) return <div style={{ color: "red" }}>Erreur : {error}</div>;
+  if (loading) return (
+    <div className="flex justify-center items-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+      <div className="flex">
+        <div className="flex-shrink-0">
+          <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+        </div>
+        <div className="ml-3">
+          <p className="text-sm text-red-700">
+            Erreur lors du chargement des données: {error}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 
   return (
-    <div style={{ backgroundColor: "white", padding: "20px", borderRadius: "8px" }}>
-      <h2 style={{ fontSize: "20px", marginBottom: "15px" }}>Journal des Opérations</h2>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
-        <thead style={{ backgroundColor: "#f1f1f1" }}>
-          <tr>
-            <th style={{ padding: "10px", textAlign: "left" }}>Date</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Référence</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Libellé</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Montant</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Type</th>
-            <th style={{ padding: "10px", textAlign: "left" }}>Ressource</th>
-          </tr>
-        </thead>
-        <tbody>
-          {records.map((item) => (
-            <tr key={item.id} style={{ borderTop: "1px solid #ddd" }}>
-              <td style={{ padding: "10px" }}>{formatDate(item.created_at)}</td>
-              <td style={{ padding: "10px", fontWeight: "bold" }}>{item.reference}</td>
-              <td style={{ padding: "10px" }}>{item.label}</td>
-              <td style={{ padding: "10px" }}>{parseFloat(item.amount).toFixed(2)} DH</td>
-              <td style={{ padding: "10px", color: item.type === "Produit" ? "green" : "red" }}>
-                {item.type}
-              </td>
-              <td style={{ padding: "10px" }}>
-                {item.ressource} ({item.ressource_type})
-              </td>
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="flex justify-between px-6 py-4 border-b border-gray-200">
+        <h2 className="text-xl font-semibold text-gray-800">Journal des Opérations</h2>
+        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+          + Nouvelle Opération
+        </button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Référence
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Libellé
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Montant
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Type
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Ressource
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {records.length > 0 ? (
+              records.map((item) => (
+                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {formatDate(item.created_at)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {item.reference}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {item.label}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {parseFloat(item.amount).toFixed(2)} DH
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.type === "Produit"
+                        ? "bg-green-100 text-green-800"
+                        : "bg-red-100 text-red-800"
+                      }`}>
+                      {item.type}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <span className="font-medium">{item.ressource}</span>
+                    <span className="text-gray-400 ml-1">({item.ressource_type})</span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" className="px-6 py-4 text-center text-sm text-gray-500">
+                  Aucune opération enregistrée
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {records.length > 0 && (
+        <div className="px-6 py-3 border-t border-gray-200 text-xs text-gray-500">
+          Total: {records.length} opérations
+        </div>
+      )}
     </div>
   );
 };
