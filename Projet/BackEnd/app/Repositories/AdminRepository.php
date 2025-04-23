@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
+use App\Models\Student;
 use App\Models\User;
 
 class AdminRepository implements AdminInterface{
@@ -17,7 +18,11 @@ class AdminRepository implements AdminInterface{
         
     }
     public function DisplayStudents(){
-        
+        try{
+            return Student::all();
+        }catch(\Exception $e){
+            throw $e;
+        }
     }
     public function DisplayAbsences(){
         

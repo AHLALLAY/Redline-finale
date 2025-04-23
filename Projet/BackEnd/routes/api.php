@@ -1,9 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\AbsenceController;
 use App\Http\Controllers\Api\AccountantController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Requests\AccountantRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function() {
@@ -24,4 +24,9 @@ Route::controller(AccountantController::class)->group(function(){
 
 Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/staff','DisplayStaff');
+    Route::get('/admin/student','DisplayStudents');
+});
+
+Route::controller(AbsenceController::class)->group(function (){
+    Route::post('/prof/absence/new','AddAbsence');
 });
