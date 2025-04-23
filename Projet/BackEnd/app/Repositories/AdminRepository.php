@@ -3,9 +3,10 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\AdminInterface;
 use App\Models\User;
 
-class AdminRepository {
+class AdminRepository implements AdminInterface{
 
     public function DisplayStaff(){
         try{
