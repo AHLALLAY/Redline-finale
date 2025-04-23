@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Interfaces\AccountantInterface;
+use App\Interfaces\AdminInterface;
 use App\Interfaces\AuthInterface;
 use App\Repositories\AccountantRepository;
+use App\Repositories\AdminRepository;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,6 +19,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(AuthInterface::class, AuthRepository::class);
         $this->app->bind(AccountantInterface::class, AccountantRepository::class);
+        $this->app->bind(AdminInterface::class, AdminRepository::class);
     }
 
     /**
