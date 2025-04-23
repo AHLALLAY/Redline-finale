@@ -24,4 +24,5 @@ Route::controller(AccountantController::class)->group(function(){
 
 Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/staff','DisplayStaff');
+    Route::get('/admin/student','DisplayStudents');
 });
