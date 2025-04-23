@@ -15,4 +15,8 @@ class AdminService {
         return $this->adminRepository->DisplayStaff();
     }
 
+    public function DisplayStudents(){
+        return $this->adminRepository->DisplayStudents();
+    }
+
 }
