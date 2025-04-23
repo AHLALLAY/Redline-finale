@@ -11,5 +11,8 @@ class AbsenceService {
     {
         $this->absenceRepository = $absenceRepository;   
     }
-    
+
+    public function AddAbsence($data){
+        return $this->absenceRepository->AddAbsence($data);
+    }
 }
