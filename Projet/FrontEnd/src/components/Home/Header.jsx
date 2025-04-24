@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from 'react-icons/fa';
+import {useNavigate} from 'react-router-dom';
 
 function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate('');
     const menuItems = [
         { id: 'offres', label: 'Nos offres' },
         { id: 'propos', label: 'À propos' }
@@ -17,6 +19,9 @@ function Header() {
             });
         }
     };
+    const navigateToLogin = () => {
+        navigate('/Login/staff');
+    }
 
     return (
         <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
@@ -42,7 +47,7 @@ function Header() {
                                 {item.label}
                             </button>
                         ))}
-                        <button className="bg-green-600 rounded-full p-2 hover:bg-green-700 hover:text-white">Connexion</button>
+                        <button onClick={navigateToLogin} className="bg-green-600 rounded-full p-2 hover:bg-green-700 hover:text-white">Connexion</button>
                     </nav>
                 </div>
 
