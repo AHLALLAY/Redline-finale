@@ -5,8 +5,14 @@ function RecordTable() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    fetchRecords();
+  }, []);
+
+  const fetchRecords = () => {
+    setLoading(true);
     fetch("http://127.0.0.1:8000/api/accountant/journal/all")
       .then((res) => {
         if (!res.ok) {
@@ -22,7 +28,20 @@ function RecordTable() {
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  };
+
+  const handleNewRecord = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const handleRecordAdded = () => {
+    setShowModal(false);
+    fetchRecords();
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -60,13 +79,35 @@ function RecordTable() {
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="flex justify-between px-6 py-4 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800">Journal des Opérations</h2>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+        <button 
+          onClick={handleNewRecord}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+        >
           + Nouvelle Opération
         </button>
       </div>
-      <div>
-        <AddRecordForm />
-      </div>
+      {showModal && (
+        <div className="absolute inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold">Nouvelle Opération</h3>
+              <button 
+                onClick={handleCloseModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4">
+              <AddRecordForm 
+                onSuccess={handleRecordAdded}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -83,9 +124,6 @@ function RecordTable() {
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Montant
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Type
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Ressource
@@ -106,14 +144,11 @@ function RecordTable() {
                     {item.label}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {parseFloat(item.amount).toFixed(2)} DH
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${item.type === "Produit"
                         ? "bg-green-100 text-green-800"
                         : "bg-red-100 text-red-800"
                       }`}>
-                      {item.type}
+                        {parseFloat(item.amount).toFixed(2)} DH
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
