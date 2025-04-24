@@ -42,7 +42,7 @@ function Header() {
                                 {item.label}
                             </button>
                         ))}
-                        <button className="">Connexion</button>
+                        <button className="bg-green-600 rounded-full p-2 hover:bg-green-700 hover:text-white">Connexion</button>
                     </nav>
                 </div>
 
