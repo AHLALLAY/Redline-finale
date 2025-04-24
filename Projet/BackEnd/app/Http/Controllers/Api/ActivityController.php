@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityRequest;
-use App\Services\ActivityService;
-use Illuminate\Http\Request;
+use App\Services\ActivityServices;
 use Illuminate\Validation\ValidationException;
 
 class ActivityController extends Controller
 {
     protected $activityService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(ActivityServices $activityService)
     {
         $this->activityService = $activityService;
     }
