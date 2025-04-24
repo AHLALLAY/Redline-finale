@@ -42,6 +42,7 @@ function Header() {
                                 {item.label}
                             </button>
                         ))}
+                        <button className="">Connexion</button>
                     </nav>
                 </div>
 
