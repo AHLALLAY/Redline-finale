@@ -61,7 +61,7 @@ function DashboardComptable() {
 
           {/* Tableau des enregistrements */}
           <div className="bg-white p-4 rounded shadow">
-            <RecordTable month={selectedMonth} />
+            {/* <RecordTable month={selectedMonth} /> */}
           </div>
         </main>
       </div>
