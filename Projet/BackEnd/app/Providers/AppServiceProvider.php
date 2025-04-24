@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Interfaces\AbsenceInterface;
 use App\Interfaces\AccountantInterface;
+use App\Interfaces\ActivitiesInterface;
 use App\Interfaces\AdminInterface;
 use App\Interfaces\AuthInterface;
 use App\Repositories\AbsenceRepository;
 use App\Repositories\AccountantRepository;
+use App\Repositories\ActivityRepository;
 use App\Repositories\AdminRepository;
 use App\Repositories\AuthRepository;
 use Illuminate\Support\ServiceProvider;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AccountantInterface::class, AccountantRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
         $this->app->bind(AbsenceInterface::class, AbsenceRepository::class);
+        $this->app->bind(ActivitiesInterface::class, ActivityRepository::class);
     }
 
     /**
