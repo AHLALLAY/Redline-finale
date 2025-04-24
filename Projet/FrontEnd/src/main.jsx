@@ -10,6 +10,7 @@ import DashboardEnseingnant from './views/enseingant/DashboardEnseingnant.jsx'
 import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboard.jsx'
 import ProtecteEnseignantDashboard from './components/Protectors/ProtecteEnseignantDashboard.jsx'
 import ProtecteComptableDashboard from './components/Protectors/ProtecteComptableDashboard.jsx'
+import Transaction from './views/comptable/Transaction.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -35,6 +36,8 @@ createRoot(document.getElementById('root')).render(
             </ProtecteComptableDashboard>
           }
         />
+
+        <Route path="/comptable/transaction" element={ <Transaction /> }/>
       </Routes>
     </BrowserRouter>
   </StrictMode>
