@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
+import AddRecordForm from "./AddRecordForm";
 
-const RecordTable = () => {
+function RecordTable() {
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,6 +63,9 @@ const RecordTable = () => {
         <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
           + Nouvelle Opération
         </button>
+      </div>
+      <div>
+        <AddRecordForm />
       </div>
 
       <div className="overflow-x-auto">
