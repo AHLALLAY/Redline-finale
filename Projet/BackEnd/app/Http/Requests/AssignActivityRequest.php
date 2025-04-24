@@ -11,7 +11,7 @@ class AssignActivityRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,14 @@ class AssignActivityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => ['required', 'string', 'max:100'],
+            'description' => ['required', 'string', 'max:200'],
+            'date' => ['required', 'date'],
+            'classe' => ['required', 'string', 'in:1ére année, 2ème année, 3ème année, 4ème année, 5ème année, 6ème année'],
+            'group' => ['required', 'integer', 'between:1,10'],
+            'teacher_id' => ['required', 'integer', 'exists:teachers,id'],
+            'is_done' => ['required', 'boolean'],
+            'done_at' => ['nullable', 'date', 'required_if:is_done,true']
         ];
     }
 }
