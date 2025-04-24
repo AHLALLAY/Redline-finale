@@ -4,8 +4,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import LoginStaff from './views/auth/LoginStaff.jsx'
 import DashboardAdmin from './views/admin/DashboardAdmin.jsx'
-import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboard.jsx'
 import DashboardComptable from './views/comptable/DashboardComptable.jsx'
+import DashboardEnseingnant from './views/enseingant/DashboardEnseingnant.jsx'
+
+import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboard.jsx'
+import ProtecteEnseignantDashboard from './components/Protectors/ProtecteEnseignantDashboard.jsx'
+import ProtecteComptableDashboard from './components/Protectors/ProtecteComptableDashboard.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
