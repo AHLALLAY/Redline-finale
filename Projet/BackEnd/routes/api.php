@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AbsenceController;
 use App\Http\Controllers\Api\AccountantController;
+use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
@@ -29,4 +30,8 @@ Route::controller(AdminController::class)->group(function(){
 
 Route::controller(AbsenceController::class)->group(function (){
     Route::post('/prof/absence/new','AddAbsence');
+});
+
+Route::controller(ActivityController::class)->group(function(){
+    Route::post('/prof/activity/new', 'AssignActivity');
 });
