@@ -39,4 +39,8 @@ class ActivityController extends Controller
             ], 500);
         }
     }
+
+    public function AddActivityToTextBox(){
+        
+    }
 }
