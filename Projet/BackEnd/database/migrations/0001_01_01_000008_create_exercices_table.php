@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('description');
-            $table->date('date');
             $table->string('classe');
             $table->string('group');
-            $table->foreignId('Teacher_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_done')->default(false);
             $table->date('done_at')->nullable();
             $table->timestamps();
