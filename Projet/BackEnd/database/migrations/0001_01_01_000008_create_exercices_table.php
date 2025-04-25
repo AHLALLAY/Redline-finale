@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('classe');
-            $table->string('group');
+            $table->integer('group');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_done')->default(false);
             $table->date('done_at')->nullable();

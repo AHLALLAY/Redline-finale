@@ -5,81 +5,78 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
+
 
 class UsersSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $roles = ['Enseignant', 'Enseignant', 'Enseignant', 'Enseignant', 'Enseignant', 
-                 'Enseignant', 'Enseignant', 'Enseignant', 'Enseignant', 'Enseignant',
-                 'Comptable', 'Secrétaire', 'Admin'];
-        
-        $firstNamesMale = ['Mohamed', 'Ahmed', 'Youssef', 'Hassan', 'Omar', 'Karim', 'Adil', 'Mehdi', 'Nabil', 'Rachid'];
-        $firstNamesFemale = ['Fatima', 'Amina', 'Khadija', 'Zahra', 'Samira', 'Nadia', 'Leila', 'Houda', 'Salma', 'Asmae'];
-        $lastNames = ['Alaoui', 'Benjelloun', 'El Mansouri', 'Chraibi', 'Bennani', 'Touimi', 'Berrada', 'Ouazzani', 'Cherkaoui', 'Idrissi'];
-
-        $users = [];
-        
-        // Admin
-        $users[] = [
-            'name' => 'Admin Admin',
-            'cin' => 'AB123456',
-            'email' => 'admin2025@gmail.com',
-            'password' => Hash::make('123456789'),
+        // Admin user
+        DB::table('users')->insert([
+            'name' => 'Admin User',
+            'cin' => 'A123456',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
             'role' => 'Admin',
-            'birth_date' => '1980-01-15',
-            'phone' => '06' . rand(10, 99) . rand(10, 99) . rand(10, 99),
-            'last_diplomat' => 'Doctorat en Gestion',
-            'obtained_at' => '2010-06-30',
-        ];
+            'birth_date' => '1985-03-15',
+            'phone' => '0600000001',
+            'last_diplomat' => 'Doctorat en Informatique',
+            'obtained_at' => '2010-06-20',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        // Comptable
-        $users[] = [
-            'name' => 'Comptable Comptable',
-            'cin' => 'CD789012',
-            'email' => 'comptable2025@gmail.com',
-            'password' => Hash::make('123456789'),
+        // Comptable user
+        DB::table('users')->insert([
+            'name' => 'Comptable User',
+            'cin' => 'B123456',
+            'email' => 'comptable@example.com',
+            'password' => Hash::make('password'),
             'role' => 'Comptable',
-            'birth_date' => '1985-05-20',
-            'phone' => '06' . rand(10, 99) . rand(10, 99) . rand(10, 99),
-            'last_diplomat' => 'Master en Comptabilité',
-            'obtained_at' => '2015-07-15',
-        ];
+            'birth_date' => '1988-07-25',
+            'phone' => '0600000002',
+            'last_diplomat' => 'Master en Finance',
+            'obtained_at' => '2012-06-15',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
-        // Secrétaire
-        $users[] = [
-            'name' => 'Secrétaire Secrétaire',
-            'cin' => 'EF345678',
-            'email' => 'secretaire2025@gmail.com',
-            'password' => Hash::make('123456789'),
+        // Secrétaire user
+        DB::table('users')->insert([
+            'name' => 'Secrétaire User',
+            'cin' => 'C123456',
+            'email' => 'secretaire@example.com',
+            'password' => Hash::make('password'),
             'role' => 'Secrétaire',
-            'birth_date' => '1978-11-10',
-            'phone' => '06' . rand(10, 99) . rand(10, 99) . rand(10, 99),
-            'last_diplomat' => 'Bac +3 en Secrétariat',
-            'obtained_at' => '2005-06-20',
+            'birth_date' => '1990-11-10',
+            'phone' => '0600000003',
+            'last_diplomat' => 'Licence en Administration',
+            'obtained_at' => '2014-06-30',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        // 9 Enseignants
+        $subjects = [
+            'Mathématiques', 'Français', 'Sciences', 'Histoire', 'Géographie',
+            'Physique', 'Chimie', 'Biologie', 'Informatique'
         ];
 
-        // 10 Enseignants (5 hommes, 5 femmes)
-        for ($i = 0; $i < 10; $i++) {
-            $gender = ($i < 5) ? 'male' : 'female';
-            $firstName = $gender === 'male' 
-                ? $firstNamesMale[array_rand($firstNamesMale)] 
-                : $firstNamesFemale[array_rand($firstNamesFemale)];
-            $lastName = $lastNames[array_rand($lastNames)];
-            
-            $users[] = [
-                'name' => $firstName . ' ' . $lastName,
-                'cin' => substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 2) . rand(100000, 999999),
-                'email' => strtolower($firstName) . strtolower($lastName) . '2025@gmail.com',
-                'password' => Hash::make('123456789'),
+        foreach ($subjects as $index => $subject) {
+            DB::table('users')->insert([
+                'name' => "Enseignant $subject",
+                'cin' => 'E' . str_pad($index + 1, 6, '0', STR_PAD_LEFT),
+                'email' => strtolower($subject) . '@example.com',
+                'password' => Hash::make('password'),
                 'role' => 'Enseignant',
-                'birth_date' => date('Y-m-d', mt_rand(strtotime('1970-01-01'), strtotime('1990-12-31'))),
-                'phone' => '06' . rand(10, 99) . rand(10, 99) . rand(10, 99),
-                'last_diplomat' => 'Master en ' . ['Mathématiques', 'Physique', 'Chimie', 'Français', 'Arabe', 'Histoire'][array_rand(['Mathématiques', 'Physique', 'Chimie', 'Français', 'Arabe', 'Histoire'])],
-                'obtained_at' => date('Y-m-d', mt_rand(strtotime('2010-01-01'), strtotime('2020-12-31'))),
-            ];
+                'birth_date' => Carbon::now()->subYears(rand(30, 60))->subDays(rand(1, 365))->format('Y-m-d'),
+                'phone' => '06' . str_pad($index + 10, 8, '0', STR_PAD_LEFT),
+                'last_diplomat' => "Master en $subject",
+                'obtained_at' => Carbon::now()->subYears(rand(5, 20))->format('Y-m-d'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        DB::table('users')->insert($users);
     }
 }
