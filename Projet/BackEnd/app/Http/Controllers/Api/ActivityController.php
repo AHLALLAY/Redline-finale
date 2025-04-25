@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityRequest;
 use App\Services\ActivityService;
-use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class ActivityController extends Controller
