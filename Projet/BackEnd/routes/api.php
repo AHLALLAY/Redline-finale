@@ -34,4 +34,5 @@ Route::controller(AbsenceController::class)->group(function (){
 
 Route::controller(ActivityController::class)->group(function(){
     Route::post('/prof/activity/new', 'AssignActivity');
+    Route::post('/prof/activity/textbox/new', 'AddActivityToTextBox');
 });
