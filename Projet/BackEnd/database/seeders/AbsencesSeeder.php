@@ -2,36 +2,32 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class AbsencesSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $absences = [];
         $statuses = ['Présent', 'Absent', 'Retard'];
         $periods = ['Matin', 'Après-midi', 'Journée'];
-        $justifications = ['Non justifié', 'Justifié', 'En attente', null];
+        $justifications = ['Non justifié', 'Justifié', 'En attente'];
 
-        // Générer 3 absences par élève
-        for ($studentId = 1; $studentId <= 264; $studentId++) {
-            for ($i = 0; $i < 3; $i++) {
-                $status = $statuses[array_rand($statuses)];
-                $delay = ($status === 'Retard') ? rand(5, 45) : null;
-                
-                $absences[] = [
-                    'student_id' => $studentId,
-                    'status' => $status,
-                    'delay' => $delay,
-                    'date' => date('Y-m-d', strtotime('-' . rand(1, 30) . ' days')),
-                    'period' => ($status !== 'Présent') ? $periods[array_rand($periods)] : null,
-                    'justification' => ($status !== 'Présent') ? $justifications[array_rand($justifications)] : null,
-                    'recorded_by' => rand(2, 13), // IDs des enseignants (2-13)
-                ];
-            }
+        for ($i = 1; $i <= 500; $i++) {
+            $status = $statuses[rand(0, 2)];
+            
+            DB::table('absences')->insert([
+                'student_id' => rand(1, 246),
+                'status' => $status,
+                'delay' => $status === 'Retard' ? rand(5, 60) : null,
+                'date' => Carbon::now()->subDays(rand(1, 90))->format('Y-m-d'),
+                'period' => $periods[rand(0, 2)],
+                'justification' => $status !== 'Présent' ? $justifications[rand(0, 2)] : null,
+                'recorded_by' => rand(4, 12), // Users IDs (9 enseignants)
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        DB::table('absences')->insert($absences);
     }
 }
