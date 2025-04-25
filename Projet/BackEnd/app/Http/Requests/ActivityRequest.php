@@ -27,7 +27,7 @@ class ActivityRequest extends FormRequest
             'date' => ['required', 'date'],
             'classe' => ['required', 'string', 'in:1ére année, 2ème année, 3ème année, 4ème année, 5ème année, 6ème année'],
             'group' => ['required', 'integer', 'between:1,10'],
-            'teacher_id' => ['required', 'integer', 'exists:teachers,id'],
+            'teacher_id' => ['required', 'integer', 'exists:users,id,role,Enseignant'],
             'is_done' => ['required', 'boolean'],
             'done_at' => ['nullable', 'date', 'required_if:is_done,true']
         ];
