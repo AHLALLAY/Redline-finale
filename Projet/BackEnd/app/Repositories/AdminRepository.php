@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
+use App\Models\Absence;
 use App\Models\Classe;
 use App\Models\Garde;
 use App\Models\Offre;
@@ -89,7 +90,7 @@ class AdminRepository implements AdminInterface
     public function DisplayAbsences()
     {
         try {
-            return Student::all();
+            return Absence::all();
         } catch (\Exception $e) {
             throw $e;
         }
