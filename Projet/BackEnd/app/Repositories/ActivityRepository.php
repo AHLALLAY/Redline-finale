@@ -17,4 +17,9 @@ class ActivityRepository implements ActivitiesInterface{
     public function AddActivityToTextBox($activity){
 
     }
+
+    public function AddGrades($grades)
+    {
+        
+    }
 }
