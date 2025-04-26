@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Garde extends Model
 {
-    protected $fillable = ['teacher', 'hours'];
+    protected $fillable = ['teacher', 'start_time'];
 }
