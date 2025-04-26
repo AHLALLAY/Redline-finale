@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AuthInterface::class, AuthRepository::class);
         $this->app->bind(AccountantInterface::class, AccountantRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
-        $this->app->bind(AbsenceInterface::class, AbsenceRepository::class);
         $this->app->bind(ActivitiesInterface::class, ActivityRepository::class);
     }
 
