@@ -22,7 +22,7 @@ class GardeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'teacher' => ['required', 'integer'],
+            'teacher_id' => ['required', 'integer'],
             'start_time' => ['required', 'date_format:H:i']
         ];
     }
