@@ -52,7 +52,8 @@ class AdminRepository implements AdminInterface
     {
         try {
             $user = User::find($staffId);
-            $user->update(['is_deleted' => true]);
+            $user->is_deleted = true;
+            return $user->save();
             return true;
         } catch (\Exception $e) {
             report($e);
