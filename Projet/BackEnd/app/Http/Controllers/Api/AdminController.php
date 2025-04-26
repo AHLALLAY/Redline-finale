@@ -63,6 +63,26 @@ class AdminController extends Controller
             throw $e;
         }
     }
+    public function ActivatStaff($staffId)
+    {
+        try {
+            $result = $this->adminService->ActivatStaff($staffId);
+
+            if (!$result) {
+                return response()->json([
+                    'message' => 'Staff member not found',
+                    'status' => 'error'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'Activation successive',
+                'status' => 'success'
+            ], 200);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
     public function DeleteStaff($staffId)
     {
         try {

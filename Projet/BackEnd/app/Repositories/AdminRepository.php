@@ -38,6 +38,16 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
+    public function ActivatStaff($staffId)
+    {
+        try {
+            $user = User::findOrFail($staffId);
+            $user->is_suspended = false;
+            return $user->save();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
     public function DeleteStaff($staffId)
     {
         try {
