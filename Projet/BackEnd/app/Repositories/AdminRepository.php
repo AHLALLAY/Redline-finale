@@ -4,6 +4,9 @@
 namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
+use App\Models\Absence;
+use App\Models\Classe;
+use App\Models\Garde;
 use App\Models\Offre;
 use App\Models\Student;
 use App\Models\User;
@@ -52,15 +55,28 @@ class AdminRepository implements AdminInterface
     {
         try {
             $user = User::find($staffId);
-            $user->update(['is_deleted' => true]);
+            $user->is_deleted = true;
+            return $user->save();
             return true;
         } catch (\Exception $e) {
             report($e);
             return false;
         }
     }
-    public function AddClasse($classeData) {}
-    public function AddGarde($gardData) {}
+    public function AddClasse($classeData) {
+        try{
+            return Classe::create($classeData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
+    public function AddGarde($gardData) {
+        try{
+            return Garde::create($gardData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
 
     // student
     public function DisplayStudents()
@@ -74,7 +90,7 @@ class AdminRepository implements AdminInterface
     public function DisplayAbsences()
     {
         try {
-            return Student::all();
+            return Absence::all();
         } catch (\Exception $e) {
             throw $e;
         }

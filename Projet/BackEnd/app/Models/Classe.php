@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classe extends Model
 {
-    protected $fillable = ['niveau', 'group', 'teacher'];
+    protected $fillable = ['niveau', 'group', 'teacher_id'];
 
     public function teacher(){ return $this->belongsToMany(User::class); }
 }
