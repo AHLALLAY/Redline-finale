@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classe extends Model
 {
-    //
+    protected $fillable = ['niveau', 'group', 'teacher'];
 }
