@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('last_diplomat');
             $table->date('obtained_at');
             $table->boolean('is_suspended')->default(false);
+            $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
 
