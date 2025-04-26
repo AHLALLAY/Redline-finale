@@ -47,12 +47,18 @@ class AdminController extends Controller
     {
         try {
             $result = $this->adminService->SuspendStaff($staffId);
-            if ($result) {
+
+            if (!$result) {
                 return response()->json([
-                    'message' => 'Suspend successive',
-                    'status' => 'success'
-                ], 200);
+                    'message' => 'Staff member not found',
+                    'status' => 'error'
+                ], 404);
             }
+
+            return response()->json([
+                'message' => 'Suspend successive',
+                'status' => 'success'
+            ], 200);
         } catch (\Exception $e) {
             throw $e;
         }
