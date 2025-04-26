@@ -23,7 +23,7 @@ class AdminRepository implements AdminInterface
     public function DisplayStaff()
     {
         try {
-            return User::all();
+            return User::where('role', 'Enseignant')->get();
         } catch (\Exception $e) {
             throw $e;
         }
