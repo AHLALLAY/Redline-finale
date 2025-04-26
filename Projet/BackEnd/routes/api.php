@@ -24,8 +24,20 @@ Route::controller(AccountantController::class)->group(function(){
 
 
 Route::controller(AdminController::class)->group(function(){
+    // staff
     Route::get('/admin/staff','DisplayStaff');
+    Route::post('/admin/staff/suspend/{staffId}','SuspendStaff');
+    Route::post('/admin/staff/activat/{staffId}','ActivatStaff');
+    Route::post('/admin/staff/delete/{staffId}','SuspendStaff');
+    Route::post('/admin/class/new','AddClasse');
+    Route::post('/admin/gard/new','AddGarde');
+    
+    // student
     Route::get('/admin/student','DisplayStudents');
+    Route::get('/admin/absence','DisplayAbsences');
+    
+    // auther
+    Route::post('/admin/offre/new','AddOffre');
 });
 
 Route::controller(AbsenceController::class)->group(function (){

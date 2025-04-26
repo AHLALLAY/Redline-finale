@@ -12,6 +12,7 @@ class AdminService {
     public function AddStaff($staffData){}
     public function DisplayStaff(){ return $this->adminRepository->DisplayStaff(); }
     public function SuspendStaff($staffId){ return $this->adminRepository->SuspendStaff($staffId); }
+    public function ActivatStaff($staffId){ return $this->adminRepository->ActivatStaff($staffId); }
     public function DeleteStaff($staffId){ return $this->adminRepository->DeleteStaff($staffId); }
     public function AddClasse($classeData){ return $this->adminRepository->AddClasse($classeData); }
     public function AddGarde($gardData){ return $this->adminRepository->AddGarde($gardData); }

@@ -31,9 +31,19 @@ class AdminRepository implements AdminInterface
     public function SuspendStaff($staffId)
     {
         try {
-            $user = User::find($staffId);
-            $user->update(['is_suspended' => true]);
-            return true;
+            $user = User::findOrFail($staffId);
+            $user->is_suspended = true;
+            return $user->save();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public function ActivatStaff($staffId)
+    {
+        try {
+            $user = User::findOrFail($staffId);
+            $user->is_suspended = false;
+            return $user->save();
         } catch (\Exception $e) {
             throw $e;
         }
