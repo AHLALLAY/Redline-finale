@@ -74,6 +74,7 @@ class UsersSeeder extends Seeder
                 'phone' => '06' . str_pad($index + 10, 8, '0', STR_PAD_LEFT),
                 'last_diplomat' => "Master en $subject",
                 'obtained_at' => Carbon::now()->subYears(rand(5, 20))->format('Y-m-d'),
+                'is_suspended' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
