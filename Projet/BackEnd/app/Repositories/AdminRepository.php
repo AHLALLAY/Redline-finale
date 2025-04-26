@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
+use App\Models\Offre;
 use App\Models\Student;
 use App\Models\User;
 
@@ -11,10 +12,10 @@ class AdminRepository implements AdminInterface
 {
 
     // staff
-    public function AddStaff($staff)
+    public function AddStaff($staffData)
     {
         try {
-            return User::create($staff);
+            return User::create($staffData);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -27,19 +28,29 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function SuspendStaff($staff)
+    public function SuspendStaff($staffId)
     {
         try {
-            $user = User::find($staff);
-            $user->update(['is_suspended' => false]);
+            $user = User::find($staffId);
+            $user->update(['is_suspended' => true]);
             return true;
         } catch (\Exception $e) {
             throw $e;
         }
     }
-    public function DeleteStaff($staff) {}
-    public function AssignClasse($classe, $to) {}
-    public function AssignGarde($time, $to) {}
+    public function DeleteStaff($staffId)
+    {
+        try {
+            $user = User::find($staffId);
+            $user->update(['is_deleted' => true]);
+            return true;
+        } catch (\Exception $e) {
+            report($e);
+            return false;
+        }
+    }
+    public function AddClasse($classeData) {}
+    public function AddGarde($gardData) {}
 
     // student
     public function DisplayStudents()
@@ -50,8 +61,23 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function DisplayAbsences() {}
+    public function DisplayAbsences()
+    {
+        try {
+            return Student::all();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 
     // auther
-    public function AddOffre($offre) {}
+    public function AddOffre($offreData)
+    {
+        try {
+            Offre::create($offreData);
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }
