@@ -146,29 +146,6 @@ class AdminController extends Controller
 
 
     // student
-    public function DisplayAbsences()
-    {
-        try {
-            $data = $this->adminService->DisplayAbsences();
-            if ($data === null) {
-                return response()->json([
-                    "message" => "No Student found",
-                    "status" => "success"
-                ], 200);
-            }
-            return response()->json([
-                "message" => "les donner collecter",
-                "data" => $data,
-                "status" => "success"
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                "message" => "Unexpected Error",
-                "error" => $e->getMessage()
-            ], 500);
-        }
-    }
-
     public function DisplayStudents()
     {
         try {
@@ -191,7 +168,28 @@ class AdminController extends Controller
             ], 500);
         }
     }
-
+    public function DisplayAbsences()
+    {
+        try {
+            $data = $this->adminService->DisplayAbsences();
+            if ($data === null) {
+                return response()->json([
+                    "message" => "No Student found",
+                    "status" => "success"
+                ], 200);
+            }
+            return response()->json([
+                "message" => "les donner collecter",
+                "data" => $data,
+                "status" => "success"
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Unexpected Error",
+                "error" => $e->getMessage()
+            ], 500);
+        }
+    }
 
     // auther
     public function AddOffre(OffreRequest $offreRequest)
