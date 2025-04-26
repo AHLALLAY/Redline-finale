@@ -7,7 +7,7 @@ use App\Models\User;
 
 class TextBox extends Model
 {
-    protected $fillable = ['title', 'type', 'description', 'teacher'];
+    protected $fillable = ['title', 'type', 'description', 'teacher_id'];
 
     public function user(){
         return $this->belongsTo(User::class);
