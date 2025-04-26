@@ -24,7 +24,7 @@ class ClasseRequest extends FormRequest
         return [
             'niveau' => ['required', 'in:1ére année,2ème année,3ème année,4ème année,5ème année,6ème année'],
             'group' => ['required', 'in:A,B,C,D'],
-            'teacher' => ['required', 'integer', 'exists:users,id']
+            'teacher_id' => ['required', 'integer', 'exists:users,id']
         ];
     }
 }
