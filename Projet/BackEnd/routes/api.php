@@ -27,6 +27,7 @@ Route::controller(AdminController::class)->group(function(){
     // staff
     Route::get('/admin/staff','DisplayStaff');
     Route::post('/admin/staff/suspend/{staffId}','SuspendStaff');
+    Route::post('/admin/staff/activat/{staffId}','ActivatStaff');
     Route::post('/admin/staff/delete/{staffId}','SuspendStaff');
     Route::post('/admin/class/new','AddClasse');
     Route::post('/admin/gard/new','AddGarde');
