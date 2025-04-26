@@ -11,11 +11,17 @@ class AdminRepository implements AdminInterface
 {
 
     // staff
-    public function AddStaff($staff) {}
+    public function AddStaff($staff) {
+        try{
+            return User::create($staff);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
     public function DisplayStaff()
     {
         try {
-            return User::where('role', 'Enseignant')->get();
+            return User::all();
         } catch (\Exception $e) {
             throw $e;
         }
