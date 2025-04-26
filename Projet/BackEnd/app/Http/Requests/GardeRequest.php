@@ -11,7 +11,7 @@ class GardeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class GardeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'teacher' => ['required', 'integer'],
+            'start_time' => ['required', 'date_format:H:i']
         ];
     }
 }

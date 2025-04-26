@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Garde extends Model
 {
-    protected $fillable = ['teacher', 'hours'];
+    protected $fillable = ['teacher', 'start_time'];
+
+    public function teacher(){ return $this->belongsTo(User::class) ;}
 }
