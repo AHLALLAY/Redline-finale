@@ -2,34 +2,33 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class ExercicesSeeder extends Seeder
 {
-    public function run()
+    public function run(): void
     {
-        $exercices = [];
-        $classes = ['1ére A', '2ème A', '3ème A', '4ème A', '5ème A', '6ème A', '1ére B', '2ème B', '3ème B'];
-        $groups = ['Groupe 1', 'Groupe 2', 'Groupe 3', 'Groupe 4'];
-        $subjects = ['Mathématiques', 'Physique', 'Chimie', 'Français', 'Arabe', 'Histoire-Géo', 'SVT', 'Anglais'];
+        $classes = ['CP', 'CE1', 'CE2', 'CM1', 'CM2', '6ème'];
+        $subjects = ['Mathématiques', 'Français', 'Sciences', 'Histoire', 'Géographie'];
+        
 
-        // Générer 30 exercices
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 1; $i <= 30; $i++) {
             $isDone = rand(0, 1);
             
-            $exercices[] = [
-                'title' => 'Devoir de ' . $subjects[array_rand($subjects)],
-                'description' => 'Exercices sur ' . ['les fractions', 'la grammaire', 'l\'histoire', 'les équations', 'la photosynthèse'][array_rand(['les fractions', 'la grammaire', 'l\'histoire', 'les équations', 'la photosynthèse'])],
-                'date' => date('Y-m-d', strtotime('+' . rand(1, 30) . ' days')),
-                'classe' => $classes[array_rand($classes)],
-                'group' => $groups[array_rand($groups)],
-                'Teacher_id' => rand(2, 13), // IDs des enseignants (2-13)
+            DB::table('exercices')->insert([
+                'title' => $subjects[rand(0, count($subjects) - 1)] . ' - Exercice ' . $i,
+                'description' => 'Description de l\'exercice ' . $i . '. ' . Str::random(50),
+                'classe' => $classes[rand(0, count($classes) - 1)],
+                'group' => rand(1, 3),
+                'teacher_id' => rand(4, 12),
                 'is_done' => $isDone,
-                'done_at' => $isDone ? date('Y-m-d', strtotime('+' . rand(1, 5) . ' days')) : null,
-            ];
+                'done_at' => $isDone ? Carbon::now()->subDays(rand(1, 30))->format('Y-m-d') : null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
-
-        DB::table('exercices')->insert($exercices);
     }
 }

@@ -18,4 +18,7 @@ class ActivityService {
         return $this->activityRepository->AddActivityToTextBox($activity);
     }
 
+    public function AddGrades($grades){
+
+    }
 }
