@@ -11,10 +11,11 @@ class AdminRepository implements AdminInterface
 {
 
     // staff
-    public function AddStaff($staff) {
-        try{
+    public function AddStaff($staff)
+    {
+        try {
             return User::create($staff);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -26,7 +27,16 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function SuspendStaff($staff) {}
+    public function SuspendStaff($staff)
+    {
+        try {
+            $user = User::find($staff);
+            $user->update(['is_suspended' => false]);
+            return true;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
     public function DeleteStaff($staff) {}
     public function AssignClasse($classe, $to) {}
     public function AssignGarde($time, $to) {}
@@ -34,9 +44,9 @@ class AdminRepository implements AdminInterface
     // student
     public function DisplayStudents()
     {
-        try{
+        try {
             return Student::all();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
