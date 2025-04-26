@@ -24,7 +24,6 @@ class ActivityRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:100'],
             'description' => ['required', 'string', 'max:200'],
-            'date' => ['required', 'date'],
             'classe' => ['required', 'string', 'in:1ére année, 2ème année, 3ème année, 4ème année, 5ème année, 6ème année'],
             'group' => ['required', 'integer', 'between:1,10'],
             'teacher_id' => ['required', 'integer', 'exists:users,id,role,Enseignant'],
