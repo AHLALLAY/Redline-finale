@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->enum('type',['Cours', 'Evaluation']);
             $table->text('description');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('teacher')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
