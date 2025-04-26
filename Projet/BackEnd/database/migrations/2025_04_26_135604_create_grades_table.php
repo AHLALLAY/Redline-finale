@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('grades', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->decimal('Grade',4,2);
+            $table->string('controle_N');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
