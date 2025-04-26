@@ -4,6 +4,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\AdminInterface;
+use App\Models\Classe;
 use App\Models\Offre;
 use App\Models\Student;
 use App\Models\User;
@@ -60,7 +61,13 @@ class AdminRepository implements AdminInterface
             return false;
         }
     }
-    public function AddClasse($classeData) {}
+    public function AddClasse($classeData) {
+        try{
+            return Classe::create($classeData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
     public function AddGarde($gardData) {}
 
     // student
