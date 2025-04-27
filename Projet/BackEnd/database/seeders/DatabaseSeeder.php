@@ -13,7 +13,8 @@ class DatabaseSeeder extends Seeder
             StudentsSeeder::class,
             AbsencesSeeder::class,
             JournalsSeeder::class,
-            ExercicesSeeder::class
+            ExercicesSeeder::class,
+            ClassesSeeder::class
         ]);
     }
 }
