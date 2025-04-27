@@ -43,10 +43,10 @@ Route::controller(AdminController::class)->group(function(){
 });
 
 Route::controller(TeacherController::class)->group(function(){
-    Route::post('/prof/exercice/new','AddExercice');
-    Route::patch('/prof/exercice/done/{exerciceId}','ExercieDone');
-    Route::post('/prof/activity/new','AddActivityToTextBox');
-    Route::post('/prof/MyStudents','DisplayMyStudents');
+    Route::post('/prof/exercice/new','AddExercice'); //done
+    Route::patch('/prof/exercice/done/{exerciceId}','ExercieDone'); //done
+    Route::post('/prof/activity/new','AddActivityToTextBox'); //done
+    Route::post('/prof/MyStudents/{Levels}_{group}','DisplayMyStudents'); //done
     Route::post('/prof/absence/new','AddAbsence');
     Route::post('/prof/grade/new','AddGrade');
 });
