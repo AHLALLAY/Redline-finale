@@ -69,7 +69,24 @@ class TeacherController extends Controller
     }
 
     // student
-    public function DisplayMyStudents($students) {}
-    public function AddAbsence($absnceData) {}
+    public function DisplayMyStudents($level, $group)
+    {
+        try {
+            $students = $this->teacherService->DisplayMyStudents($level, $group);
+            return response()->json([
+                'message' => 'Étudiants récupérés avec succès',
+                'data' => $students,
+                'status' => 'success'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération des étudiants',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
+    
+    public function AddAbsence($absenceData) {}
     public function AddGrade($gradeData) {}
 }
