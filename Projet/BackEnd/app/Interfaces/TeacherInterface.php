@@ -9,7 +9,7 @@ interface TeacherInterface
     public function AddActivityToTextBox($activityData);
     
     // student
-    public function DisplayMyStudents($students);
+    public function DisplayMyStudents($level, $groupe);
     public function AddAbsence($absnceData);
     public function AddGrade($gradeData);
 

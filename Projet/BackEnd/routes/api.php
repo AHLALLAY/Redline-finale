@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\Api\AbsenceController;
 use App\Http\Controllers\Api\AccountantController;
-use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function() {
@@ -43,7 +42,10 @@ Route::controller(AdminController::class)->group(function(){
     Route::post('/admin/offer/new','AddOffer'); //done
 });
 
-Route::controller(ActivityController::class)->group(function(){
-    Route::post('/prof/activity/new', 'AssignActivity');
-    Route::post('/prof/activity/textbox/new', 'AddActivityToTextBox');
+Route::controller(TeacherController::class)->group(function(){
+    Route::post('/prof/exercice/new','AddExercice');
+    Route::post('/prof/activity/new','AddActivityToTextBox');
+    Route::post('/prof/MyStudents','DisplayMyStudents');
+    Route::post('/prof/absence/new','AddAbsence');
+    Route::post('/prof/grade/new','AddGrade');
 });
