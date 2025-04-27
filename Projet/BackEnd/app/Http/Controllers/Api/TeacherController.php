@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ActivityRequest;
 use App\Http\Requests\ExerciceRequest;
 use App\Http\Requests\TextBoxRequest;
-use App\Models\TextBox;
 use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
@@ -60,7 +58,7 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function AddActivityToTextBox(TextBox $textBoxRequest)
+    public function AddActivityToTextBox(TextBoxRequest $textBoxRequest)
     {
         try {
             $validated_data = $textBoxRequest->validated();
@@ -73,7 +71,7 @@ class TeacherController extends Controller
             ], 201);
         } catch (ValidationException $e) {
             return  response()->json([
-                'message' => 'Erreur lors lavalidation',
+                'message' => 'Erreur lors la validation',
                 'error' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
