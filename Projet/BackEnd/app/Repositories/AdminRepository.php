@@ -103,12 +103,14 @@ class AdminRepository implements AdminInterface
     {
         try {
             $all = User::all()->count();
-            $teacher = User::where('role', 'Enseignant')->count()->get();
-            $accountant = User::where('role', 'Comptable')->count()->get();
-            $secretary = User::where('role', 'Secrétaire')->count()->get();
+            $admin = User::where('role', 'Admin')->count();
+            $teacher = User::where('role', 'Enseignant')->count();
+            $accountant = User::where('role', 'Comptable')->count();
+            $secretary = User::where('role', 'Secrétaire')->count();
             
             return [
                 'total' => $all,
+                'admin' => $admin,
                 'teacher'=> $teacher,
                 'accoutant' => $accountant,
                 'Secretary' => $secretary

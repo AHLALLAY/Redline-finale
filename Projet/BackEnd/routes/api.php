@@ -18,8 +18,8 @@ Route::controller(AuthController::class)->group(function() {
 
 Route::controller(AccountantController::class)->group(function(){
     Route::post('/accountant/journal/new','AddRecord'); //done
-    Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth');
-    Route::get('/accountant/journal/all','GetAllRecord');
+    Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth'); //done
+    Route::get('/accountant/journal/all','GetAllRecord'); //done
 });
 
 
@@ -37,8 +37,8 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/absences','DisplayAbsences'); //done
     
     // statistics
-    Route::get('/admin/statistics/staff','CountStaff');
-    Route::get('/admin/statistics/students','CountStudent');
+    Route::get('/admin/statistics/staff','CountStaff'); // done
+    Route::get('/admin/statistics/students','CountStudent'); // done
     // auther
     Route::post('/admin/offer/new','AddOffer'); //done
 });
