@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExerciceRequest;
 use App\Http\Requests\TextBoxRequest;
+use App\Models\Student;
 use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
@@ -41,18 +42,19 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function ExercieDone($exerciceId){
-        try{
+    public function ExercieDone($exerciceId)
+    {
+        try {
             $result = $this->teacherService->ExerciceDone($exerciceId);
-            if($result){
+            if ($result) {
                 return response()->json([
-                    'message'=> 'Exercice status has been changed',
-                    'status'=> 'success'
-                ],200);
+                    'message' => 'Exercice status has been changed',
+                    'status' => 'success'
+                ], 200);
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'message'=> 'Unexpected Error',
+                'message' => 'Unexpected Error',
                 'error' => $e->getMessage(),
                 'status' => 'faild'
             ], 500);
@@ -87,7 +89,14 @@ class TeacherController extends Controller
     public function DisplayMyStudents($level, $group)
     {
         try {
-            $students = $this->teacherService->DisplayMyStudents($level, $group);
+            $levels = Student::getLevelSlugs($level);
+            if ($levels === 'invalide') {
+                return response()->json([
+                    'message' => 'Niveau non valide',
+                    'status' => 'error'
+                ], 404);
+            }
+            $students = $this->teacherService->DisplayMyStudents($levels, $group);
             return response()->json([
                 'message' => 'Étudiants récupérés avec succès',
                 'data' => $students,
@@ -101,7 +110,7 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    
+
     public function AddAbsence($absenceData) {}
     public function AddGrade($gradeData) {}
 }
