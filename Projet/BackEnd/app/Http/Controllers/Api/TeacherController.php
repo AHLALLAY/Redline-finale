@@ -43,6 +43,23 @@ class TeacherController extends Controller
             ], 500);
         }
     }
+    public function ExercieDone($exerciceId){
+        try{
+            $result = $this->teacherService->ExerciceDone($exerciceId);
+            if($result){
+                return response()->json([
+                    'message'=> 'Exercice status has been changed',
+                    'status'=> 'success'
+                ],200);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message'=> 'Unexpected Error',
+                'error' => $e->getMessage(),
+                'status' => 'faild'
+            ], 500);
+        }
+    }
     public function AddActivityToTextBox(TextBox $textBoxRequest)
     {
         try {

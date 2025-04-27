@@ -17,6 +17,17 @@ class TeacherRepository implements TeacherInterface
             return $e->getMessage();
         }
     }
+    public function ExerciceDone($exerciceId)
+    {
+        try{
+            $exercice = Exercice::findeOrFail($exerciceId);
+            $exercice->is_done = true;
+            $exercice->done_at = now();
+            return $exercice->save();
+        }catch(\Exception $e){
+            throw $e->getMessage();
+        }
+    }
     public function AddActivityToTextBox($activityData) {}
 
     // student
