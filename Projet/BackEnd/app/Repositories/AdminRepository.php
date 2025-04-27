@@ -118,7 +118,22 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
+    public function CountStudent()
+    {
+        try {
+            $all = Student::all()->count();
+            $male = Student::where('gender', 'Masculin')->count();
+            $female = Student::where('gender', 'Féminin')->count();
 
+            return [
+                'total' => $all,
+                'male' => $male,
+                'female' => $female
+            ];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 
     // auther
     public function AddOffer($offerData)
