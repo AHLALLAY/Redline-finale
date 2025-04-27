@@ -6,6 +6,7 @@ interface TeacherInterface
 {
     // activities
     public function AddExercice($exerciceData);
+    public function ExerciceDone($exerciceId);
     public function AddActivityToTextBox($activityData);
     
     // student

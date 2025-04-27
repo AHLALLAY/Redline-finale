@@ -13,6 +13,7 @@ class TeacherService {
 
     // activities
     public function AddExercice($exerciceData) { return $this->teacherRepository->AddExercice($exerciceData); }
+    public function ExerciceDone($exerciceId) { return $this->teacherRepository->ExerciceDone($exerciceId); }
     public function AddActivityToTextBox($activityData) { return $this->teacherRepository->AddActivityToTextBox($activityData); }
 
     // student

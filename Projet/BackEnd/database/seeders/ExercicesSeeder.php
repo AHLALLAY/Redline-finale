@@ -13,6 +13,7 @@ class ExercicesSeeder extends Seeder
     {
         $classes = ['CP', 'CE1', 'CE2', 'CM1', 'CM2', '6ème'];
         $subjects = ['Mathématiques', 'Français', 'Sciences', 'Histoire', 'Géographie'];
+        $groups = ['A', 'B', 'C', 'D'];
         
 
         for ($i = 1; $i <= 30; $i++) {
@@ -22,7 +23,7 @@ class ExercicesSeeder extends Seeder
                 'title' => $subjects[rand(0, count($subjects) - 1)] . ' - Exercice ' . $i,
                 'description' => 'Description de l\'exercice ' . $i . '. ' . Str::random(50),
                 'classe' => $classes[rand(0, count($classes) - 1)],
-                'group' => rand(1, 3),
+                'group' => $groups[rand(0, 3)],
                 'teacher_id' => rand(4, 12),
                 'is_done' => $isDone,
                 'done_at' => $isDone ? Carbon::now()->subDays(rand(1, 30))->format('Y-m-d') : null,
