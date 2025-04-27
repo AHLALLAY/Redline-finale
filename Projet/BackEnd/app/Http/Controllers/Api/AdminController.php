@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClasseRequest;
 use App\Http\Requests\GardeRequest;
-use App\Http\Requests\OffreRequest;
+use App\Http\Requests\OfferRequest;
 use App\Services\AdminService;
 use Illuminate\Validation\ValidationException;
 
@@ -192,11 +191,11 @@ class AdminController extends Controller
     }
 
     // auther
-    public function AddOffre(OffreRequest $offreRequest)
+    public function AddOffer(OfferRequest $offerRequest)
     {
         try {
-            $validated_data = $offreRequest->validated();
-            $this->adminService->AddGarde($validated_data);
+            $validated_data = $offerRequest->validated();
+            $this->adminService->AddOffer($validated_data);
             return response()->json([
                 'message' => 'Offre Added',
                 'data' => $validated_data,

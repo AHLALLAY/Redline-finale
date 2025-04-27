@@ -7,7 +7,7 @@ use App\Interfaces\AdminInterface;
 use App\Models\Absence;
 use App\Models\Classe;
 use App\Models\Garde;
-use App\Models\Offre;
+use App\Models\Offer;
 use App\Models\Student;
 use App\Models\User;
 
@@ -97,10 +97,10 @@ class AdminRepository implements AdminInterface
     }
 
     // auther
-    public function AddOffre($offreData)
+    public function AddOffer($offerData)
     {
         try {
-            Offre::create($offreData);
+            Offer::create($offerData);
             return true;
         } catch (\Exception $e) {
             throw $e;

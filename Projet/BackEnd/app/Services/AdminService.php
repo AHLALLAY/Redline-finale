@@ -23,5 +23,5 @@ class AdminService {
     public function DisplayAbsences(){ return $this->adminRepository->DisplayAbsences(); }
     
     // auther
-    public function AddOffre($offreData){ return $this->adminRepository->AddOffre($offreData); }
+    public function AddOffer($offerData){ return $this->adminRepository->AddOffer($offerData); }
 }

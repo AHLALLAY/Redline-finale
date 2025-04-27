@@ -18,5 +18,5 @@ interface AdminInterface
     public function DisplayAbsences();
 
     // auther
-    public function AddOffre($offreData);
+    public function AddOffer($offerData);
 }
