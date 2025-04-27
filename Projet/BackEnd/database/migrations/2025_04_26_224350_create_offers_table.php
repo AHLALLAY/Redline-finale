@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->enum('type',['Stage', 'Position']);
+            $table->enum('contrat',['Stage', 'CDI', 'CDD']);
             $table->timestamps();
         });
     }

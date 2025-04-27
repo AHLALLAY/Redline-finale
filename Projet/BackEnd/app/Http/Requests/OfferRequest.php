@@ -24,7 +24,7 @@ class OfferRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:100'],
             'description'=> ['required', 'string', 'max:1000'],
-            'type'=> ['required', 'in:Stage,Position'],
+            'contrat'=> ['required', 'in:Stage,CDI,CDD'],
         ];
     }
 }
