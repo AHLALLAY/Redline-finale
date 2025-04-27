@@ -5,23 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityRequest;
 use App\Http\Requests\TextBoxRequest;
-use App\Services\ActivityService;
+use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
-class ActivityController extends Controller
+class TeacherController extends Controller
 {
-    protected $activityService;
+    protected $teacherService;
 
-    public function __construct(ActivityService $activityService)
+    public function __construct(TeacherService $teacherService)
     {
-        $this->activityService = $activityService;
+        $this->teacherService = $teacherService;
     }
 
     public function AssignActivity(ActivityRequest $activityRequest)
     {
         try {
             $validated_data = $activityRequest->validated();
-            $result = $this->activityService->AssignActivity($validated_data);
+            $result = $this->teacherService->AssignActivity($validated_data);
 
             return response()->json([
                 'message' => 'Activity Assigned successfuly',
@@ -44,7 +44,7 @@ class ActivityController extends Controller
     public function AddActivityToTextBox(TextBoxRequest $textBoxRequest){
         try{
             $validated_data = $textBoxRequest->validated();
-            $this->activityService->AddActivityToTextBox($validated_data);
+            $this->teacherService->AddActivityToTextBox($validated_data);
 
             return response()->json([
                 'message' => 'Activity Added',
