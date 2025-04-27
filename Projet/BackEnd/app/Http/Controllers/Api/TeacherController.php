@@ -118,21 +118,21 @@ class TeacherController extends Controller
             return response()->json([
                 'message' => 'Validation Error',
                 'error' => $e->errors(),
-                'status' => 'error'
+                'status' => 'failed'
             ], 422);
 
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'unexpected error',
                 'error' => $e->getMessage(),
-                'status' => 'failed'
+                'status' => 'errors'
             ], 500);
         }
     }
     public function AddGrade(GradeRequest $gradeRequest) {
         try{
             $validated_data = $gradeRequest->validated();
-            $this->teacherService->AddAbsence($validated_data);
+            $this->teacherService->AddGrade($validated_data);
             return response()->json([
                 'message' => 'grade added',
                 'status' => 'success'
@@ -141,14 +141,14 @@ class TeacherController extends Controller
             return response()->json([
                 'message' => 'Validation Error',
                 'error' => $e->errors(),
-                'status' => 'error'
+                'status' => 'failed'
             ], 422);
 
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'unexpected error',
                 'error' => $e->getMessage(),
-                'status' => 'failed'
+                'status' => 'error'
             ], 500);
         }
     }
