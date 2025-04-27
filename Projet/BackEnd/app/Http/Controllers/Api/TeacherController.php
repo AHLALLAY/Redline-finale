@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ActivityRequest;
+use App\Http\Requests\ExerciceRequest;
 use App\Http\Requests\TextBoxRequest;
+use App\Models\TextBox;
 use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
@@ -17,14 +19,15 @@ class TeacherController extends Controller
         $this->teacherService = $teacherService;
     }
 
-    public function AssignActivity(ActivityRequest $activityRequest)
+    // activities
+    public function AddExercice(ExerciceRequest $exerciceRequest)
     {
         try {
-            $validated_data = $activityRequest->validated();
-            $result = $this->teacherService->AssignActivity($validated_data);
+            $validated_data = $exerciceRequest->validated();
+            $result = $this->teacherService->AddExercice($validated_data);
 
             return response()->json([
-                'message' => 'Activity Assigned successfuly',
+                'message' => 'Exercice Assigned successfuly',
                 'data' => $result,
                 'status' => 'success'
             ], 201);
@@ -40,9 +43,9 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-
-    public function AddActivityToTextBox(TextBoxRequest $textBoxRequest){
-        try{
+    public function AddActivityToTextBox(TextBox $textBoxRequest)
+    {
+        try {
             $validated_data = $textBoxRequest->validated();
             $this->teacherService->AddActivityToTextBox($validated_data);
 
@@ -51,12 +54,12 @@ class TeacherController extends Controller
                 'data' => $validated_data,
                 'status' => 'success'
             ], 201);
-        }catch(ValidationException $e){
+        } catch (ValidationException $e) {
             return  response()->json([
                 'message' => 'Erreur lors lavalidation',
                 'error' => $e->errors()
             ], 422);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Unexpected Error',
                 'error' => $e->getMessage(),
@@ -64,4 +67,9 @@ class TeacherController extends Controller
             ], 500);
         }
     }
+
+    // student
+    public function DisplayMyStudents($students) {}
+    public function AddAbsence($absnceData) {}
+    public function AddGrade($gradeData) {}
 }
