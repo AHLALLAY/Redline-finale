@@ -3,7 +3,9 @@
 namespace App\Repositories;
 
 use App\Interfaces\TeacherInterface;
+use App\Models\Absence;
 use App\Models\Exercice;
+use App\Models\Grade;
 use App\Models\Student;
 use App\Models\TextBox;
 
@@ -45,6 +47,18 @@ class TeacherRepository implements TeacherInterface
             return $e->getMessage();
         }
     }
-    public function AddAbsence($absnceData) {}
-    public function AddGrade($gradeData) {}
+    public function AddAbsence($absnceData) {
+        try{
+            return Absence::create($absnceData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
+    public function AddGrade($gradeData) {
+        try{
+            return Grade::create($gradeData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
 }

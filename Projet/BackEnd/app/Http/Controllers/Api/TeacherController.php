@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AbsenceRequest;
 use App\Http\Requests\ExerciceRequest;
+use App\Http\Requests\GradeRequest;
 use App\Http\Requests\TextBoxRequest;
 use App\Models\Student;
 use App\Services\teacherService;
@@ -104,6 +106,50 @@ class TeacherController extends Controller
         }
     }
 
-    public function AddAbsence($absenceData) {}
-    public function AddGrade($gradeData) {}
+    public function AddAbsence(AbsenceRequest $absenceRequest) {
+        try{
+            $validated_data = $absenceRequest->validated();
+            $this->teacherService->AddAbsence($validated_data);
+            return response()->json([
+                'message' => 'absent added',
+                'status' => 'success'
+            ], 200);
+        }catch(ValidationException $e){
+            return response()->json([
+                'message' => 'Validation Error',
+                'error' => $e->errors(),
+                'status' => 'error'
+            ], 422);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
+    public function AddGrade(GradeRequest $gradeRequest) {
+        try{
+            $validated_data = $gradeRequest->validated();
+            $this->teacherService->AddAbsence($validated_data);
+            return response()->json([
+                'message' => 'grade added',
+                'status' => 'success'
+            ], 200);
+        }catch(ValidationException $e){
+            return response()->json([
+                'message' => 'Validation Error',
+                'error' => $e->errors(),
+                'status' => 'error'
+            ], 422);
+
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
 }
