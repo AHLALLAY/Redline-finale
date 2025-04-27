@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ActivityRequest;
 use App\Http\Requests\ExerciceRequest;
 use App\Http\Requests\TextBoxRequest;
-use App\Models\TextBox;
+use App\Models\Student;
 use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
@@ -43,24 +42,25 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function ExercieDone($exerciceId){
-        try{
+    public function ExercieDone($exerciceId)
+    {
+        try {
             $result = $this->teacherService->ExerciceDone($exerciceId);
-            if($result){
+            if ($result) {
                 return response()->json([
-                    'message'=> 'Exercice status has been changed',
-                    'status'=> 'success'
-                ],200);
+                    'message' => 'Exercice status has been changed',
+                    'status' => 'success'
+                ], 200);
             }
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
-                'message'=> 'Unexpected Error',
+                'message' => 'Unexpected Error',
                 'error' => $e->getMessage(),
                 'status' => 'faild'
             ], 500);
         }
     }
-    public function AddActivityToTextBox(TextBox $textBoxRequest)
+    public function AddActivityToTextBox(TextBoxRequest $textBoxRequest)
     {
         try {
             $validated_data = $textBoxRequest->validated();
@@ -73,7 +73,7 @@ class TeacherController extends Controller
             ], 201);
         } catch (ValidationException $e) {
             return  response()->json([
-                'message' => 'Erreur lors lavalidation',
+                'message' => 'Erreur lors la validation',
                 'error' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
@@ -103,7 +103,7 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    
+
     public function AddAbsence($absenceData) {}
     public function AddGrade($gradeData) {}
 }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('birth_place');
             $table->enum('gender', ['Masculin', 'Féminin']);
             $table->enum('level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année']);
+            $table->enum('group',['A', 'B', 'C', 'D']);
             $table->string('parent');
             $table->string('cin');
             $table->string('address');
