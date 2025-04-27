@@ -99,7 +99,7 @@ class AdminRepository implements AdminInterface
     }
 
     // statistics
-    public function CountStuff()
+    public function CountStaff()
     {
         try {
             $all = User::all()->count();

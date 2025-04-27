@@ -18,7 +18,7 @@ interface AdminInterface
     public function DisplayAbsences();
 
     // statistics
-    public function CountStuff();
+    public function CountStaff();
     public function CountStudent();
 
     // auther
