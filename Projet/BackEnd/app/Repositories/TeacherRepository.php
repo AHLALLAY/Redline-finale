@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\TeacherInterface;
 use App\Models\Exercice;
 use App\Models\Student;
+use App\Models\TextBox;
 
 class TeacherRepository implements TeacherInterface
 {
@@ -28,7 +29,13 @@ class TeacherRepository implements TeacherInterface
             throw $e;
         }
     }
-    public function AddActivityToTextBox($activityData) {}
+    public function AddActivityToTextBox($activityData) {
+        try{
+            return TextBox::create($activityData);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
 
     // student
     public function DisplayMyStudents($level, $group) {
