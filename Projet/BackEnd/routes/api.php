@@ -8,16 +8,16 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function() {
-    Route::post('/login/staff','LoginStaff');
-    Route::post('/login/student','LoginStudent');
-    Route::post('/register/staff','RegisterStaff');
-    Route::post('/register/student','RegisterStudent');
-    Route::post('/logout','Logout');
+    Route::post('/login/staff','LoginStaff'); //done
+    Route::post('/login/student','LoginStudent'); //done
+    Route::post('/register/staff','RegisterStaff'); //done
+    Route::post('/register/student','RegisterStudent'); //done
+    Route::post('/logout','Logout'); //done
 });
 
 
 Route::controller(AccountantController::class)->group(function(){
-    Route::post('/accountant/journal/new','AddRecord');
+    Route::post('/accountant/journal/new','AddRecord'); //done
     Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth');
     Route::get('/accountant/journal/all','GetAllRecord');
 });
@@ -25,23 +25,22 @@ Route::controller(AccountantController::class)->group(function(){
 
 Route::controller(AdminController::class)->group(function(){
     // staff
-    Route::get('/admin/staff','DisplayStaff');
-    Route::post('/admin/staff/suspend/{staffId}','SuspendStaff');
-    Route::post('/admin/staff/activat/{staffId}','ActivatStaff');
-    Route::post('/admin/staff/delete/{staffId}','SuspendStaff');
-    Route::post('/admin/class/new','AddClasse');
-    Route::post('/admin/gard/new','AddGarde');
+    Route::get('/admin/staff','DisplayStaff'); //done
+    Route::patch('/admin/staff/suspend/{staffId}','SuspendStaff'); //done
+    Route::patch('/admin/staff/activat/{staffId}','ActivatStaff'); //done
+    Route::patch('/admin/staff/delete/{staffId}','DeleteStaff'); //done
+    Route::post('/admin/class/new','AddClasse'); //done
+    Route::post('/admin/gard/new','AddGarde'); //done
     
     // student
-    Route::get('/admin/student','DisplayStudents');
-    Route::get('/admin/absence','DisplayAbsences');
+    Route::get('/admin/students','DisplayStudents'); //done
+    Route::get('/admin/absences','DisplayAbsences'); //done
     
+    // statistics
+    Route::get('/admin/statistics/staff','CountStaff');
+    Route::get('/admin/statistics/students','CountStudent');
     // auther
-    Route::post('/admin/offre/new','AddOffre');
-});
-
-Route::controller(AbsenceController::class)->group(function (){
-    Route::post('/prof/absence/new','AddAbsence');
+    Route::post('/admin/offer/new','AddOffer'); //done
 });
 
 Route::controller(ActivityController::class)->group(function(){
