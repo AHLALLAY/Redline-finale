@@ -44,6 +44,7 @@ Route::controller(AdminController::class)->group(function(){
 
 Route::controller(TeacherController::class)->group(function(){
     Route::post('/prof/exercice/new','AddExercice');
+    Route::patch('/prof/exercice/done','ExercieDone');
     Route::post('/prof/activity/new','AddActivityToTextBox');
     Route::post('/prof/MyStudents','DisplayMyStudents');
     Route::post('/prof/absence/new','AddAbsence');
