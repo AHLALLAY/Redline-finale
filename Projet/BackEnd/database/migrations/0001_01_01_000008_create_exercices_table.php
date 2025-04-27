@@ -19,7 +19,7 @@ return new class extends Migration
             $table->enum('group',['A','B','C','D'])->default('A');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->boolean('is_done')->default(false);
-            $table->date('done_at')->nullable();
+            $table->timestamp('done_at')->nullable();
             $table->timestamps();
         });
     }
