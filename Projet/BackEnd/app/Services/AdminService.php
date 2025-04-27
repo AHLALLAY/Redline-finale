@@ -22,6 +22,11 @@ class AdminService {
     public function DisplayStudents(){ return $this->adminRepository->DisplayStudents(); }
     public function DisplayAbsences(){ return $this->adminRepository->DisplayAbsences(); }
     
+    // statistics
+    public function CountStaff(){ return $this->adminRepository->CountStaff(); }
+    public function CountStudent(){ return $this->adminRepository->CountStudent(); }
+
+    
     // auther
-    public function AddOffre($offreData){ return $this->adminRepository->AddOffre($offreData); }
+    public function AddOffer($offerData){ return $this->adminRepository->AddOffer($offerData); }
 }

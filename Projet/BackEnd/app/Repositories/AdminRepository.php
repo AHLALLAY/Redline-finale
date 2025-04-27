@@ -7,7 +7,7 @@ use App\Interfaces\AdminInterface;
 use App\Models\Absence;
 use App\Models\Classe;
 use App\Models\Garde;
-use App\Models\Offre;
+use App\Models\Offer;
 use App\Models\Student;
 use App\Models\User;
 
@@ -63,17 +63,19 @@ class AdminRepository implements AdminInterface
             return false;
         }
     }
-    public function AddClasse($classeData) {
-        try{
+    public function AddClasse($classeData)
+    {
+        try {
             return Classe::create($classeData);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
-    public function AddGarde($gardData) {
-        try{
+    public function AddGarde($gardData)
+    {
+        try {
             return Garde::create($gardData);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -96,11 +98,48 @@ class AdminRepository implements AdminInterface
         }
     }
 
-    // auther
-    public function AddOffre($offreData)
+    // statistics
+    public function CountStaff()
     {
         try {
-            Offre::create($offreData);
+            $all = User::all()->count();
+            $teacher = User::where('role', 'Enseignant')->count()->get();
+            $accountant = User::where('role', 'Comptable')->count()->get();
+            $secretary = User::where('role', 'Secrétaire')->count()->get();
+            
+            return [
+                'total' => $all,
+                'teacher'=> $teacher,
+                'accoutant' => $accountant,
+                'Secretary' => $secretary
+            ];
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public function CountStudent()
+    {
+        try {
+            $all = Student::all()->count();
+            $male = Student::where('gender', 'Masculin')->count();
+            $female = Student::where('gender', 'Féminin')->count();
+
+            return [
+                'total' => $all,
+                'male' => $male,
+                'female' => $female
+            ];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    // auther
+    public function AddOffer($offerData)
+    {
+        try {
+            Offer::create($offerData);
             return true;
         } catch (\Exception $e) {
             throw $e;

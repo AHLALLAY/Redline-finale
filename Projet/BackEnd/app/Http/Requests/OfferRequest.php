@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class OffreRequest extends FormRequest
+class OfferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class OffreRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:100'],
             'description'=> ['required', 'string', 'max:1000'],
-            'type'=> ['required', 'in:Stage,Position'],
+            'contrat'=> ['required', 'in:Stage,CDI,CDD'],
         ];
     }
 }

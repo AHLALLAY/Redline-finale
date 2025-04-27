@@ -17,6 +17,10 @@ interface AdminInterface
     public function DisplayStudents();
     public function DisplayAbsences();
 
+    // statistics
+    public function CountStaff();
+    public function CountStudent();
+
     // auther
-    public function AddOffre($offreData);
+    public function AddOffer($offerData);
 }

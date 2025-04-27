@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClasseRequest;
 use App\Http\Requests\GardeRequest;
-use App\Http\Requests\OffreRequest;
+use App\Http\Requests\OfferRequest;
 use App\Services\AdminService;
 use Illuminate\Validation\ValidationException;
 
@@ -191,12 +190,50 @@ class AdminController extends Controller
         }
     }
 
+    // statistics
+    public function CountStaff(){
+        try{
+            $result = $this->adminService->CountStaff();
+            if($result){
+                return response()->json([
+                    'message' => 'Calcule Completed',
+                    'data' => $result,
+                    'status' => 'success'
+                ], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
+
+    public function CountStudent(){
+        try{
+            $result = $this->adminService->CountStudent();
+            if($result){
+                return response()->json([
+                    'message' => 'Calcule Completed',
+                    'data' => $result,
+                    'status' => 'success'
+                ], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
     // auther
-    public function AddOffre(OffreRequest $offreRequest)
+    public function AddOffer(OfferRequest $offerRequest)
     {
         try {
-            $validated_data = $offreRequest->validated();
-            $this->adminService->AddGarde($validated_data);
+            $validated_data = $offerRequest->validated();
+            $this->adminService->AddOffer($validated_data);
             return response()->json([
                 'message' => 'Offre Added',
                 'data' => $validated_data,
