@@ -25,7 +25,7 @@ class ExerciceRequest extends FormRequest
             'title' => ['required', 'string', 'max:100'],
             'description' => ['required', 'string', 'max:200'],
             'classe' => ['required', 'string', 'in:1ére année, 2ème année, 3ème année, 4ème année, 5ème année, 6ème année'],
-            'group' => ['required', 'integer', 'between:1,10'],
+            'group' => ['required', 'string', 'in:A,B,C,D'],
             'teacher_id' => ['required', 'integer', 'exists:users,id,role,Enseignant'],
             'is_done' => ['required', 'boolean'],
             'done_at' => ['nullable', 'date', 'required_if:is_done,true']
