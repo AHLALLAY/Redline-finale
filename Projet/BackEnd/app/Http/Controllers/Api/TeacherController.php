@@ -89,14 +89,7 @@ class TeacherController extends Controller
     public function DisplayMyStudents($level, $group)
     {
         try {
-            $levels = Student::getLevelSlugs($level);
-            if ($levels === 'invalide') {
-                return response()->json([
-                    'message' => 'Niveau non valide',
-                    'status' => 'error'
-                ], 404);
-            }
-            $students = $this->teacherService->DisplayMyStudents($levels, $group);
+            $students = $this->teacherService->DisplayMyStudents($level, $group);
             return response()->json([
                 'message' => 'Étudiants récupérés avec succès',
                 'data' => $students,
