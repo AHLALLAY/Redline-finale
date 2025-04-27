@@ -210,6 +210,24 @@ class AdminController extends Controller
         }
     }
 
+    public function CountStudent(){
+        try{
+            $result = $this->adminService->CountStudent();
+            if($result){
+                return response()->json([
+                    'message' => 'Calcule Completed',
+                    'data' => $result,
+                    'status' => 'success'
+                ], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
     // auther
     public function AddOffer(OfferRequest $offerRequest)
     {
