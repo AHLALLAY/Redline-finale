@@ -20,12 +20,12 @@ class TeacherRepository implements TeacherInterface
     public function ExerciceDone($exerciceId)
     {
         try{
-            $exercice = Exercice::findeOrFail($exerciceId);
+            $exercice = Exercice::findOrFail($exerciceId);
             $exercice->is_done = true;
             $exercice->done_at = now();
             return $exercice->save();
         }catch(\Exception $e){
-            throw $e->getMessage();
+            throw $e;
         }
     }
     public function AddActivityToTextBox($activityData) {}
