@@ -5,7 +5,7 @@ namespace App\Repositories;
 use App\Interfaces\ActivitiesInterface;
 use App\Models\Exercice;
 
-class ActivityRepository implements ActivitiesInterface{
+class TeacherRepository implements ActivitiesInterface{
 
     public function AssignActivity($activity){
         try{
