@@ -190,6 +190,26 @@ class AdminController extends Controller
         }
     }
 
+    // statistics
+    public function CountStaff(){
+        try{
+            $result = $this->adminService->CountStaff();
+            if($result){
+                return response()->json([
+                    'message' => 'Calcule Completed',
+                    'data' => $result,
+                    'status' => 'success'
+                ], 200);
+            }
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'failed'
+            ], 500);
+        }
+    }
+
     // auther
     public function AddOffer(OfferRequest $offerRequest)
     {
