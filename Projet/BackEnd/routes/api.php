@@ -43,6 +43,9 @@ Route::controller(AdminController::class)->group(function(){
 });
 
 Route::controller(TeacherController::class)->group(function(){
-    Route::post('/prof/activity/new', 'AssignActivity');
-    Route::post('/prof/activity/textbox/new', 'AddActivityToTextBox');
+    Route::post('/prof/exercice/new','AddExercice');
+    Route::post('/prof/activity/new','AddActivityToTextBox');
+    Route::post('/prof/MyStudents','DisplayMyStudents');
+    Route::post('/prof/absence/new','AddAbsence');
+    Route::post('/prof/grade/new','AddGrade');
 });
