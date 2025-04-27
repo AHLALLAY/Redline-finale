@@ -2,24 +2,24 @@
 
 namespace App\Repositories;
 
-use App\Interfaces\ActivitiesInterface;
+use App\Interfaces\TeacherInterface;
 use App\Models\Exercice;
 
-class TeacherRepository implements ActivitiesInterface{
-
-    public function AssignActivity($activity){
-        try{
-            return Exercice::create($activity);
-        }catch(\Exception $e){
+class TeacherRepository implements TeacherInterface
+{
+    // activities
+    public function AddExercice($exerciceData)
+    {
+        try {
+            return Exercice::create($exerciceData);
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
-    public function AddActivityToTextBox($activity){
+    public function AddActivityToTextBox($activityData) {}
 
-    }
-
-    public function AddGrades($grades)
-    {
-        
-    }
+    // student
+    public function DisplayMyStudents($students) {}
+    public function AddAbsence($absnceData) {}
+    public function AddGrade($gradeData) {}
 }
