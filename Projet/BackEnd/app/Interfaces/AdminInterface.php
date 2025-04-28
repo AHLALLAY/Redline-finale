@@ -12,7 +12,8 @@ interface AdminInterface
     public function DeleteStaff($staffId);
     public function AddClasse($classeData);
     public function AddGarde($gardData);
-
+    public function AddTimeTable($data);
+    
     // student
     public function DisplayStudents();
     public function DisplayAbsences();

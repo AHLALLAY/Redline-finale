@@ -30,6 +30,7 @@ Route::controller(AdminController::class)->group(function(){
     Route::patch('/admin/staff/delete/{staffId}','DeleteStaff'); //done
     Route::post('/admin/class/new','AddClasse'); //done
     Route::post('/admin/gard/new','AddGarde'); //done
+    Route::post('/admin/timetable/new', 'AddTimeTable');
     
     // student
     Route::get('/admin/students','DisplayStudents'); //done
@@ -47,6 +48,6 @@ Route::controller(TeacherController::class)->group(function(){
     Route::patch('/prof/exercice/done/{exerciceId}','ExercieDone'); //done
     Route::post('/prof/activity/new','AddActivityToTextBox'); //done
     Route::post('/prof/MyStudents/{Levels}_{group}','DisplayMyStudents'); //done
-    Route::post('/prof/absence/new','AddAbsence');
-    Route::post('/prof/grade/new','AddGrade');
+    Route::post('/prof/absence/new','AddAbsence'); //done
+    Route::post('/prof/grade/new','AddGrade'); //done
 });

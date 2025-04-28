@@ -25,7 +25,7 @@ class GradeRequest extends FormRequest
             'student_id' => ['required', 'integer', 'exists:students,id'],
             'grade' => ['required', 'numeric', 'min:0', 'max:20'],
             'controle_N' => ['required', 'integer', 'min:1'],
-            'teacher_id' => ['required', 'integer', 'exists:staff,id']
+            'teacher_id' => ['required', 'integer', 'exists:users,id']
         ];
     }
 }

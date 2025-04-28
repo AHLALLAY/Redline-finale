@@ -9,6 +9,7 @@ use App\Models\Classe;
 use App\Models\Garde;
 use App\Models\Offer;
 use App\Models\Student;
+use App\Models\TimeTable;
 use App\Models\User;
 
 class AdminRepository implements AdminInterface
@@ -79,7 +80,14 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-
+    public function AddTimeTable($data)
+    {
+        try{
+            return TimeTable::create($data);
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
     // student
     public function DisplayStudents()
     {
