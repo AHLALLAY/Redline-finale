@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ClasseRequest;
 use App\Http\Requests\GardeRequest;
 use App\Http\Requests\OfferRequest;
+use App\Http\Requests\TimeTableRequest;
 use App\Services\AdminService;
 use Illuminate\Validation\ValidationException;
 
@@ -142,7 +143,29 @@ class AdminController extends Controller
             ], 500);
         }
     }
+    public function AddTimeTable(TimeTableRequest $timeTableRequest){
+        try{
+            $validated_data = $timeTableRequest->validated();
+            $this->adminService->AddTimeTable($validated_data);
 
+            return response()->json([
+                'message' => 'Time Table created',
+                'status' => 'success'
+            ], 201);
+        } catch (ValidationException $e) {
+            return  response()->json([
+                'message' => 'Erreur lors la validation',
+                'error' => $e->errors(),
+                'status' => 'failed'
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected Error',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
 
     // student
     public function DisplayStudents()
