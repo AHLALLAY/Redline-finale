@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars,FaTimes} from "react-icons/fa"
+import { FaBars, FaTimes } from "react-icons/fa";
 
 function StaffListe() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,13 +15,13 @@ function StaffListe() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col">
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             <div className="inline-flex items-center">
-              <span className="text-5xl font-bold text-green-600 mr-2">Ω</span>
+              <button onClick={comeBack} className="text-5xl font-bold text-green-600 mr-2">Ω</button>
               <h1 className="text-xl md:text-3xl font-bold text-green-600">
                 OMEGA SCHOOL
               </h1>
@@ -58,8 +58,7 @@ function StaffListe() {
           </div>
         )}
       </header>
-      this is a staff inf
-      <button onClick={comeBack}>back</button>
+      
     </div>
   );
 }
