@@ -60,7 +60,34 @@ function StudentListe() {
       </header>
       <div className="ml-5 mt-20">
         <main>
-          
+        <div></div>
+          <table className="flex">
+            <thead>
+              <th>
+                <tr>Nom</tr>
+                <tr>Eemail</tr>
+                <tr>Password</tr>
+                <tr>Date de naissance</tr>
+                <tr>Lieu de naissance</tr>
+                <tr>Sex</tr>
+                <tr>Niveaux</tr>
+                <tr>Group</tr>
+                <tr>Parent</tr>
+                <tr>CIN</tr>
+                <tr>Address</tr>
+                <tr>Telephone</tr>
+                <tr>Date d'inscription</tr>
+                <tr>Date de cloture</tr>
+              </th>
+            </thead>
+            <tbody>
+              <td>
+
+                <tr></tr>
+
+              </td>
+            </tbody>
+          </table>
         </main>
       </div>
     </div>
