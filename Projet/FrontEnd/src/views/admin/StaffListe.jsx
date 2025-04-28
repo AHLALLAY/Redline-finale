@@ -75,6 +75,8 @@ function StaffListe() {
                 <tr>Date d'obtention</tr>
                 <tr>status du suspend</tr>
                 <tr>status dU compte</tr>
+                <tr>Date d'inscription</tr>
+                <tr>Date de cloture</tr>
               </th>
             </thead>
             <tbody>
