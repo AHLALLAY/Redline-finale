@@ -58,7 +58,35 @@ function StaffListe() {
           </div>
         )}
       </header>
-      
+      <div className="ml-5 mt-20">
+        <main>
+          <div></div>
+          <table className="flex">
+            <thead>
+              <th>
+                <tr>Nom</tr>
+                <tr>CIN</tr>
+                <tr>Eemail</tr>
+                <tr>Password</tr>
+                <tr>Role</tr>
+                <tr>Date de naissance</tr>
+                <tr>Telephone</tr>
+                <tr>Diplome</tr>
+                <tr>Date d'obtention</tr>
+                <tr>status du suspend</tr>
+                <tr>status dU compte</tr>
+              </th>
+            </thead>
+            <tbody>
+              <td>
+
+                <tr></tr>
+
+              </td>
+            </tbody>
+          </table>
+        </main>
+      </div>
     </div>
   );
 }
