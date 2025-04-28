@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('level');
             $table->string('group');
             $table->integer('class_room_N');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->string('subject_school');
             $table->timestamps();
         });
