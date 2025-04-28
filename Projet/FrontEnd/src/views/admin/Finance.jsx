@@ -60,6 +60,26 @@ function Finance() {
             </header>
             <div className="ml-5 mt-20">
                 <main>
+                    <div></div>
+                    <table className="flex">
+                        <thead>
+                            <th>
+                                <tr>Lébellé</tr>
+                                <tr>Montant</tr>
+                                <tr>Type</tr>
+                                <tr>Reference</tr>
+                                <tr>Ressource</tr>
+                                <tr>Type de Ressource</tr>
+                                <tr>Date d'opération</tr>
+                            </th>
+                        </thead>
+                        <tbody>
+                            <td>
+                                <tr></tr>
+                            </td>
+                        </tbody>
+                    </table>
+
                 </main>
             </div>
         </div>
