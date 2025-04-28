@@ -15,7 +15,7 @@ function StudentListe() {
   };
 
   return (
-    <div className="flex flex-col">
+    <div>
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-3">
@@ -58,12 +58,14 @@ function StudentListe() {
           </div>
         )}
       </header>
-      <div className="ml-5 mt-20">
+      <div className="mx-5 mt-20">
         <main>
-        <div></div>
-          <table className="flex">
+        <div className="m-5">
+          <button className="p-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700" >Nouvelle élève</button>
+        </div>
+          <table className="min-w-full">
             <thead>
-              <th>
+              <th className="flex justify-between">
                 <tr>Nom</tr>
                 <tr>Email</tr>
                 <tr>Password</tr>
