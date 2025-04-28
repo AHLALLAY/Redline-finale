@@ -1,18 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { FaMoneyBillWave, FaUserTie, FaUserGraduate } from "react-icons/fa";
 
 function DashboardAdmin() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handelLogout = () => {
+  const handleLogout = () => {
     localStorage.clear();
     navigate("/Login/staff");
   };
 
+  const dashboardItems = [
+    { title: "Finance", icon: <FaMoneyBillWave className="text-green-600 text-3xl" />, color: "bg-green-50" },
+    { title: "Personnel", icon: <FaUserTie className="text-blue-600 text-3xl" />, color: "bg-blue-50" },
+    { title: "Élèves", icon: <FaUserGraduate className="text-purple-600 text-3xl" />, color: "bg-purple-50" }
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Header */}
       <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
         <div className="container mx-auto px-4 py-3">
@@ -39,8 +46,8 @@ function DashboardAdmin() {
             {/* Menu Desktop */}
             <nav className="hidden md:flex space-x-8">
               <button
-                onClick={handelLogout}
-                className="bg-green-600 rounded-full px-4 py-2 text-white hover:bg-green-700 transition-colors"
+                onClick={handleLogout}
+                className="bg-green-600 rounded-full px-6 py-2 text-white hover:bg-green-700 transition-colors font-medium flex items-center"
               >
                 Déconnexion
               </button>
@@ -64,7 +71,7 @@ function DashboardAdmin() {
               <button
                 className="w-full text-left py-2 px-4 text-gray-800 hover:bg-gray-100 rounded-md font-medium"
                 onClick={() => {
-                  handelLogout();
+                  handleLogout();
                   setMobileMenuOpen(false);
                 }}
               >
@@ -76,69 +83,44 @@ function DashboardAdmin() {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-1 pt-20"> {/* pt-20 pour compenser le header fixe */}
-        {/* Sidebar */}
-        <aside className="w-64 fixed h-[calc(100vh-5rem)] bg-white shadow-md p-4 overflow-y-auto">
-          <nav className="space-y-2">
-            <a
-              href="#"
-              className="w-full px-4 py-3 text-left rounded-md text-white flex items-center gap-3 bg-blue-600 transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
-              </svg>
-              Tableau de bord
-            </a>
-            <a
-              href="#"
-              className="w-full px-4 py-3 text-left rounded-md hover:bg-blue-100 text-gray-700 flex items-center gap-3 transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Activité
-            </a>
-            <a
-              href="#"
-              className="w-full px-4 py-3 text-left rounded-md hover:bg-blue-100 text-gray-700 flex items-center gap-3 transition-colors"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm2 10a1 1 0 10-2 0v3a1 1 0 102 0v-3zm2-3a1 1 0 011 1v5a1 1 0 11-2 0v-5a1 1 0 011-1zm4-1a1 1 0 10-2 0v7a1 1 0 102 0V8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Notes des Élèves
-            </a>
-          </nav>
-        </aside>
-
-        {/* Main Content Area */}
-        <main className="flex-1 ml-64 p-6 bg-gray-50 min-h-[calc(100vh-5rem)]">
-          {/* Votre contenu principal ici */}
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">Bienvenue sur le tableau de bord</h2>
-            <p className="text-gray-600">Contenu principal de votre application...</p>
+      <div className="flex flex-1 pt-24">
+        {/* Main Content Area*/}
+        <main className="flex-1 p-6 bg-gray-50 min-h-[calc(100vh-5rem)]">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Tableau de bord administrateur</h2>
+          
+          {/* Quick Stats Section */}
+          <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Statistiques rapides</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Enseignants</p>
+                <p className="text-2xl font-bold text-blue-600">24</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <p className="text-sm text-gray-600">Élèves actifs</p>
+                <p className="text-2xl font-bold text-purple-600">320</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Dashboard Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {dashboardItems.map((item, index) => (
+              <div key={index} className={`${item.color} rounded-lg shadow-md overflow-hidden transform transition-all duration-200 hover:shadow-lg hover:scale-105`}>
+                <div className="p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-800">{item.title}</h3>
+                    {item.icon}
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    Gérer les données {item.title.toLowerCase()}
+                  </p>
+                  <button className="w-full bg-white border border-gray-300 rounded-lg py-2 px-4 text-gray-800 font-medium hover:bg-gray-50 transition-colors flex justify-center items-center shadow-sm">
+                    Voir les détails
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </main>
       </div>
