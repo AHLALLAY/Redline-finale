@@ -63,28 +63,26 @@ function StaffListe() {
           <div></div>
           <table className="flex">
             <thead>
-              <th>
-                <tr>Nom</tr>
-                <tr>CIN</tr>
-                <tr>Eemail</tr>
-                <tr>Password</tr>
-                <tr>Role</tr>
-                <tr>Date de naissance</tr>
-                <tr>Telephone</tr>
-                <tr>Diplome</tr>
-                <tr>Date d'obtention</tr>
-                <tr>status du suspend</tr>
-                <tr>status dU compte</tr>
-                <tr>Date d'inscription</tr>
-                <tr>Date de cloture</tr>
-              </th>
+              <tr>
+                <th>Nom</th>
+                <th>CIN</th>
+                <th>Eemail</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Date de naissance</th>
+                <th>Telephone</th>
+                <th>Diplome</th>
+                <th>Date d'obtention</th>
+                <th>status du suspend</th>
+                <th>status dU compte</th>
+                <th>Date d'inscription</th>
+                <th>Date de cloture</th>
+              </tr>
             </thead>
             <tbody>
-              <td>
-
-                <tr></tr>
-
-              </td>
+              <tr>
+                <td></td>
+              </tr>
             </tbody>
           </table>
         </main>
