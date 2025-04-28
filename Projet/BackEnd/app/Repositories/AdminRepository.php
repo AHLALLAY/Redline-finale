@@ -79,7 +79,10 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-
+    public function AddTimeTable($data)
+    {
+        
+    }
     // student
     public function DisplayStudents()
     {

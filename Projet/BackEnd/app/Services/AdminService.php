@@ -16,7 +16,7 @@ class AdminService {
     public function DeleteStaff($staffId){ return $this->adminRepository->DeleteStaff($staffId); }
     public function AddClasse($classeData){ return $this->adminRepository->AddClasse($classeData); }
     public function AddGarde($gardData){ return $this->adminRepository->AddGarde($gardData); }
-
+    public function AddTimeTable($data){ return $this->adminRepository->AddTimeTable($data); }
     
     // student
     public function DisplayStudents(){ return $this->adminRepository->DisplayStudents(); }

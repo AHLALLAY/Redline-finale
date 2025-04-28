@@ -142,7 +142,9 @@ class AdminController extends Controller
             ], 500);
         }
     }
-
+    public function AddTimeTable(){
+        
+    }
 
     // student
     public function DisplayStudents()
