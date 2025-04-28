@@ -11,6 +11,8 @@ import ProtecteAdminDashboard from './components/Protectors/ProtecteAdminDashboa
 import ProtecteEnseignantDashboard from './components/Protectors/ProtecteEnseignantDashboard.jsx'
 import ProtecteComptableDashboard from './components/Protectors/ProtecteComptableDashboard.jsx'
 import Transaction from './views/comptable/Transaction.jsx'
+import StaffListe from './views/admin/StaffListe.jsx'
+import StudentListe from './views/admin/StudentListe.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,9 +23,24 @@ createRoot(document.getElementById('root')).render(
         <Route path="/admin/dashboard" element={
             <ProtecteAdminDashboard>
               <DashboardAdmin />
+              
             </ProtecteAdminDashboard>
           }
         />
+        
+        <Route path="/admin/staff" element={
+            <ProtecteAdminDashboard>
+              <StaffListe />
+            </ProtecteAdminDashboard>
+          }
+        />
+        <Route path="/admin/student" element={
+            <ProtecteAdminDashboard>
+              <StudentListe />
+            </ProtecteAdminDashboard>
+          }
+        />
+
         <Route path="/enseignant/dashboard" element={
             <ProtecteEnseignantDashboard>
               <DashboardEnseingnant />
