@@ -16,8 +16,8 @@ class UsersSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Admin User',
             'cin' => 'A123456',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('123456789'),
             'role' => 'Admin',
             'birth_date' => '1985-03-15',
             'phone' => '0600000001',
@@ -31,8 +31,8 @@ class UsersSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Comptable User',
             'cin' => 'B123456',
-            'email' => 'comptable@example.com',
-            'password' => Hash::make('password'),
+            'email' => 'comptable@gmail.com',
+            'password' => Hash::make('123456789'),
             'role' => 'Comptable',
             'birth_date' => '1988-07-25',
             'phone' => '0600000002',
@@ -46,8 +46,8 @@ class UsersSeeder extends Seeder
         DB::table('users')->insert([
             'name' => 'Secrétaire User',
             'cin' => 'C123456',
-            'email' => 'secretaire@example.com',
-            'password' => Hash::make('password'),
+            'email' => 'secretaire@gmail.com',
+            'password' => Hash::make('123456789'),
             'role' => 'Secrétaire',
             'birth_date' => '1990-11-10',
             'phone' => '0600000003',
@@ -67,8 +67,8 @@ class UsersSeeder extends Seeder
             DB::table('users')->insert([
                 'name' => "Enseignant $subject",
                 'cin' => 'E' . str_pad($index + 1, 6, '0', STR_PAD_LEFT),
-                'email' => strtolower($subject) . '@example.com',
-                'password' => Hash::make('password'),
+                'email' => strtolower($subject) . '@gmail.com',
+                'password' => Hash::make('123456789'),
                 'role' => 'Enseignant',
                 'birth_date' => Carbon::now()->subYears(rand(30, 60))->subDays(rand(1, 365))->format('Y-m-d'),
                 'phone' => '06' . str_pad($index + 10, 8, '0', STR_PAD_LEFT),
