@@ -66,7 +66,7 @@ function StaffListe() {
               <tr>
                 <th>Nom</th>
                 <th>CIN</th>
-                <th>Eemail</th>
+                <th>Email</th>
                 <th>Password</th>
                 <th>Role</th>
                 <th>Date de naissance</th>

@@ -65,7 +65,7 @@ function StudentListe() {
             <thead>
               <th>
                 <tr>Nom</tr>
-                <tr>Eemail</tr>
+                <tr>Email</tr>
                 <tr>Password</tr>
                 <tr>Date de naissance</tr>
                 <tr>Lieu de naissance</tr>
