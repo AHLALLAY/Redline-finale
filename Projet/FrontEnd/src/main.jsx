@@ -12,6 +12,7 @@ import ProtecteEnseignantDashboard from './components/Protectors/ProtecteEnseign
 import ProtecteComptableDashboard from './components/Protectors/ProtecteComptableDashboard.jsx'
 import Transaction from './views/comptable/Transaction.jsx'
 import StaffListe from './views/admin/StaffListe.jsx'
+import StudentListe from './views/admin/StudentListe.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -30,6 +31,12 @@ createRoot(document.getElementById('root')).render(
         <Route path="/admin/staff" element={
             <ProtecteAdminDashboard>
               <StaffListe />
+            </ProtecteAdminDashboard>
+          }
+        />
+        <Route path="/admin/student" element={
+            <ProtecteAdminDashboard>
+              <StudentListe />
             </ProtecteAdminDashboard>
           }
         />
