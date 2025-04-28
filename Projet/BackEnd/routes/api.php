@@ -30,7 +30,7 @@ Route::controller(AdminController::class)->group(function(){
     Route::patch('/admin/staff/delete/{staffId}','DeleteStaff'); //done
     Route::post('/admin/class/new','AddClasse'); //done
     Route::post('/admin/gard/new','AddGarde'); //done
-    Route::post('/admin/timetable/new', 'AddTimeTable');
+    Route::post('/admin/timetable/new', 'AddTimeTable'); //done
     
     // student
     Route::get('/admin/students','DisplayStudents'); //done
