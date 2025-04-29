@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FaBars,
@@ -10,352 +10,252 @@ import {
   FaFemale,
 } from "react-icons/fa";
 
+// Liste des mois en français
+const mois = [
+  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+// Options du menu principal
+const menu_dashboard = [
+  {
+    id: "finance",
+    titre: "Finance",
+    icone: <FaMoneyBillWave className="text-orange-600 text-3xl" />,
+    couleur: "bg-orange-50 hover:bg-orange-100",
+    chemin: "/admin/finance",
+    description: "Gérer les finances",
+  },
+  {
+    id: "personnel",
+    titre: "Personnel",
+    icone: <FaUserTie className="text-orange-600 text-3xl" />,
+    couleur: "bg-orange-50 hover:bg-orange-100",
+    chemin: "/admin/staff",
+    description: "Gérer le personnel",
+  },
+  {
+    id: "eleves",
+    titre: "Élèves",
+    icone: <FaUserGraduate className="text-orange-600 text-3xl" />,
+    couleur: "bg-orange-50 hover:bg-orange-100",
+    chemin: "/admin/student",
+    description: "Gérer les élèves",
+  },
+];
+
+// Composant principal Dashboard
 function DashboardAdmin() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [staffData, setStaffData] = useState(null);
-  const [studentData, setStudentData] = useState(null);
-  const [financeData, setFinanceData] = useState(null);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [hoverItem, setHoverItem] = useState(null);
+  // États pour gérer l'interface
+  const [menuMobileOuvert, setMenuMobileOuvert] = useState(false);
+  const [elementSurvole, setElementSurvole] = useState(null);
+  const [message, setMessage] = useState({ type: "", texte: "" });
+  const [chargement, setChargement] = useState(true);
+
+  // États pour les données
+  const [donneePersonnel, setDonneePersonnel] = useState(null);
+  const [donneeEleves, setDonneeEleves] = useState(null);
+  const [donneeFinance, setDonneeFinance] = useState(null);
+  const [moisSelectionne, setMoisSelectionne] = useState(new Date().getMonth() + 1);
+
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/Login/staff");
+  // Fonction pour afficher un message temporaire
+  const afficherMessage = (type, texte) => {
+    setMessage({ type, texte });
+    setTimeout(() => {
+      setMessage({ type: "", texte: "" });
+    }, 3000);
   };
 
-  const getStats = async () => {
+  // Fonction pour récupérer les statistiques
+  const chargerStatistiques = useCallback( async (m = moisSelectionne) => {
     try {
-      // Fetch staff statistics
-      const staffResponse = await fetch(
-        "http://127.0.0.1:8000/api/admin/statistics/staff"
-      );
-      if (staffResponse.ok) {
-        const staffResult = await staffResponse.json();
-        setStaffData(staffResult);
+      setChargement(true);
+
+      // Récupération des données du personnel
+      const reponsePersonnel = await fetch("http://127.0.0.1:8000/api/admin/statistics/staff");
+      if (reponsePersonnel.ok) {
+        const resultPersonnel = await reponsePersonnel.json();
+        setDonneePersonnel(resultPersonnel);
       }
 
-      const studentsResponse = await fetch(
-        "http://127.0.0.1:8000/api/admin/statistics/students"
-      );
-      if (studentsResponse.ok) {
-        const studentsResult = await studentsResponse.json();
-        setStudentData(studentsResult);
+      // Récupération des données des élèves
+      const reponseEleves = await fetch("http://127.0.0.1:8000/api/admin/statistics/students");
+      if (reponseEleves.ok) {
+        const resultEleves = await reponseEleves.json();
+        setDonneeEleves(resultEleves);
       }
-      const financeResponse = await fetch(
-        "http://127.0.0.1:8000/api/accountant/journal/statistics/4",
+
+      // Récupération des données financières
+      const reponseFinance = await fetch(
+        `http://127.0.0.1:8000/api/accountant/journal/statistics/${m}`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
-      if (financeResponse.ok) {
-        const financeResult = await financeResponse.json();
 
-        setFinanceData(parseInt(financeResult.data.produit.stats.total - financeResult.data.charges.stats.total));
+      if (reponseFinance.ok) {
+        const resultFinance = await reponseFinance.json();
+        setDonneeFinance({
+          produit: resultFinance.data.produit,
+          charges: resultFinance.data.charges,
+          solde: (
+            resultFinance.data.produit.stats.total -
+            resultFinance.data.charges.stats.total
+          ).toFixed(2)
+        });
+        afficherMessage("succes", `Données financières mises à jour pour ${mois[m - 1]}`);
       }
-    } catch (err) {
-      setError(err.message);
+    } catch (erreur) {
+      afficherMessage("erreur", erreur.message);
     } finally {
-      setLoading(false);
+      setChargement(false);
     }
-  };
+  }, [moisSelectionne]);
 
-  useEffect(() => {
-    getStats();
-  }, []);
+// Charger les données au chargement du composant
+useEffect(() => {
+  chargerStatistiques();
+}, [chargerStatistiques]);
 
-  const dashboardItems = [
-    {
-      id: "finance",
-      title: "Finance",
-      icon: <FaMoneyBillWave className="text-green-600 text-3xl" />,
-      color: "bg-green-50",
-      onClick: () => navigate("/admin/finance"),
-    },
-    {
-      id: "personnel",
-      title: "Personnel",
-      icon: <FaUserTie className="text-blue-600 text-3xl" />,
-      color: "bg-blue-50",
-      onClick: () => navigate("/admin/staff"),
-    },
-    {
-      id: "eleves",
-      title: "Élèves",
-      icon: <FaUserGraduate className="text-purple-600 text-3xl" />,
-      color: "bg-purple-50",
-      onClick: () => navigate("/admin/student"),
-      hasHoverStats: true,
-    },
-  ];
+// Fonction de déconnexion
+const deconnexion = () => {
+  localStorage.clear();
+  navigate("/Login/staff");
+};
 
-  const months = [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juiller",
-    "Aoute",
-    "September",
-    "October",
-    "Nouvember",
-    "December",
-  ];
+// Fonction pour changer le mois sélectionné
+const changerMois = (e) => {
+  const mois = parseInt(e.target.value);
+  setMoisSelectionne(mois);
+  chargerStatistiques(mois);
+};
 
-  return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Header */}
-      <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            <div className="inline-flex items-center">
-              <span className="text-5xl font-bold text-green-600 mr-2">Ω</span>
-              <h1 className="text-xl md:text-3xl font-bold text-green-600">
-                OMEGA SCHOOL
-              </h1>
-            </div>
-
-            <nav className="hidden md:flex space-x-8">
-              <button
-                onClick={handleLogout}
-                className="bg-green-600 rounded-full px-6 py-2 text-white hover:bg-green-700 transition-colors font-medium"
-              >
-                Déconnexion
-              </button>
-            </nav>
-
-            <button
-              className="md:hidden text-gray-800"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
+return (
+  <div className="min-h-screen flex flex-col bg-gradient-to-b from-orange-50 to-orange-100">
+    {/* En-tête */}
+    <header className="fixed w-full top-0 z-50 bg-orange-500 shadow-md">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          <div className="inline-flex items-center">
+            <span className="text-5xl font-bold text-white mr-2">Ω</span>
+            <h1 className="text-xl md:text-3xl font-bold text-white">
+              OMEGA SCHOOL
+            </h1>
           </div>
-        </div>
 
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100 p-4">
+          {/* Menu pour écrans moyens et grands */}
+          <nav className="hidden md:flex space-x-8">
             <button
-              onClick={handleLogout}
-              className="w-full bg-green-600 rounded-full px-6 py-2 text-white hover:bg-green-700 transition-colors font-medium"
+              onClick={deconnexion}
+              className="bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2 text-white transition-colors font-medium shadow hover:shadow-md"
             >
               Déconnexion
             </button>
+          </nav>
+
+          {/* Bouton menu mobile */}
+          <button
+            className="md:hidden text-white"
+            onClick={() => setMenuMobileOuvert(!menuMobileOuvert)}
+            aria-label="Menu"
+          >
+            {menuMobileOuvert ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Menu mobile */}
+      {menuMobileOuvert && (
+        <div className="md:hidden bg-orange-400 p-4">
+          <button
+            onClick={deconnexion}
+            className="w-full bg-red-500 hover:bg-red-600 rounded-lg px-6 py-2 text-white transition-colors font-medium"
+          >
+            Déconnexion
+          </button>
+        </div>
+      )}
+    </header>
+
+    {/* Contenu principal */}
+    <div className="flex flex-1 pt-24">
+      <main className="flex-1 p-4 md:p-6 min-h-[calc(100vh-5rem)]">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">
+          Tableau de bord
+        </h2>
+
+        {/* Affichage des messages */}
+        {message.type === "erreur" && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg shadow">
+            <p>{message.texte}</p>
           </div>
         )}
-      </header>
 
-      {/* Main content */}
-      <div className="flex flex-1 pt-24">
-        <main className="flex-1 p-6 bg-gray-50 min-h-[calc(100vh-5rem)]">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Tableau de bord
-          </h2>
+        {message.type === "succes" && (
+          <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded-lg shadow">
+            <p>{message.texte}</p>
+          </div>
+        )}
 
-          {error && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
-              <p>{error}</p>
+        {/* Section des statistiques */}
+        <div className="mb-8 bg-white p-4 md:p-6 rounded-lg shadow-md">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Statistiques Rapides</h3>
+
+          {chargement ? (
+            <div className="flex justify-center p-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600"></div>
             </div>
-          )}
-
-          {/* Statistics section */}
-          <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Effectif</h3>
-
-            {loading ? (
-              <div className="flex justify-center p-8">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
-                {/* Finance statistics */}
-                <div
-                  className="bg-green-50 p-4 rounded-lg"
-                  onMouseEnter={() => setHoverItem("finance")}
-                  onMouseLeave={() => setHoverItem(null)}
-                >
-                  <div className="flex justify-between">
-                    <p className="text-sm text-gray-600">Finance</p>
-                    <select name="" id="" className="rounded text-gray-600 focus-ring:none border-none bg-green-50">
-                      <option value="default">month</option>
-                      {months.map((m) => {
-                        <option value={m.key}>{m.value}</option>;
-                      })}
-                    </select>
-                  </div>
-                  <p className="text-2xl font-bold text-green-600">
-                    {financeData || "Non disponible"}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 relative">
+              {/* Statistiques financières */}
+              <div className="bg-orange-50 p-4 md:p-6 rounded-lg shadow-sm hover:shadow transition-all relative">
+                <div className="flex justify-between items-center w-full mb-2">
+                  <p className="text-sm font-medium text-gray-700">Finance</p>
+                  <select
+                    className="z-50 rounded text-gray-600 bg-orange-100 text-sm"
+                    value={moisSelectionne}
+                    onChange={changerMois}
+                  >
+                    {mois.map((mois, index) => (
+                      <option key={index} value={index + 1}>{mois}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-center">
+                  <FaMoneyBillWave className="text-orange-600 text-2xl mr-3" />
+                  <p className="text-2xl font-bold text-orange-600">
+                    {donneeFinance?.solde !== undefined ? `${donneeFinance.solde} Dh` : "N/A"}
                   </p>
-
-                  {/* Hover stats popup fro finance */}
-                  {hoverItem == "finance" && financeData?.data && (
-                    <div>this is a hover</div>
-                  )}
                 </div>
 
-                {/* Staff total statistics */}
-                <div
-                  className="bg-blue-50 p-4 rounded-lg relative"
-                  onMouseEnter={() => setHoverItem("personnel")}
-                  onMouseLeave={() => setHoverItem(null)}
-                >
-                  <p className="text-sm text-gray-600">Personnel total</p>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {staffData?.data?.total || "Non disponible"}
-                  </p>
+                {/* Détails financiers (visible au survol) */}
+                {elementSurvole === "finance" && (
+                  <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-orange-200">
+                    <h4 className="text-lg font-bold text-orange-600 mb-3">
+                      Détails Financiers - {mois[moisSelectionne - 1]}
+                    </h4>
 
-                  {/* Hover stats popup for staff */}
-                  {hoverItem === "personnel" && staffData?.data && (
-                    <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-gray-200">
-                      <h4 className="text-lg font-bold text-blue-600 mb-3">
-                        Répartition du personnel
-                      </h4>
-
-                      <div className="space-y-3">
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-gray-700">
-                              Administrateurs
-                            </span>
-                            <span className="font-bold">
-                              {staffData.data.admin || 0}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-700 h-2 rounded-full"
-                              style={{
-                                width: `${
-                                  staffData.data.total
-                                    ? (staffData.data.admin /
-                                        staffData.data.total) *
-                                      100
-                                    : 0
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-gray-700">Enseignants</span>
-                            <span className="font-bold">
-                              {staffData.data.teacher || 0}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full"
-                              style={{
-                                width: `${
-                                  staffData.data.total
-                                    ? (staffData.data.teacher /
-                                        staffData.data.total) *
-                                      100
-                                    : 0
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-gray-700">Comptables</span>
-                            <span className="font-bold">
-                              {staffData.data.accoutant || 0}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-500 h-2 rounded-full"
-                              style={{
-                                width: `${
-                                  staffData.data.total
-                                    ? (staffData.data.accoutant /
-                                        staffData.data.total) *
-                                      100
-                                    : 0
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-
-                        <div>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-gray-700">Secrétaires</span>
-                            <span className="font-bold">
-                              {staffData.data.Secretary || 0}
-                            </span>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-400 h-2 rounded-full"
-                              style={{
-                                width: `${
-                                  staffData.data.total
-                                    ? (staffData.data.Secretary /
-                                        staffData.data.total) *
-                                      100
-                                    : 0
-                                }%`,
-                              }}
-                            ></div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Student statistics with hover */}
-                <div
-                  className="bg-purple-50 p-4 rounded-lg relative"
-                  onMouseEnter={() => setHoverItem("eleves")}
-                  onMouseLeave={() => setHoverItem(null)}
-                >
-                  <p className="text-sm text-gray-600">Élèves</p>
-                  <p className="text-2xl font-bold text-purple-600">
-                    {studentData?.data?.total || "Non disponible"}
-                  </p>
-
-                  {/* Hover stats popup for students */}
-                  {hoverItem === "eleves" && studentData?.data && (
-                    <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-gray-200">
-                      <h4 className="text-lg font-bold text-purple-600 mb-3">
-                        Répartition des élèves
-                      </h4>
-
-                      <div className="mb-3">
+                    <div className="space-y-3">
+                      <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="flex items-center text-blue-600">
-                            <FaMale className="mr-2" /> Garçons
-                          </span>
-                          <span className="font-bold">
-                            {studentData.data.male || 0}
+                          <span className="text-green-600 font-medium">Produits</span>
+                          <span className="font-bold text-green-600">
+                            {donneeFinance.produit?.stats?.total !== undefined
+                              ? `${donneeFinance.produit.stats.total} Dh`
+                              : "N/A"}
                           </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-blue-600 h-2 rounded-full"
+                            className="bg-green-500 h-2 rounded-full"
                             style={{
-                              width: `${
-                                studentData.data.total
-                                  ? (studentData.data.male /
-                                      studentData.data.total) *
-                                    100
-                                  : 0
-                              }%`,
+                              width: `${donneeFinance.produit?.stats?.total && donneeFinance.charges?.stats?.total
+                                ? (donneeFinance.produit.stats.total /
+                                  (donneeFinance.produit.stats.total + donneeFinance.charges.stats.total)) * 100
+                                : 0}%`
                             }}
                           ></div>
                         </div>
@@ -363,60 +263,247 @@ function DashboardAdmin() {
 
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="flex items-center text-pink-600">
-                            <FaFemale className="mr-2" /> Filles
-                          </span>
-                          <span className="font-bold">
-                            {studentData.data.female || 0}
+                          <span className="text-red-600 font-medium">Charges</span>
+                          <span className="font-bold text-red-600">
+                            {donneeFinance.charges?.stats?.total !== undefined
+                              ? `${donneeFinance.charges.stats.total} Dh`
+                              : "N/A"}
                           </span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
                           <div
-                            className="bg-pink-700 h-2 rounded-full"
+                            className="bg-red-500 h-2 rounded-full"
                             style={{
-                              width: `${
-                                studentData.data.total
-                                  ? (studentData.data.female /
-                                      studentData.data.total) *
-                                    100
-                                  : 0
-                              }%`,
+                              width: `${donneeFinance.charges?.stats?.total && donneeFinance.produit?.stats?.total
+                                ? (donneeFinance.charges.stats.total /
+                                  (donneeFinance.produit.stats.total + donneeFinance.charges.stats.total)) * 100
+                                : 0}%`
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-gray-200">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-700 font-medium">Solde</span>
+                          <span className={`font-bold ${donneeFinance.solde >= 0 ? 'text-green-600' : 'text-red-600'
+                            }`}>
+                            {donneeFinance.solde !== undefined ? `${donneeFinance.solde} Dh` : "N/A"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Zone cliquable pour le survol */}
+                <div
+                  className="absolute inset-0 cursor-pointer"
+                  onMouseEnter={() => setElementSurvole("finance")}
+                  onMouseLeave={() => setElementSurvole(null)}
+                />
+              </div>
+
+              {/* Statistiques du personnel */}
+              <div className="bg-orange-50 p-4 md:p-6 rounded-lg shadow-sm hover:shadow transition-all relative">
+                <p className="text-sm font-medium text-gray-700 mb-2">Personnel</p>
+                <div className="flex items-center">
+                  <FaUserTie className="text-orange-600 text-2xl mr-3" />
+                  <p className="text-2xl font-bold text-orange-600">
+                    {donneePersonnel?.data?.total || "N/A"}
+                  </p>
+                </div>
+
+                {/* Détails personnel (visible au survol) */}
+                {elementSurvole === "personnel" && (
+                  <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-orange-200">
+                    <h4 className="text-lg font-bold text-orange-600 mb-3">
+                      Répartition du personnel
+                    </h4>
+
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-gray-700">Administrateurs</span>
+                          <span className="font-bold text-orange-700">
+                            {donneePersonnel.data.admin || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-orange-700 h-2 rounded-full"
+                            style={{
+                              width: `${donneePersonnel.data.total
+                                ? (donneePersonnel.data.admin / donneePersonnel.data.total) * 100
+                                : 0}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-gray-700">Enseignants</span>
+                          <span className="font-bold text-orange-600">
+                            {donneePersonnel.data.teacher || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-orange-600 h-2 rounded-full"
+                            style={{
+                              width: `${donneePersonnel.data.total
+                                ? (donneePersonnel.data.teacher / donneePersonnel.data.total) * 100
+                                : 0}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-gray-700">Comptables</span>
+                          <span className="font-bold text-orange-500">
+                            {donneePersonnel.data.accoutant || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-orange-500 h-2 rounded-full"
+                            style={{
+                              width: `${donneePersonnel.data.total
+                                ? (donneePersonnel.data.accoutant / donneePersonnel.data.total) * 100
+                                : 0}%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-gray-700">Secrétaires</span>
+                          <span className="font-bold text-orange-400">
+                            {donneePersonnel.data.Secretary || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-orange-400 h-2 rounded-full"
+                            style={{
+                              width: `${donneePersonnel.data.total
+                                ? (donneePersonnel.data.Secretary / donneePersonnel.data.total) * 100
+                                : 0}%`,
                             }}
                           ></div>
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+                  </div>
+                )}
 
-          {/* Dashboard menu items */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {dashboardItems.map((item) => (
-              <div
-                key={item.id}
-                className={`${item.color} rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer`}
-                onClick={item.onClick}
-              >
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold text-gray-800">{item.title}</h3>
-                  {item.icon}
-                </div>
-                <p className="text-gray-600 mb-4">
-                  Gérer les {item.title.toLowerCase()}
-                </p>
-                <button className="w-full bg-white border border-gray-300 rounded-lg py-2 px-4 text-gray-800 font-medium hover:bg-gray-50">
-                  Voir détails
-                </button>
+                {/* Zone cliquable pour le survol */}
+                <div
+                  className="absolute inset-0 cursor-pointer"
+                  onMouseEnter={() => setElementSurvole("personnel")}
+                  onMouseLeave={() => setElementSurvole(null)}
+                />
               </div>
-            ))}
-          </div>
-        </main>
-      </div>
+
+              {/* Statistiques des élèves */}
+              <div className="bg-orange-50 p-4 md:p-6 rounded-lg shadow-sm hover:shadow transition-all relative">
+                <p className="text-sm font-medium text-gray-700 mb-2">Élèves</p>
+                <div className="flex items-center">
+                  <FaUserGraduate className="text-orange-600 text-2xl mr-3" />
+                  <p className="text-2xl font-bold text-orange-600">
+                    {donneeEleves?.data?.total || "N/A"}
+                  </p>
+                </div>
+
+                {/* Détails élèves (visible au survol) */}
+                {elementSurvole === "eleves" && (
+                  <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-orange-200">
+                    <h4 className="text-lg font-bold text-orange-600 mb-3">
+                      Répartition des élèves
+                    </h4>
+
+                    <div className="mb-3">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="flex items-center text-blue-600">
+                          <FaMale className="mr-2" /> Garçons
+                        </span>
+                        <span className="font-bold text-blue-600">
+                          {donneeEleves.data.male || 0}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
+                          style={{
+                            width: `${donneeEleves.data.total
+                              ? (donneeEleves.data.male / donneeEleves.data.total) * 100
+                              : 0}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="flex items-center text-pink-600">
+                          <FaFemale className="mr-2" /> Filles
+                        </span>
+                        <span className="font-bold text-pink-600">
+                          {donneeEleves.data.female || 0}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-pink-500 h-2 rounded-full"
+                          style={{
+                            width: `${donneeEleves.data.total
+                              ? (donneeEleves.data.female / donneeEleves.data.total) * 100
+                              : 0}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Zone cliquable pour le survol */}
+                <div
+                  className="absolute inset-0 cursor-pointer"
+                  onMouseEnter={() => setElementSurvole("eleves")}
+                  onMouseLeave={() => setElementSurvole(null)}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Menu du tableau de bord */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          {menu_dashboard.map((item) => (
+            <div
+              key={item.id}
+              className={`${item.couleur} rounded-lg shadow-md p-4 md:p-6 hover:shadow-lg transition-all transform hover:-translate-y-1 cursor-pointer`}
+              onClick={() => navigate(item.chemin)}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-800">{item.titre}</h3>
+                {item.icone}
+              </div>
+              <p className="text-gray-600 mb-4">{item.description}</p>
+              <button className="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2 px-4 font-medium transition-colors shadow hover:shadow-md">
+                Voir détails
+              </button>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
-  );
+  </div>
+);
 }
 
 export default DashboardAdmin;
