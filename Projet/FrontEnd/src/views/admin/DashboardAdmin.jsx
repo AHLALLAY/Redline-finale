@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaMoneyBillWave, FaUserTie, FaUserGraduate } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaMoneyBillWave,
+  FaUserTie,
+  FaUserGraduate,
+  FaMale,
+  FaFemale,
+} from "react-icons/fa";
 
 function DashboardAdmin() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [staffData, setStaffData] = useState(null);
   const [studentData, setStudentData] = useState(null);
+  const [financeData, setFinanceData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [hoverItem, setHoverItem] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -18,30 +28,37 @@ function DashboardAdmin() {
   const getStats = async () => {
     try {
       // Fetch staff statistics
-      const staffResponse = await fetch("http://127.0.0.1:8000/api/admin/statistics/staff");
-      if (!staffResponse.ok) {
-        throw new Error(`Erreur personnel: ${staffResponse.status}`);
+      const staffResponse = await fetch(
+        "http://127.0.0.1:8000/api/admin/statistics/staff"
+      );
+      if (staffResponse.ok) {
+        const staffResult = await staffResponse.json();
+        setStaffData(staffResult);
       }
-      const staffResult = await staffResponse.json();
-      
-      // Fetch student statistics
-      const studentsResponse = await fetch("http://127.0.0.1:8000/api/admin/statistics/students");
-      if (!studentsResponse.ok) {
-        throw new Error(`Erreur élèves: ${studentsResponse.status}`);
+
+      const studentsResponse = await fetch(
+        "http://127.0.0.1:8000/api/admin/statistics/students"
+      );
+      if (studentsResponse.ok) {
+        const studentsResult = await studentsResponse.json();
+        setStudentData(studentsResult);
       }
-      const studentsResult = await studentsResponse.json();
-      
-      // Set the state with the full response objects
-      setStaffData(staffResult);
-      setStudentData(studentsResult);
-      
-      // Debug logs
-      console.log("Staff data:", staffResult);
-      console.log("Student data:", studentsResult);
-      
+      const financeResponse = await fetch(
+        "http://127.0.0.1:8000/api/accountant/journal/statistics/4",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (financeResponse.ok) {
+        const financeResult = await financeResponse.json();
+
+        setFinanceData(parseInt(financeResult.data.produit.stats.total - financeResult.data.charges.stats.total));
+      }
     } catch (err) {
       setError(err.message);
-      console.error("Erreur:", err);
     } finally {
       setLoading(false);
     }
@@ -51,26 +68,44 @@ function DashboardAdmin() {
     getStats();
   }, []);
 
-  // Create dashboard menu items
   const dashboardItems = [
-    { 
-      title: "Finance", 
-      icon: <FaMoneyBillWave className="text-green-600 text-3xl" />, 
+    {
+      id: "finance",
+      title: "Finance",
+      icon: <FaMoneyBillWave className="text-green-600 text-3xl" />,
       color: "bg-green-50",
-      onClick: () => navigate("/admin/finance")
+      onClick: () => navigate("/admin/finance"),
     },
-    { 
-      title: "Personnel", 
-      icon: <FaUserTie className="text-blue-600 text-3xl" />, 
+    {
+      id: "personnel",
+      title: "Personnel",
+      icon: <FaUserTie className="text-blue-600 text-3xl" />,
       color: "bg-blue-50",
-      onClick: () => navigate("/admin/personnel")
+      onClick: () => navigate("/admin/staff"),
     },
-    { 
-      title: "Élèves", 
-      icon: <FaUserGraduate className="text-purple-600 text-3xl" />, 
+    {
+      id: "eleves",
+      title: "Élèves",
+      icon: <FaUserGraduate className="text-purple-600 text-3xl" />,
       color: "bg-purple-50",
-      onClick: () => navigate("/admin/eleves")
+      onClick: () => navigate("/admin/student"),
+      hasHoverStats: true,
     },
+  ];
+
+  const months = [
+    "Janvier",
+    "Février",
+    "Mars",
+    "Avril",
+    "Mai",
+    "Juin",
+    "Juiller",
+    "Aoute",
+    "September",
+    "October",
+    "Nouvember",
+    "December",
   ];
 
   return (
@@ -81,7 +116,9 @@ function DashboardAdmin() {
           <div className="flex justify-between items-center">
             <div className="inline-flex items-center">
               <span className="text-5xl font-bold text-green-600 mr-2">Ω</span>
-              <h1 className="text-xl md:text-3xl font-bold text-green-600">OMEGA SCHOOL</h1>
+              <h1 className="text-xl md:text-3xl font-bold text-green-600">
+                OMEGA SCHOOL
+              </h1>
             </div>
 
             <nav className="hidden md:flex space-x-8">
@@ -102,7 +139,7 @@ function DashboardAdmin() {
             </button>
           </div>
         </div>
-        
+
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-gray-100 p-4">
@@ -119,9 +156,10 @@ function DashboardAdmin() {
       {/* Main content */}
       <div className="flex flex-1 pt-24">
         <main className="flex-1 p-6 bg-gray-50 min-h-[calc(100vh-5rem)]">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Tableau de bord</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            Tableau de bord
+          </h2>
 
-          {/* Error display */}
           {error && (
             <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6">
               <p>{error}</p>
@@ -130,67 +168,235 @@ function DashboardAdmin() {
 
           {/* Statistics section */}
           <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Statistiques</h3>
-            
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Effectif</h3>
+
             {loading ? (
               <div className="flex justify-center p-8">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+                {/* Finance statistics */}
+                <div
+                  className="bg-green-50 p-4 rounded-lg"
+                  onMouseEnter={() => setHoverItem("finance")}
+                  onMouseLeave={() => setHoverItem(null)}
+                >
+                  <div className="flex justify-between">
+                    <p className="text-sm text-gray-600">Finance</p>
+                    <select name="" id="" className="rounded text-gray-600 focus-ring:none border-none bg-green-50">
+                      <option value="default">month</option>
+                      {months.map((m) => {
+                        <option value={m.key}>{m.value}</option>;
+                      })}
+                    </select>
+                  </div>
+                  <p className="text-2xl font-bold text-green-600">
+                    {financeData || "Non disponible"}
+                  </p>
+
+                  {/* Hover stats popup fro finance */}
+                  {hoverItem == "finance" && financeData?.data && (
+                    <div>this is a hover</div>
+                  )}
+                </div>
+
                 {/* Staff total statistics */}
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div
+                  className="bg-blue-50 p-4 rounded-lg relative"
+                  onMouseEnter={() => setHoverItem("personnel")}
+                  onMouseLeave={() => setHoverItem(null)}
+                >
                   <p className="text-sm text-gray-600">Personnel total</p>
                   <p className="text-2xl font-bold text-blue-600">
                     {staffData?.data?.total || "Non disponible"}
                   </p>
+
+                  {/* Hover stats popup for staff */}
+                  {hoverItem === "personnel" && staffData?.data && (
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-gray-200">
+                      <h4 className="text-lg font-bold text-blue-600 mb-3">
+                        Répartition du personnel
+                      </h4>
+
+                      <div className="space-y-3">
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-gray-700">
+                              Administrateurs
+                            </span>
+                            <span className="font-bold">
+                              {staffData.data.admin || 0}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-700 h-2 rounded-full"
+                              style={{
+                                width: `${
+                                  staffData.data.total
+                                    ? (staffData.data.admin /
+                                        staffData.data.total) *
+                                      100
+                                    : 0
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-gray-700">Enseignants</span>
+                            <span className="font-bold">
+                              {staffData.data.teacher || 0}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{
+                                width: `${
+                                  staffData.data.total
+                                    ? (staffData.data.teacher /
+                                        staffData.data.total) *
+                                      100
+                                    : 0
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-gray-700">Comptables</span>
+                            <span className="font-bold">
+                              {staffData.data.accoutant || 0}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-500 h-2 rounded-full"
+                              style={{
+                                width: `${
+                                  staffData.data.total
+                                    ? (staffData.data.accoutant /
+                                        staffData.data.total) *
+                                      100
+                                    : 0
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-gray-700">Secrétaires</span>
+                            <span className="font-bold">
+                              {staffData.data.Secretary || 0}
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className="bg-blue-400 h-2 rounded-full"
+                              style={{
+                                width: `${
+                                  staffData.data.total
+                                    ? (staffData.data.Secretary /
+                                        staffData.data.total) *
+                                      100
+                                    : 0
+                                }%`,
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                
-                {/* Teacher statistics */}
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Enseignants</p>
-                  <p className="text-2xl font-bold text-green-600">
-                    {staffData?.data?.teacher || "Non disponible"}
-                  </p>
-                </div>
-                
-                {/* Student statistics */}
-                <div className="bg-purple-50 p-4 rounded-lg">
+
+                {/* Student statistics with hover */}
+                <div
+                  className="bg-purple-50 p-4 rounded-lg relative"
+                  onMouseEnter={() => setHoverItem("eleves")}
+                  onMouseLeave={() => setHoverItem(null)}
+                >
                   <p className="text-sm text-gray-600">Élèves</p>
                   <p className="text-2xl font-bold text-purple-600">
                     {studentData?.data?.total || "Non disponible"}
                   </p>
+
+                  {/* Hover stats popup for students */}
+                  {hoverItem === "eleves" && studentData?.data && (
+                    <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-10 border border-gray-200">
+                      <h4 className="text-lg font-bold text-purple-600 mb-3">
+                        Répartition des élèves
+                      </h4>
+
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="flex items-center text-blue-600">
+                            <FaMale className="mr-2" /> Garçons
+                          </span>
+                          <span className="font-bold">
+                            {studentData.data.male || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-blue-600 h-2 rounded-full"
+                            style={{
+                              width: `${
+                                studentData.data.total
+                                  ? (studentData.data.male /
+                                      studentData.data.total) *
+                                    100
+                                  : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="flex items-center text-pink-600">
+                            <FaFemale className="mr-2" /> Filles
+                          </span>
+                          <span className="font-bold">
+                            {studentData.data.female || 0}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div
+                            className="bg-pink-700 h-2 rounded-full"
+                            style={{
+                              width: `${
+                                studentData.data.total
+                                  ? (studentData.data.female /
+                                      studentData.data.total) *
+                                    100
+                                  : 0
+                              }%`,
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Additional student statistics */}
-          {!loading && studentData?.data && (
-            <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Répartition des élèves</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Garçons</p>
-                  <p className="text-2xl font-bold text-blue-600">
-                    {studentData?.data?.male || "Non disponible"}
-                  </p>
-                </div>
-                <div className="bg-pink-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Filles</p>
-                  <p className="text-2xl font-bold text-pink-600">
-                    {studentData?.data?.female || "Non disponible"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Dashboard menu items */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {dashboardItems.map((item, index) => (
+            {dashboardItems.map((item) => (
               <div
-                key={index}
+                key={item.id}
                 className={`${item.color} rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer`}
                 onClick={item.onClick}
               >
