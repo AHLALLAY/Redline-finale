@@ -85,23 +85,93 @@ export default function StudentList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation des champs requis
+    if (!newStudent.name || !newStudent.email || !newStudent.level || !newStudent.parent) {
+      showNotification('Veuillez remplir tous les champs obligatoires', 'error');
+      return;
+    }
+  
     try {
+      const studentData = {
+        name: newStudent.name,
+        email: newStudent.email,
+        password: newStudent.password, // "123456789" par défaut
+        birth_date: newStudent.birth_date,
+        birth_place: newStudent.birth_place,
+        gender: newStudent.gender,
+        level: newStudent.level,
+        group: newStudent.group,
+        parent: newStudent.parent,
+        cin: newStudent.cin,
+        address: newStudent.address,
+        phone: newStudent.phone
+      };
+  
+      // Appel API
       const response = await fetch('http://127.0.0.1:8000/api/register/student', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newStudent)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify(studentData)
       });
-
-      if (!response.ok) throw new Error('Erreur lors de l\'ajout');
-      
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error(data.message || 'Erreur lors de l\'ajout de l\'élève');
+      }
+  
+      // Succès
       showNotification('Élève ajouté avec succès', 'success');
       setIsModalOpen(false);
-      // Recharger les données
-      setLoading(true);
-      const newData = await fetch('http://127.0.0.1:8000/api/admin/students').then(r => r.json());
-      setStudents(newData.data);
+      
+      // Réinitialisation du formulaire
+      setNewStudent({
+        name: "",
+        email: "",
+        password: "123456789",
+        birth_date: "",
+        birth_place: "",
+        gender: "",
+        level: "",
+        group: "",
+        parent: "",
+        cin: "",
+        address: "",
+        phone: ""
+      });
+  
+      fetchStudents();
+  
     } catch (err) {
-      showNotification(err.message, 'error');
+      console.error('Erreur:', err);
+      showNotification(err.message || 'Une erreur est survenue', 'error');
+    }
+  };
+  
+  const fetchStudents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://127.0.0.1:8000/api/admin/students');
+      if (!response.ok) throw new Error('Erreur de chargement');
+      
+      const data = await response.json();
+      if (data.status === 'success') {
+        setStudents(data.data);
+        
+        const uniqueLevels = [...new Set(data.data.map(s => s.level))];
+        const uniqueGroups = [...new Set(data.data.map(s => s.group).filter(Boolean))];
+        
+        setLevels(uniqueLevels);
+        setGroups(uniqueGroups.sort());
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
