@@ -1,34 +1,37 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaPlus, FaEye, FaFilter, FaArrowLeft, FaMale, FaFemale } from "react-icons/fa";
+import { FaBars, FaTimes, FaPlus, FaEye, FaFilter, FaMale, FaFemale } from "react-icons/fa";
 
 // Composants
 const Header = ({ onBack, onToggleMenu, mobileMenuOpen, onLogout }) => (
   <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
     <div className="container mx-auto px-4 py-3">
       <div className="flex justify-between items-center">
+        {/* Logo et titre */}
         <div className="flex items-center">
-          <div className="inline-flex items-center">
-            <button
-              onClick={onBack}
-              className="text-3xl font-bold text-orange-600 mr-2">Ω
-            </button>
-
-            <h1 className="text-xl font-bold text-orange-600">OMEGA SCHOOL</h1>
-          </div>
+          <button
+            onClick={onBack}
+            className="text-3xl font-bold text-orange-600 mr-2"
+            title="Retour au tableau de bord"
+          >
+            Ω
+          </button>
+          <h1 className="text-xl font-bold text-orange-600">OMEGA SCHOOL</h1>
         </div>
 
+        {/* Bouton de déconnexion (visible uniquement sur desktop) */}
         <div className="hidden md:flex">
           <button
             onClick={onLogout}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full transition duration-300 font-medium"
+            className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full transition duration-300 font-medium"
           >
             Déconnexion
           </button>
         </div>
 
+        {/* Bouton du menu mobile */}
         <button
-          className="md:hidden text-gray-800 p-2 rounded-full hover:bg-gray-100"
+          className="md:hidden text-gray-700 p-2 rounded-full hover:bg-gray-100"
           onClick={onToggleMenu}
         >
           {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
@@ -36,11 +39,12 @@ const Header = ({ onBack, onToggleMenu, mobileMenuOpen, onLogout }) => (
       </div>
     </div>
 
+    {/* Menu mobile */}
     {mobileMenuOpen && (
-      <div className="md:hidden bg-white border-t border-gray-200 p-4 shadow-lg animate-fadeIn">
+      <div className="md:hidden bg-white border-t border-gray-200 p-4 shadow-lg">
         <button
           onClick={onLogout}
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full transition duration-300 font-medium"
+          className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full transition duration-300 font-medium"
         >
           Déconnexion
         </button>
@@ -49,10 +53,24 @@ const Header = ({ onBack, onToggleMenu, mobileMenuOpen, onLogout }) => (
   </header>
 );
 
-const FilterPanel = ({ filterOpen, levels, groups, selectedLevel, selectedGroup, onLevelChange, onGroupChange, onReset }) => (
-  filterOpen && (
-    <div className="bg-orange-50 p-4 rounded-lg mb-4 border border-orange-100 animate-fadeIn shadow-sm">
+// Composant pour les filtres
+const FilterPanel = ({ 
+  filterOpen, 
+  levels, 
+  groups, 
+  selectedLevel, 
+  selectedGroup, 
+  onLevelChange, 
+  onGroupChange, 
+  onReset 
+}) => {
+  // Si le panneau de filtre n'est pas ouvert, ne rien afficher
+  if (!filterOpen) return null;
+  
+  return (
+    <div className="bg-orange-50 p-4 rounded-lg mb-4 border border-orange-100 shadow-sm">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {/* Filtre par niveau */}
         <div>
           <label htmlFor="levelFilter" className="block text-sm font-medium text-gray-700 mb-1">
             Niveau
@@ -60,16 +78,17 @@ const FilterPanel = ({ filterOpen, levels, groups, selectedLevel, selectedGroup,
           <select
             id="levelFilter"
             value={selectedLevel}
-            onChange={e => onLevelChange(e.target.value)}
+            onChange={(e) => onLevelChange(e.target.value)}
             className="block w-full bg-white border border-gray-300 rounded-md py-2 px-3 focus:ring-orange-500 focus:border-orange-500"
           >
             <option value="all">Tous les niveaux</option>
-            {levels.map(level => (
+            {levels.map((level) => (
               <option key={level} value={level}>{level}</option>
             ))}
           </select>
         </div>
 
+        {/* Filtre par groupe */}
         <div>
           <label htmlFor="groupFilter" className="block text-sm font-medium text-gray-700 mb-1">
             Groupe
@@ -77,16 +96,17 @@ const FilterPanel = ({ filterOpen, levels, groups, selectedLevel, selectedGroup,
           <select
             id="groupFilter"
             value={selectedGroup}
-            onChange={e => onGroupChange(e.target.value)}
+            onChange={(e) => onGroupChange(e.target.value)}
             className="block w-full bg-white border border-gray-300 rounded-md py-2 px-3 focus:ring-orange-500 focus:border-orange-500"
           >
             <option value="all">Tous les groupes</option>
-            {groups.map(group => (
+            {groups.map((group) => (
               <option key={group} value={group}>{group}</option>
             ))}
           </select>
         </div>
 
+        {/* Bouton de réinitialisation */}
         <div className="flex items-end">
           <button
             onClick={onReset}
@@ -97,81 +117,91 @@ const FilterPanel = ({ filterOpen, levels, groups, selectedLevel, selectedGroup,
         </div>
       </div>
     </div>
-  )
-);
+  );
+};
 
-const StudentTable = ({ students, onViewDetails }) => (
-  <div className="overflow-x-auto">
-    {students.length === 0 ? (
+// Carte d'étudiant
+const StudentCard = ({ student, onViewGrades }) => {
+  // Formatter la date
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border-l-4 border-orange-400">
+      <div className="flex items-start justify-between">
+        {/* Nom et icône de genre */}
+        <div className="flex items-center mb-2">
+          <span className={`mr-2 ${student.gender === 'Masculin' ? 'text-blue-500' : 'text-pink-500'}`}>
+            {student.gender === 'Masculin' ? <FaMale size={18} /> : <FaFemale size={18} />}
+          </span>
+          <h3 className="font-semibold text-gray-800">{student.name}</h3>
+        </div>
+        
+        {/* Bouton pour voir les notes */}
+        <button
+          onClick={() => onViewGrades(student.id)}
+          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition-colors"
+          title="Voir les notes"
+        >
+          <FaEye size={16} />
+        </button>
+      </div>
+      
+      {/* Infos de l'étudiant */}
+      <div className="mt-3 space-y-2 text-sm text-gray-600">
+        <div className="flex justify-between">
+          <span className="font-medium">Niveau:</span> 
+          <span>{student.level}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Groupe:</span> 
+          <span>{student.group || "Non assigné"}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Date de naissance:</span> 
+          <span>{student.birth_date ? formatDate(student.birth_date) : "N/A"}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Inscription:</span> 
+          <span>{formatDate(student.created_at)}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Grille de cartes pour les étudiants
+const StudentGrid = ({ students, onViewGrades }) => {
+  if (students.length === 0) {
+    return (
       <div className="p-8 text-center">
         <p className="text-gray-500">Aucun élève ne correspond à vos critères.</p>
       </div>
-    ) : (
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-orange-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nom</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Niveau</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Groupe</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Adresse</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Téléphone</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Parent</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date Inscription</th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
-          {students.map((student, index) => (
-            <tr key={student.id} className={`hover:bg-orange-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <span className={`mr-2 ${student.gender === 'Masculin' ? 'text-blue-500' : 'text-pink-500'}`}>
-                    {student.gender === 'Masculin' ? <FaMale /> : <FaFemale />}
-                  </span>
-                  <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{student.level}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.group || "Non assigné"}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.address}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.phone}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.parent}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {new Date(student.created_at).toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                  })}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
-                  onClick={() => onViewDetails(student.id)}
-                  className="text-orange-600 hover:text-orange-900 bg-orange-50 hover:bg-orange-100 p-2 rounded-full transition-colors"
-                  title="Voir les détails"
-                >
-                  <FaEye />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    )}
-  </div>
-);
+    );
+  }
 
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+      {students.map((student) => (
+        <StudentCard 
+          key={student.id} 
+          student={student} 
+          onViewGrades={onViewGrades} 
+        />
+      ))}
+    </div>
+  );
+};
+
+// Composant pour le formulaire d'ajout d'élève
 const StudentModal = ({ isOpen, onClose, student, onChange, onSubmit, levels }) => {
   if (!isOpen) return null;
 
@@ -351,7 +381,7 @@ const StudentModal = ({ isOpen, onClose, student, onChange, onSubmit, levels }) 
               </button>
               <button
                 type="submit"
-                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
               >
                 Enregistrer
               </button>
@@ -363,7 +393,7 @@ const StudentModal = ({ isOpen, onClose, student, onChange, onSubmit, levels }) 
   );
 };
 
-// Loading et erreur
+// Composants pour l'état de chargement
 const Loader = () => (
   <div className="min-h-screen flex items-center justify-center bg-orange-50">
     <div className="flex flex-col items-center">
@@ -373,6 +403,7 @@ const Loader = () => (
   </div>
 );
 
+// Composant pour afficher une erreur
 const ErrorDisplay = ({ message, onRetry }) => (
   <div className="min-h-screen flex items-center justify-center bg-orange-50">
     <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-lg shadow-md max-w-lg">
@@ -380,7 +411,7 @@ const ErrorDisplay = ({ message, onRetry }) => (
       <p className="mb-4">{message}</p>
       <button
         onClick={onRetry}
-        className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center"
+        className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors flex items-center"
       >
         <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -391,20 +422,46 @@ const ErrorDisplay = ({ message, onRetry }) => (
   </div>
 );
 
-// Composant principal 
-const StudentListe = () => {
-  // États
+// Composant pour les notifications
+const Notification = ({ message, type, visible }) => {
+  if (!visible) return null;
+  
+  const bgColor = type === 'success' ? 'bg-green-100 border-green-500 text-green-700' :
+                 type === 'error' ? 'bg-red-100 border-red-500 text-red-700' :
+                 'bg-blue-100 border-blue-500 text-blue-700';
+  
+  return (
+    <div className={`fixed top-20 right-4 p-4 rounded-md shadow-md border-l-4 animate-fadeIn ${bgColor}`}>
+      <p>{message}</p>
+    </div>
+  );
+};
+
+// Composant principal
+const StudentList = () => {
+  // États pour les données
   const [students, setStudents] = useState([]);
   const [filteredStudents, setFilteredStudents] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [groups, setGroups] = useState([]);
+  
+  // États pour l'interface utilisateur
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedGroup, setSelectedGroup] = useState("all");
-  const [levels, setLevels] = useState([]);
-  const [groups, setGroups] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // État pour les notifications
+  const [notification, setNotification] = useState({
+    message: '',
+    type: 'info',
+    visible: false
+  });
+  
+  // État pour le nouvel étudiant
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
@@ -419,7 +476,22 @@ const StudentListe = () => {
     phone: ""
   });
 
+  // Hook de navigation
   const navigate = useNavigate();
+
+  // Fonction pour afficher une notification
+  const showNotification = (message, type = 'info') => {
+    setNotification({
+      message,
+      type,
+      visible: true
+    });
+    
+    // Masquer la notification après 3 secondes
+    setTimeout(() => {
+      setNotification(prev => ({ ...prev, visible: false }));
+    }, 3000);
+  };
 
   // Récupère les données des étudiants
   const fetchStudents = async () => {
@@ -434,7 +506,7 @@ const StudentListe = () => {
       const result = await response.json();
 
       if (result.status === 'success' && Array.isArray(result.data)) {
-        // Extraire les données et les filtrer
+        // Extraire les données
         setStudents(result.data);
         setFilteredStudents(result.data);
 
@@ -442,9 +514,7 @@ const StudentListe = () => {
         const uniqueLevels = [...new Set(result.data.map(student => student.level))];
         setLevels(uniqueLevels);
 
-        const uniqueGroups = [...new Set(result.data
-          .map(student => student.group)
-          .filter(Boolean))];
+        const uniqueGroups = [...new Set(result.data.map(student => student.group))];
         setGroups(uniqueGroups.sort());
       } else {
         throw new Error('Format de réponse API inattendu');
@@ -457,12 +527,12 @@ const StudentListe = () => {
     }
   };
 
-  // Charger les données au montage
+  // Charger les données au montage du composant
   useEffect(() => {
     fetchStudents();
   }, []);
 
-  // Filtrer les étudiants
+  // Filtrer les étudiants quand les filtres changent
   useEffect(() => {
     let results = [...students];
 
@@ -477,7 +547,7 @@ const StudentListe = () => {
     setFilteredStudents(results);
   }, [selectedLevel, selectedGroup, students]);
 
-  // Handlers
+  // Handlers pour les actions utilisateur
   const handleLogout = () => {
     localStorage.clear();
     navigate("/Login/staff");
@@ -513,11 +583,9 @@ const StudentListe = () => {
         throw new Error(`Erreur HTTP: ${response.status}`);
       }
 
-      // Fermer le modal et rafraîchir la liste
       setIsModalOpen(false);
+      showNotification('Élève ajouté avec succès!', 'success');  
       fetchStudents();
-
-      // Réinitialiser le formulaire
       setNewStudent({
         name: "",
         email: "",
@@ -533,13 +601,14 @@ const StudentListe = () => {
       });
 
     } catch (err) {
-      setError(err.message);
+      showNotification(`Erreur: ${err.message}`, 'error');
     }
   };
 
-  const handleViewDetails = (studentId) => {
-    // À implémenter: afficher les détails d'un étudiant
-    console.log("Voir les détails de l'étudiant:", studentId);
+  const handleViewGrades = (studentId) => {
+    // À implémenter: afficher les notes d'un étudiant
+    showNotification('Fonctionnalité à venir: affichage des notes', 'info');
+    console.log("Voir les notes de l'étudiant:", studentId);
   };
 
   // Rendu conditionnel
@@ -556,10 +625,17 @@ const StudentListe = () => {
         onLogout={handleLogout}
       />
 
+      {/* Notification */}
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        visible={notification.visible}
+      />
+
       {/* Contenu principal */}
       <div className="container mx-auto px-4 pt-24 pb-16">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* En-tête du tableau et filtres */}
+          {/* En-tête et filtres */}
           <div className="px-6 py-4 border-b border-gray-200">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 mb-4">
               <h2 className="text-lg font-semibold text-gray-800 flex items-center">
@@ -569,7 +645,7 @@ const StudentListe = () => {
                 </span>
               </h2>
 
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilterOpen(!filterOpen)}
                   className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors"
@@ -583,7 +659,7 @@ const StudentListe = () => {
 
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="flex items-center space-x-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   <FaPlus />
                   <span>Nouvel élève</span>
@@ -604,10 +680,10 @@ const StudentListe = () => {
             />
           </div>
 
-          {/* Tableau des étudiants */}
-          <StudentTable
+          {/* Grille d'étudiants */}
+          <StudentGrid
             students={filteredStudents}
-            onViewDetails={handleViewDetails}
+            onViewGrades={handleViewGrades}
           />
         </div>
       </div>
@@ -625,4 +701,4 @@ const StudentListe = () => {
   );
 };
 
-export default StudentListe;
+export default StudentList;
