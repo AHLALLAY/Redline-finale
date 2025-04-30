@@ -1,409 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBars, FaTimes, FaPlus, FaEye, FaFilter, FaArrowLeft, FaMale, FaFemale } from "react-icons/fa";
+import { FaBars, FaTimes, FaPlus, FaEye, FaFilter, FaMale, FaFemale } from "react-icons/fa";
 
-// Composants
-const Header = ({ onBack, onToggleMenu, mobileMenuOpen, onLogout }) => (
-  <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
-    <div className="container mx-auto px-4 py-3">
-      <div className="flex justify-between items-center">
-        <div className="flex items-center">
-          <div className="inline-flex items-center">
-            <button
-              onClick={onBack}
-              className="text-3xl font-bold text-orange-600 mr-2">Ω
-            </button>
-
-            <h1 className="text-xl font-bold text-orange-600">OMEGA SCHOOL</h1>
-          </div>
-        </div>
-
-        <div className="hidden md:flex">
-          <button
-            onClick={onLogout}
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-full transition duration-300 font-medium"
-          >
-            Déconnexion
-          </button>
-        </div>
-
-        <button
-          className="md:hidden text-gray-800 p-2 rounded-full hover:bg-gray-100"
-          onClick={onToggleMenu}
-        >
-          {mobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-        </button>
-      </div>
-    </div>
-
-    {mobileMenuOpen && (
-      <div className="md:hidden bg-white border-t border-gray-200 p-4 shadow-lg animate-fadeIn">
-        <button
-          onClick={onLogout}
-          className="w-full bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full transition duration-300 font-medium"
-        >
-          Déconnexion
-        </button>
-      </div>
-    )}
-  </header>
-);
-
-const FilterPanel = ({ filterOpen, levels, groups, selectedLevel, selectedGroup, onLevelChange, onGroupChange, onReset }) => (
-  filterOpen && (
-    <div className="bg-orange-50 p-4 rounded-lg mb-4 border border-orange-100 animate-fadeIn shadow-sm">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div>
-          <label htmlFor="levelFilter" className="block text-sm font-medium text-gray-700 mb-1">
-            Niveau
-          </label>
-          <select
-            id="levelFilter"
-            value={selectedLevel}
-            onChange={e => onLevelChange(e.target.value)}
-            className="block w-full bg-white border border-gray-300 rounded-md py-2 px-3 focus:ring-orange-500 focus:border-orange-500"
-          >
-            <option value="all">Tous les niveaux</option>
-            {levels.map(level => (
-              <option key={level} value={level}>{level}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="groupFilter" className="block text-sm font-medium text-gray-700 mb-1">
-            Groupe
-          </label>
-          <select
-            id="groupFilter"
-            value={selectedGroup}
-            onChange={e => onGroupChange(e.target.value)}
-            className="block w-full bg-white border border-gray-300 rounded-md py-2 px-3 focus:ring-orange-500 focus:border-orange-500"
-          >
-            <option value="all">Tous les groupes</option>
-            {groups.map(group => (
-              <option key={group} value={group}>{group}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="flex items-end">
-          <button
-            onClick={onReset}
-            className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 py-2 px-4 rounded-md transition duration-200"
-          >
-            Réinitialiser
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-);
-
-const StudentTable = ({ students, onViewDetails }) => (
-  <div className="overflow-x-auto">
-    {students.length === 0 ? (
-      <div className="p-8 text-center">
-        <p className="text-gray-500">Aucun élève ne correspond à vos critères.</p>
-      </div>
-    ) : (
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-orange-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Nom</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Niveau</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Groupe</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Adresse</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Téléphone</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Parent</th>
-            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date Inscription</th>
-            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
-          {students.map((student, index) => (
-            <tr key={student.id} className={`hover:bg-orange-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <span className={`mr-2 ${student.gender === 'Masculin' ? 'text-blue-500' : 'text-pink-500'}`}>
-                    {student.gender === 'Masculin' ? <FaMale /> : <FaFemale />}
-                  </span>
-                  <div className="text-sm font-medium text-gray-900">{student.name}</div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{student.level}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.group || "Non assigné"}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.address}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.phone}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">{student.parent}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {new Date(student.created_at).toLocaleDateString('fr-FR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                  })}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
-                  onClick={() => onViewDetails(student.id)}
-                  className="text-orange-600 hover:text-orange-900 bg-orange-50 hover:bg-orange-100 p-2 rounded-full transition-colors"
-                  title="Voir les détails"
-                >
-                  <FaEye />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    )}
-  </div>
-);
-
-const StudentModal = ({ isOpen, onClose, student, onChange, onSubmit, levels }) => {
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-screen overflow-y-auto">
-        <div className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Ajouter un nouvel élève</h3>
-            <button
-              onClick={onClose}
-              className="text-gray-500 hover:text-gray-700"
-            >
-              <FaTimes />
-            </button>
-          </div>
-
-          <form onSubmit={onSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {/* Informations de l'élève */}
-              <div className="rounded-lg p-4 bg-orange-50 space-y-4 border border-orange-100">
-                <h2 className="font-semibold text-orange-700">Informations de l'élève</h2>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom complet*</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={student.name}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={student.email}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
-                  <input
-                    type="text"
-                    name="password"
-                    value={student.password}
-                    className="w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md"
-                    readOnly
-                  />
-                  <p className="text-xs text-gray-500 mt-1">Mot de passe par défaut: 123456789</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Date de Naissance*</label>
-                    <input
-                      type="date"
-                      name="birth_date"
-                      value={student.birth_date}
-                      onChange={onChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Lieu de Naissance*</label>
-                    <input
-                      type="text"
-                      name="birth_place"
-                      value={student.birth_place}
-                      onChange={onChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Genre*</label>
-                  <select
-                    name="gender"
-                    value={student.gender}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  >
-                    <option value="">Sélectionner</option>
-                    <option value="Masculin">Masculin</option>
-                    <option value="Féminin">Féminin</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Niveau*</label>
-                  <select
-                    name="level"
-                    value={student.level}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  >
-                    <option value="">Sélectionner un niveau</option>
-                    {levels.map(level => (
-                      <option key={level} value={level}>{level}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Informations du parent */}
-              <div className="rounded-lg p-4 bg-orange-50 space-y-4 border border-orange-100">
-                <h2 className="font-semibold text-orange-700">Informations du parent</h2>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom du parent*</label>
-                  <input
-                    type="text"
-                    name="parent"
-                    value={student.parent}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">CIN</label>
-                  <input
-                    type="text"
-                    name="cin"
-                    value={student.cin}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Adresse*</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={student.address}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone*</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={student.phone}
-                    onChange={onChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end space-x-3 pt-4 border-t">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                Annuler
-              </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
-              >
-                Enregistrer
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Loading et erreur
-const Loader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-orange-50">
-    <div className="flex flex-col items-center">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-600"></div>
-      <p className="mt-4 text-gray-600">Chargement des données...</p>
-    </div>
-  </div>
-);
-
-const ErrorDisplay = ({ message, onRetry }) => (
-  <div className="min-h-screen flex items-center justify-center bg-orange-50">
-    <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-lg shadow-md max-w-lg">
-      <p className="font-bold text-xl mb-2">Erreur</p>
-      <p className="mb-4">{message}</p>
-      <button
-        onClick={onRetry}
-        className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-lg transition-colors flex items-center"
-      >
-        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-        </svg>
-        Réessayer
-      </button>
-    </div>
-  </div>
-);
-
-// Composant principal 
-const StudentListe = () => {
-  // États
+// Composant principal
+export default function StudentList() {
+  // États principaux
   const [students, setStudents] = useState([]);
-  const [filteredStudents, setFilteredStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  // États pour les filtres
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedGroup, setSelectedGroup] = useState("all");
   const [levels, setLevels] = useState([]);
   const [groups, setGroups] = useState([]);
+
+  // États pour le modal d'ajout
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newStudent, setNewStudent] = useState({
     name: "",
@@ -413,216 +27,556 @@ const StudentListe = () => {
     birth_place: "",
     gender: "",
     level: "",
+    group: "",
     parent: "",
     cin: "",
     address: "",
     phone: ""
   });
 
-  const navigate = useNavigate();
+  // Notification
+  const [notification, setNotification] = useState({ message: "", type: "", visible: false });
 
-  // Récupère les données des étudiants
-  const fetchStudents = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('http://127.0.0.1:8000/api/admin/students');
-
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
-      const result = await response.json();
-
-      if (result.status === 'success' && Array.isArray(result.data)) {
-        // Extraire les données et les filtrer
-        setStudents(result.data);
-        setFilteredStudents(result.data);
-
-        // Extraire les niveaux et groupes uniques
-        const uniqueLevels = [...new Set(result.data.map(student => student.level))];
-        setLevels(uniqueLevels);
-
-        const uniqueGroups = [...new Set(result.data
-          .map(student => student.group)
-          .filter(Boolean))];
-        setGroups(uniqueGroups.sort());
-      } else {
-        throw new Error('Format de réponse API inattendu');
-      }
-    } catch (err) {
-      setError(err.message);
-      console.error("Erreur de chargement:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Charger les données au montage
+  // Charger les données des étudiants
   useEffect(() => {
-    fetchStudents();
+    async function fetchData() {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/admin/students');
+        if (!response.ok) throw new Error('Erreur de chargement');
+        
+        const data = await response.json();
+        if (data.status === 'success') {
+          setStudents(data.data);
+          
+          // Extraire les niveaux et groupes uniques
+          const uniqueLevels = [...new Set(data.data.map(s => s.level))];
+          const uniqueGroups = [...new Set(data.data.map(s => s.group).filter(Boolean))];
+          
+          setLevels(uniqueLevels);
+          setGroups(uniqueGroups.sort());
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchData();
   }, []);
 
   // Filtrer les étudiants
-  useEffect(() => {
-    let results = [...students];
+  const filteredStudents = students.filter(student => {
+    const levelMatch = selectedLevel === "all" || student.level === selectedLevel;
+    const groupMatch = selectedGroup === "all" || student.group === selectedGroup;
+    return levelMatch && groupMatch;
+  });
 
-    if (selectedLevel !== "all") {
-      results = results.filter(student => student.level === selectedLevel);
-    }
-
-    if (selectedGroup !== "all") {
-      results = results.filter(student => student.group === selectedGroup);
-    }
-
-    setFilteredStudents(results);
-  }, [selectedLevel, selectedGroup, students]);
-
-  // Handlers
+  // Gestion des actions
   const handleLogout = () => {
     localStorage.clear();
     navigate("/Login/staff");
   };
 
-  const handleBack = () => {
-    navigate("/admin/dashboard");
-  };
-
-  const resetFilters = () => {
-    setSelectedLevel("all");
-    setSelectedGroup("all");
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewStudent(prev => ({ ...prev, [name]: value }));
+  const showNotification = (message, type = "info") => {
+    setNotification({ message, type, visible: true });
+    setTimeout(() => setNotification(prev => ({ ...prev, visible: false })), 3000);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch('http://127.0.0.1:8000/api/register/student', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newStudent)
       });
 
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-
-      // Fermer le modal et rafraîchir la liste
+      if (!response.ok) throw new Error('Erreur lors de l\'ajout');
+      
+      showNotification('Élève ajouté avec succès', 'success');
       setIsModalOpen(false);
-      fetchStudents();
-
-      // Réinitialiser le formulaire
-      setNewStudent({
-        name: "",
-        email: "",
-        password: "123456789",
-        birth_date: "",
-        birth_place: "",
-        gender: "",
-        level: "",
-        parent: "",
-        cin: "",
-        address: "",
-        phone: ""
-      });
-
+      // Recharger les données
+      setLoading(true);
+      const newData = await fetch('http://127.0.0.1:8000/api/admin/students').then(r => r.json());
+      setStudents(newData.data);
     } catch (err) {
-      setError(err.message);
+      showNotification(err.message, 'error');
     }
   };
 
-  const handleViewDetails = (studentId) => {
-    // À implémenter: afficher les détails d'un étudiant
-    console.log("Voir les détails de l'étudiant:", studentId);
-  };
-
-  // Rendu conditionnel
-  if (loading) return <Loader />;
-  if (error) return <ErrorDisplay message={error} onRetry={fetchStudents} />;
+  // Affichage conditionnel
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorScreen message={error} onRetry={() => window.location.reload()} />;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <Header
-        onBack={handleBack}
-        onToggleMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
-        mobileMenuOpen={mobileMenuOpen}
+    <div className="min-h-screen bg-orange-50">
+      <Header 
+        onBack={() => navigate("/admin/dashboard")} 
         onLogout={handleLogout}
       />
-
-      {/* Contenu principal */}
-      <div className="container mx-auto px-4 pt-24 pb-16">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* En-tête du tableau et filtres */}
-          <div className="px-6 py-4 border-b border-gray-200">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0 mb-4">
-              <h2 className="text-lg font-semibold text-gray-800 flex items-center">
-                Liste des élèves
-                <span className="ml-2 bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full">
-                  {filteredStudents.length}/{students.length}
-                </span>
+      
+      <Notification 
+        message={notification.message} 
+        type={notification.type} 
+        visible={notification.visible} 
+      />
+      
+      <main className="container mx-auto px-4 pt-24 pb-8">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="p-4 border-b border-orange-200">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+              <h2 className="text-xl font-semibold text-orange-800">
+                Liste des élèves ({filteredStudents.length})
               </h2>
-
-              <div className="flex items-center space-x-2">
-                <button
+              
+              <div className="flex flex-wrap gap-2">
+                <FilterButton 
+                  isActive={filterOpen || selectedLevel !== "all" || selectedGroup !== "all"}
                   onClick={() => setFilterOpen(!filterOpen)}
-                  className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors"
-                >
-                  <FaFilter />
-                  <span>Filtres</span>
-                  {(selectedLevel !== "all" || selectedGroup !== "all") && (
-                    <span className="ml-1 w-2 h-2 bg-orange-500 rounded-full"></span>
-                  )}
-                </button>
-
+                />
+                
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="flex items-center space-x-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
                 >
-                  <FaPlus />
-                  <span>Nouvel élève</span>
+                  <FaPlus /> Nouvel élève
                 </button>
               </div>
             </div>
-
-            {/* Zone de filtres */}
-            <FilterPanel
-              filterOpen={filterOpen}
-              levels={levels}
-              groups={groups}
-              selectedLevel={selectedLevel}
-              selectedGroup={selectedGroup}
-              onLevelChange={setSelectedLevel}
-              onGroupChange={setSelectedGroup}
-              onReset={resetFilters}
-            />
+            
+            {filterOpen && (
+              <FilterPanel
+                levels={levels}
+                groups={groups}
+                selectedLevel={selectedLevel}
+                selectedGroup={selectedGroup}
+                onLevelChange={setSelectedLevel}
+                onGroupChange={setSelectedGroup}
+                onReset={() => {
+                  setSelectedLevel("all");
+                  setSelectedGroup("all");
+                }}
+              />
+            )}
           </div>
-
-          {/* Tableau des étudiants */}
-          <StudentTable
-            students={filteredStudents}
-            onViewDetails={handleViewDetails}
+          
+          <StudentGrid 
+            students={filteredStudents} 
+            onViewGrades={(id) => showNotification(`Affichage des notes pour l'élève ${id}`, 'info')}
           />
         </div>
-      </div>
-
-      {/* Modal d'ajout */}
-      <StudentModal
+      </main>
+      
+      <AddStudentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         student={newStudent}
-        onChange={handleInputChange}
+        onChange={(e) => setNewStudent({...newStudent, [e.target.name]: e.target.value})}
         onSubmit={handleSubmit}
         levels={levels}
+        groups={groups}
       />
     </div>
   );
-};
+}
 
-export default StudentListe;
+// Composants enfants simplifiés
+
+function Header({ onBack, onLogout }) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  return (
+    <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
+            <button
+              onClick={onBack}
+              className="text-3xl font-bold text-orange-600 mr-2 hover:text-orange-700"
+              title="Retour au tableau de bord"
+            >
+              Ω
+            </button>
+            <h1 className="text-xl font-bold text-orange-600">OMEGA SCHOOL</h1>
+          </div>
+          
+          <div className="hidden md:block">
+            <button
+              onClick={onLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            >
+              Déconnexion
+            </button>
+          </div>
+          
+          <button
+            className="md:hidden text-gray-600 p-2 rounded-lg hover:bg-orange-100"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+          </button>
+        </div>
+        
+        {mobileMenuOpen && (
+          <div className="md:hidden mt-2 pt-2 border-t border-orange-200">
+            <button
+              onClick={onLogout}
+              className="w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+            >
+              Déconnexion
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
+
+function FilterButton({ isActive, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
+        isActive ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+      }`}
+    >
+      <FaFilter />
+      <span>Filtres</span>
+      {isActive && <span className="w-2 h-2 bg-orange-500 rounded-full"></span>}
+    </button>
+  );
+}
+
+function FilterPanel({ levels, groups, selectedLevel, selectedGroup, onLevelChange, onGroupChange, onReset }) {
+  return (
+    <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Niveau</label>
+          <select
+            value={selectedLevel}
+            onChange={(e) => onLevelChange(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"
+          >
+            <option value="all">Tous les niveaux</option>
+            {levels.map(level => (
+              <option key={level} value={level}>{level}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Groupe</label>
+          <select
+            value={selectedGroup}
+            onChange={(e) => onGroupChange(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"
+          >
+            <option value="all">Tous les groupes</option>
+            {groups.map(group => (
+              <option key={group} value={group}>{group}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div className="flex items-end">
+          <button
+            onClick={onReset}
+            className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 p-2 rounded-lg transition"
+          >
+            Réinitialiser
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentGrid({ students, onViewGrades }) {
+  if (students.length === 0) {
+    return <div className="p-8 text-center text-gray-500">Aucun élève trouvé</div>;
+  }
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      {students.map(student => (
+        <StudentCard key={student.id} student={student} onViewGrades={onViewGrades} />
+      ))}
+    </div>
+  );
+}
+
+function StudentCard({ student, onViewGrades }) {
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString('fr-FR');
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 border-l-4 border-orange-400">
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex items-center">
+          <span className={`mr-2 ${student.gender === 'Masculin' ? 'text-blue-500' : 'text-pink-500'}`}>
+            {student.gender === 'Masculin' ? <FaMale /> : <FaFemale />}
+          </span>
+          <h3 className="font-semibold text-gray-800">{student.name}</h3>
+        </div>
+        
+        <button
+          onClick={() => onViewGrades(student.id)}
+          className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition"
+          title="Voir les notes"
+        >
+          <FaEye />
+        </button>
+      </div>
+      
+      <div className="space-y-2 text-sm text-gray-600">
+        <div className="flex justify-between">
+          <span className="font-medium">Niveau:</span>
+          <span>{student.level || "N/A"}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Groupe:</span>
+          <span>{student.group || "N/A"}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Naissance:</span>
+          <span>{formatDate(student.birth_date)}</span>
+        </div>
+        
+        <div className="flex justify-between">
+          <span className="font-medium">Inscrit le:</span>
+          <span>{formatDate(student.created_at)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AddStudentModal({ isOpen, onClose, student, onChange, onSubmit, levels, groups }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-gray-800">Ajouter un élève</h3>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+              <FaTimes />
+            </button>
+          </div>
+          
+          <form onSubmit={onSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Informations de base */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-orange-700">Informations personnelles</h4>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Nom complet*</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={student.name}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">Genre*</label>
+                    <select
+                      name="gender"
+                      value={student.gender}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="">Sélectionner</option>
+                      <option value="Masculin">Masculin</option>
+                      <option value="Féminin">Féminin</option>
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">Date de naissance*</label>
+                    <input
+                      type="date"
+                      name="birth_date"
+                      value={student.birth_date}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Email*</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={student.email}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">Niveau*</label>
+                    <select
+                      name="level"
+                      value={student.level}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="">Sélectionner</option>
+                      {levels.map(level => (
+                        <option key={level} value={level}>{level}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">Groupe*</label>
+                    <select
+                      name="group"
+                      value={student.group}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    >
+                      <option value="">Sélectionner</option>
+                      {groups.map(group => (
+                        <option key={group} value={group}>{group}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Informations du parent */}
+              <div className="space-y-3">
+                <h4 className="font-medium text-orange-700">Informations du parent</h4>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Nom du parent*</label>
+                  <input
+                    type="text"
+                    name="parent"
+                    value={student.parent}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Adresse*</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={student.address}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Téléphone*</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={student.phone}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">CIN</label>
+                  <input
+                    type="text"
+                    name="cin"
+                    value={student.cin}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="pt-4 border-t border-gray-200 flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+              >
+                Enregistrer
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Notification({ message, type, visible }) {
+  if (!visible) return null;
+  
+  const colors = {
+    success: 'bg-green-100 border-green-500 text-green-700',
+    error: 'bg-red-100 border-red-500 text-red-700',
+    info: 'bg-blue-100 border-blue-500 text-blue-700'
+  };
+  
+  return (
+    <div className={`fixed top-20 right-4 p-4 rounded-lg border-l-4 shadow-md ${colors[type]}`}>
+      {message}
+    </div>
+  );
+}
+
+function LoadingSpinner() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-orange-50">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+    </div>
+  );
+}
+
+function ErrorScreen({ message, onRetry }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-orange-50">
+      <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-6 rounded-lg max-w-md text-center">
+        <h3 className="font-bold text-lg mb-2">Erreur</h3>
+        <p className="mb-4">{message}</p>
+        <button
+          onClick={onRetry}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+        >
+          Réessayer
+        </button>
+      </div>
+    </div>
+  );
+}
