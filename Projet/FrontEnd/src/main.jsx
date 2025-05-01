@@ -13,6 +13,7 @@ import ProtecteComptableDashboard from './components/Protectors/ProtecteComptabl
 import Transaction from './views/comptable/Transaction.jsx'
 import StaffListe from './views/admin/StaffListe.jsx'
 import StudentListe from './views/admin/StudentListe.jsx'
+import Register from './views/auth/register.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -54,6 +55,7 @@ createRoot(document.getElementById('root')).render(
           }
         />
 
+        <Route path="/register" element={<Register />}/>
         <Route path="/comptable/transaction" element={ <Transaction /> }/>
       </Routes>
     </BrowserRouter>
