@@ -20,5 +20,9 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims() { return []; }
 
     public function exercice(){ return $this->hasMany(Exercice::class); }
+    public function gardes() { return $this->hasMany(Garde::class, 'teacher_id'); }
+    public function textBoxes() { return $this->hasMany(TextBox::class, 'teacher_id'); }
+    public function grades() { return $this->hasMany(Grade::class, 'teacher_id'); }
+    public function classes() { return $this->belongsTo(Classe::class, 'teacher_id'); }
     
 }
