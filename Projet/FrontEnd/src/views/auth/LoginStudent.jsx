@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FooterGlobal from '../../components/Global/FooterGlobal';
 
-function LoginStaff() {
+function LoginStudent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,19 +27,21 @@ function LoginStaff() {
             });
 
             const data = await response.json();
-            
+
 
             if (!response.ok) {
                 throw new Error(data.message || 'Erreur de connexion');
             }
 
-            console.log(data);
             localStorage.setItem('token', data.data.token);
-            localStorage.setItem('data', data.data);
+            localStorage.setItem('role', data.data.staff.role);
             setSuccess('Connexion réussie! Redirection en cours...');
 
+            const rolePath = data.data.staff.role.toLowerCase();
+            const redirectPath = `/${rolePath}/dashboard`;
+
             setTimeout(() => {
-                navigate(`/student/dashboard`);
+                navigate(redirectPath);
             }, 1500);
 
         } catch (err) {
@@ -149,4 +151,4 @@ function LoginStaff() {
     );
 }
 
-export default LoginStaff;
+export default LoginStudent;
