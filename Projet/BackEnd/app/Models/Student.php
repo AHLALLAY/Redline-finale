@@ -1,10 +1,20 @@
 <?php
+// app/Models/Student.php
+// Assurez-vous que votre modèle Student implémente l'interface JWTSubject
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Student extends Model
+class Student extends Authenticatable implements JWTSubject
 {
-    protected $fillable = ['name', 'email', 'password', 'birth_date', 'birth_place', 'gender', 'level', 'group', 'parent', 'cin', 'address', 'phone'];
+    use HasFactory, Notifiable;
+
+    protected $fillable = [ 'name', 'email', 'password', 'birth_date', 'birth_place', 'gender', 'level', 'group', 'parent', 'cin', 'address', 'phone', ];
+
+    public function getJWTIdentifier() { return $this->getKey(); }
+    public function getJWTCustomClaims(){ return []; }
 }
