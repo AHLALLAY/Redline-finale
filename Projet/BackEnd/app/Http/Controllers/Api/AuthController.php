@@ -19,11 +19,18 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function LoginStaff(LoginStaffRequest $loginStudentRequest)
+    public function LoginStaff(LoginStaffRequest $loginStaffRequest)
     {
         try {
-            $validated_data = $loginStudentRequest->validated();
+            $validated_data = $loginStaffRequest->validated();
             $data = $this->authService->LoginStaff($validated_data);
+
+            if ($data === null) {
+                return response()->json([
+                    'message' => 'Identifiants invalides',
+                    'status' => 'error'
+                ], 401);
+            }
 
             return response()->json([
                 'message' => 'Connexion réussie',
@@ -50,9 +57,17 @@ class AuthController extends Controller
             $validated_data = $loginStudentRequest->validated();
             $data = $this->authService->LoginStudent($validated_data);
 
+            if ($data === null) {
+                return response()->json([
+                    'message' => 'Identifiants invalides',
+                    'status' => 'error'
+                ], 401);
+            }
+
             return response()->json([
                 'message' => 'Connexion réussie',
-                'data' => $data
+                'data' => $data,
+                'status' => 'success'
             ], 200);
         } catch (ValidationException $e) {
             return response()->json([
@@ -102,7 +117,7 @@ class AuthController extends Controller
             $user = $this->authService->RegisterStudent($validated_data);
 
             return response()->json([
-                'message' => 'élève enregistré avec succès',
+                'message' => 'Élève enregistré avec succès',
                 'user' => $user,
                 'status' => 'success'
             ], 201);
@@ -124,7 +139,7 @@ class AuthController extends Controller
     public function Logout()
     {
         try {
-            $logoutResult = $this->authService->logout();
+            $logoutResult = $this->authService->Logout();
 
             if (!$logoutResult) {
                 return response()->json([
