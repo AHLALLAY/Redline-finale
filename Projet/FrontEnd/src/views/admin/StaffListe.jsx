@@ -19,16 +19,14 @@ export default function StaffList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newStaff, setNewStaff] = useState({
     name: "",
-    email: "",
-    password: "123456789",
-    birth_date: "",
-    birth_place: "",
-    gender: "",
-    level: "",
-    parent: "",
     cin: "",
-    address: "",
-    phone: ""
+    email: "",
+    password: "",
+    role: "",
+    birth_date: "",
+    phone: "",
+    last_diplomat: "",
+    obtained_at: ""
   });
 
   // Notification
@@ -40,11 +38,11 @@ export default function StaffList() {
       try {
         const response = await fetch('http://127.0.0.1:8000/api/admin/staff');
         if (!response.ok) throw new Error('Erreur de chargement');
-        
+
         const data = await response.json();
         if (data.status === 'success') {
           setStaffs(data.data);
-          
+
           // Extraire les niveaux uniques
           const uniqueLevels = [...new Set(data.data.map(s => s.level))];
           setLevels(uniqueLevels);
@@ -55,7 +53,7 @@ export default function StaffList() {
         setLoading(false);
       }
     }
-    
+
     fetchData();
   }, []);
 
@@ -77,81 +75,75 @@ export default function StaffList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validation des champs requis
     if (!newStaff.name || !newStaff.email || !newStaff.level) {
       showNotification('Veuillez remplir tous les champs obligatoires', 'error');
       return;
     }
-  
+
     try {
       const staffData = {
         name: newStaff.name,
-        email: newStaff.email,
-        password: newStaff.password, // "123456789" par défaut
-        birth_date: newStaff.birth_date,
-        birth_place: newStaff.birth_place,
-        gender: newStaff.gender,
-        level: newStaff.level,
-        parent: newStaff.parent,
         cin: newStaff.cin,
-        address: newStaff.address,
-        phone: newStaff.phone
+        email: newStaff.email,
+        password: newStaff.password,
+        birth_date: newStaff.birth_date,
+        phone: newStaff.phone,
+        last_diplomat: newStaff.last_diplomat,
+        obtained_at: newStaff.obtained_at,
       };
-  
+
       // Appel API
       const response = await fetch('http://127.0.0.1:8000/api/register/staff', {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify(staffData)
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(data.message || 'Erreur lors de l\'ajout du membre du staff');
       }
-  
+
       // Succès
       showNotification('Membre du staff ajouté avec succès', 'success');
       setIsModalOpen(false);
-      
+
       // Réinitialisation du formulaire
       setNewStaff({
         name: "",
-        email: "",
-        password: "123456789",
-        birth_date: "",
-        birth_place: "",
-        gender: "",
-        level: "",
-        parent: "",
         cin: "",
-        address: "",
-        phone: ""
+        email: "",
+        password: "",
+        birth_date: "",
+        phone: "",
+        last_diplomat: "",
+        obtained_at: ""
       });
-  
+
       fetchStaffs();
-  
+
     } catch (err) {
       console.error('Erreur:', err);
       showNotification(err.message || 'Une erreur est survenue', 'error');
     }
   };
-  
+
   const fetchStaffs = async () => {
     try {
       setLoading(true);
       const response = await fetch('http://127.0.0.1:8000/api/admin/staff');
       if (!response.ok) throw new Error('Erreur de chargement');
-      
+
       const data = await response.json();
       if (data.status === 'success') {
         setStaffs(data.data);
-        
+
         const uniqueLevels = [...new Set(data.data.map(s => s.level))];
         setLevels(uniqueLevels);
       }
@@ -168,17 +160,17 @@ export default function StaffList() {
 
   return (
     <div className="min-h-screen bg-orange-50">
-      <Header 
-        onBack={() => navigate("/admin/dashboard")} 
+      <Header
+        onBack={() => navigate("/admin/dashboard")}
         onLogout={handleLogout}
       />
-      
-      <Notification 
-        message={notification.message} 
-        type={notification.type} 
-        visible={notification.visible} 
+
+      <Notification
+        message={notification.message}
+        type={notification.type}
+        visible={notification.visible}
       />
-      
+
       <main className="container mx-auto px-4 pt-24 pb-8">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-4 border-b border-orange-200">
@@ -186,13 +178,13 @@ export default function StaffList() {
               <h2 className="text-xl font-semibold text-orange-800">
                 Liste des membres du staff ({filteredStaffs.length})
               </h2>
-              
+
               <div className="flex flex-wrap gap-2">
-                <FilterButton 
+                <FilterButton
                   isActive={filterOpen || selectedLevel !== "all"}
                   onClick={() => setFilterOpen(!filterOpen)}
                 />
-                
+
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
@@ -201,7 +193,7 @@ export default function StaffList() {
                 </button>
               </div>
             </div>
-            
+
             {filterOpen && (
               <FilterPanel
                 levels={levels}
@@ -213,19 +205,19 @@ export default function StaffList() {
               />
             )}
           </div>
-          
-          <StaffGrid 
-            staffs={filteredStaffs} 
+
+          <StaffGrid
+            staffs={filteredStaffs}
             onViewDetails={(id) => showNotification(`Affichage des détails pour le membre ${id}`, 'info')}
           />
         </div>
       </main>
-      
+
       <AddStaffModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         staff={newStaff}
-        onChange={(e) => setNewStaff({...newStaff, [e.target.name]: e.target.value})}
+        onChange={(e) => setNewStaff({ ...newStaff, [e.target.name]: e.target.value })}
         onSubmit={handleSubmit}
         levels={levels}
       />
@@ -235,7 +227,7 @@ export default function StaffList() {
 
 function Header({ onBack, onLogout }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   return (
     <header className="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm">
       <div className="container mx-auto px-4 py-3">
@@ -250,7 +242,7 @@ function Header({ onBack, onLogout }) {
             </button>
             <h1 className="text-xl font-bold text-orange-600">OMEGA SCHOOL</h1>
           </div>
-          
+
           <div className="hidden md:block">
             <button
               onClick={onLogout}
@@ -259,7 +251,7 @@ function Header({ onBack, onLogout }) {
               Déconnexion
             </button>
           </div>
-          
+
           <button
             className="md:hidden text-gray-600 p-2 rounded-lg hover:bg-orange-100"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -267,7 +259,7 @@ function Header({ onBack, onLogout }) {
             {mobileMenuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
         </div>
-        
+
         {mobileMenuOpen && (
           <div className="md:hidden mt-2 pt-2 border-t border-orange-200">
             <button
@@ -287,9 +279,8 @@ function FilterButton({ isActive, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${
-        isActive ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-      }`}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition ${isActive ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+        }`}
     >
       <FaFilter />
       <span>Filtres</span>
@@ -315,7 +306,7 @@ function FilterPanel({ levels, selectedLevel, onLevelChange, onReset }) {
             ))}
           </select>
         </div>
-        
+
         <div className="flex items-end">
           <button
             onClick={onReset}
@@ -358,7 +349,7 @@ function StaffCard({ staff, onViewDetails }) {
           </span>
           <h3 className="font-semibold text-gray-800">{staff.name}</h3>
         </div>
-        
+
         <button
           onClick={() => onViewDetails(staff.id)}
           className="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition"
@@ -367,23 +358,23 @@ function StaffCard({ staff, onViewDetails }) {
           <FaEye />
         </button>
       </div>
-      
+
       <div className="space-y-2 text-sm text-gray-600">
         <div className="flex justify-between">
           <span className="font-medium">Niveau:</span>
           <span>{staff.level || "N/A"}</span>
         </div>
-        
+
         <div className="flex justify-between">
           <span className="font-medium">Email:</span>
           <span>{staff.email || "N/A"}</span>
         </div>
-        
+
         <div className="flex justify-between">
           <span className="font-medium">Téléphone:</span>
           <span>{staff.phone || "N/A"}</span>
         </div>
-        
+
         <div className="flex justify-between">
           <span className="font-medium">Ajouté le:</span>
           <span>{formatDate(staff.created_at)}</span>
@@ -393,7 +384,7 @@ function StaffCard({ staff, onViewDetails }) {
   );
 }
 
-function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
+function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit }) {
   if (!isOpen) return null;
 
   return (
@@ -406,13 +397,13 @@ function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
               <FaTimes />
             </button>
           </div>
-          
+
           <form onSubmit={onSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Informations de base */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-orange-700">Informations personnelles</h4>
-                
+
+            <div className="space-y-3">
+              <h4 className="font-medium text-orange-700">Informations personnelles</h4>
+
+              <div className="flex space-x-2">
                 <div>
                   <label className="block text-sm text-gray-700 mb-1">Nom complet*</label>
                   <input
@@ -424,36 +415,20 @@ function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
                     required
                   />
                 </div>
-                
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-1">Genre*</label>
-                    <select
-                      name="gender"
-                      value={staff.gender}
-                      onChange={onChange}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                      required
-                    >
-                      <option value="">Sélectionner</option>
-                      <option value="Masculin">Masculin</option>
-                      <option value="Féminin">Féminin</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm text-gray-700 mb-1">Date de naissance*</label>
-                    <input
-                      type="date"
-                      name="birth_date"
-                      value={staff.birth_date}
-                      onChange={onChange}
-                      className="w-full p-2 border border-gray-300 rounded-lg"
-                      required
-                    />
-                  </div>
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">CIN*</label>
+                  <input
+                    type="text"
+                    name="cin"
+                    value={staff.cin}
+                    onChange={onChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg"
+                  />
                 </div>
-                
+              </div>
+
+
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm text-gray-700 mb-1">Email*</label>
                   <input
@@ -465,78 +440,57 @@ function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
                     required
                   />
                 </div>
-                
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1">Niveau*</label>
-                  <select
-                    name="level"
-                    value={staff.level}
+                  <label className="block text-sm text-gray-700 mb-1">Mot de passe*</label>
+                  <input
+                    type="paswword"
+                    name="password"
+                    value={staff.password}
                     onChange={onChange}
                     className="w-full p-2 border border-gray-300 rounded-lg"
-                    required
-                  >
-                    <option value="">Sélectionner</option>
-                    {levels.map(level => (
-                      <option key={level} value={level}>{level}</option>
-                    ))}
-                  </select>
+                  />
                 </div>
               </div>
               
-              {/* Informations supplémentaires */}
-              <div className="space-y-3">
-                <h4 className="font-medium text-orange-700">Informations supplémentaires</h4>
-                
+              <div>
+                <label className="block text-sm text-gray-700 mb-1">Date de naissance*</label>
+                <input
+                  type="date"
+                  name="birth_date"
+                  value={staff.birth_date}
+                  onChange={onChange}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-gray-700 mb-1">Téléphone*</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={staff.phone}
+                  onChange={onChange}
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1">Lieu de naissance</label>
+                  <label className="block text-sm text-gray-700 mb-1">Déplome*</label>
                   <input
                     type="text"
-                    name="birth_place"
-                    value={staff.birth_place}
+                    name="last_diplomat"
+                    value={staff.last_diplomat}
                     onChange={onChange}
                     className="w-full p-2 border border-gray-300 rounded-lg"
                   />
                 </div>
-                
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1">Parent</label>
+                  <label className="block text-sm text-gray-700 mb-1">Date d'obtention*</label>
                   <input
-                    type="text"
-                    name="parent"
-                    value={staff.parent}
-                    onChange={onChange}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">CIN</label>
-                  <input
-                    type="text"
-                    name="cin"
-                    value={staff.cin}
-                    onChange={onChange}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">Adresse</label>
-                  <input
-                    type="text"
-                    name="address"
-                    value={staff.address}
-                    onChange={onChange}
-                    className="w-full p-2 border border-gray-300 rounded-lg"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm text-gray-700 mb-1">Téléphone*</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={staff.phone}
+                    type="date"
+                    name="obtained_at"
+                    value={staff.obtained_at}
                     onChange={onChange}
                     className="w-full p-2 border border-gray-300 rounded-lg"
                     required
@@ -544,7 +498,7 @@ function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
                 </div>
               </div>
             </div>
-            
+
             <div className="pt-4 border-t border-gray-200 flex justify-end gap-3">
               <button
                 type="button"
@@ -569,13 +523,13 @@ function AddStaffModal({ isOpen, onClose, staff, onChange, onSubmit, levels }) {
 
 function Notification({ message, type, visible }) {
   if (!visible) return null;
-  
+
   const colors = {
     success: 'bg-green-100 border-green-500 text-green-700',
     error: 'bg-red-100 border-red-500 text-red-700',
     info: 'bg-blue-100 border-blue-500 text-blue-700'
   };
-  
+
   return (
     <div className={`fixed top-20 right-4 p-4 rounded-lg border-l-4 shadow-md ${colors[type]}`}>
       {message}
@@ -607,5 +561,3 @@ function ErrorScreen({ message, onRetry }) {
     </div>
   );
 }
-// Les composants Header restent identiques
-// à ceux du composant StudentList et peuvent être réutilisés tels quels
