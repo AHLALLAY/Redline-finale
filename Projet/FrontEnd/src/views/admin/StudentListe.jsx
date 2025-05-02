@@ -22,7 +22,7 @@ export default function StudentList() {
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
-    password: "123456789",
+    password: "",
     birth_date: "",
     birth_place: "",
     gender: "",
@@ -481,6 +481,17 @@ function AddStudentModal({ isOpen, onClose, student, onChange, onSubmit, levels,
                       type="date"
                       name="birth_date"
                       value={student.birth_date}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">lieu de naissance*</label>
+                    <input
+                      type="text"
+                      name="birth_place"
+                      value={student.birth_place}
                       onChange={onChange}
                       className="w-full p-2 border border-gray-300 rounded-lg"
                       required
