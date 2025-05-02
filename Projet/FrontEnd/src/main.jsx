@@ -16,6 +16,7 @@ import StaffListe from './views/admin/StaffListe.jsx'
 import StudentListe from './views/admin/StudentListe.jsx'
 import Register from './views/auth/register.jsx'
 import StudentDashboard from './views/Student/Student_dashboard.jsx'
+import StudentDetails from './views/admin/StudentDetails.jsx'
 
 
 createRoot(document.getElementById('root')).render(
@@ -38,9 +39,15 @@ createRoot(document.getElementById('root')).render(
           </ProtecteAdminDashboard>
         }
         />
-        <Route path="/admin/student" element={
+        <Route path="/admin/students" element={
           <ProtecteAdminDashboard>
             <StudentListe />
+          </ProtecteAdminDashboard>
+        }
+        />
+        <Route path="/admin/students/:id" element={
+          <ProtecteAdminDashboard>
+            <StudentDetails />
           </ProtecteAdminDashboard>
         }
         />

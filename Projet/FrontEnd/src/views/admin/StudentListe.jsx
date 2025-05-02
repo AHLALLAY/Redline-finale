@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaEye } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // Header
 function Header() {
     const navigate = useNavigate();
-    
+
     const back = () => navigate('/admin/dashboard');
     
     const logout = () => {
@@ -84,7 +84,7 @@ function Filter({ onFilterChange }) {
                         <div className="flex justify-between items-center mb-3">
                             <h3 className="font-medium text-gray-800">Filtres</h3>
                             <button onClick={toggle} className="text-gray-500 hover:text-gray-700">
-                               <FaTimes />
+                                <FaTimes />
                             </button>
                         </div>
 
@@ -181,7 +181,7 @@ function AddStudent({ onStudentAdded }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         try {
             const response = await fetch("http://127.0.0.1:8000/api/register/student", {
                 method: "POST",
@@ -190,9 +190,9 @@ function AddStudent({ onStudentAdded }) {
                 },
                 body: JSON.stringify(formData)
             });
-            
+
             const data = await response.json();
-            
+
             if (data.status === "success") {
                 setOpen(false);
                 setFormData({
@@ -214,7 +214,7 @@ function AddStudent({ onStudentAdded }) {
                 alert("Erreur lors de l'ajout de l'élève");
             }
         } catch (error) {
-            alert("Erreur de connexion : "+ error);
+            alert("Erreur de connexion : " + error);
         }
     };
 
@@ -461,12 +461,27 @@ function AddStudent({ onStudentAdded }) {
 
 // Student Card
 function StudentCard({ student }) {
+    const navigate = useNavigate();
+
+    const viewDetails = () => {
+        navigate(`/admin/students/${student.id}`);
+    };
+
     return (
         <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
             <h3 className="font-semibold text-lg text-orange-800">{student.name}</h3>
             <div className="mt-2 text-gray-600">
                 <p>Niveau: {student.level}</p>
                 <p>Groupe: {student.group || 'N/A'}</p>
+            </div>
+            <div className="mt-3 flex justify-end">
+                <button
+                    onClick={viewDetails}
+                    className="flex items-center gap-1 text-blue-600 hover:text-blue-800 transition"
+                >
+                    <FaEye className="text-sm" />
+                    <span>Voir détails</span>
+                </button>
             </div>
         </div>
     );
@@ -487,7 +502,7 @@ function StudentList() {
         try {
             const response = await fetch("http://127.0.0.1:8000/api/admin/students");
             const data = await response.json();
-            
+
             if (data.status === "success") {
                 setStudents(data.data);
             } else {
@@ -510,14 +525,14 @@ function StudentList() {
     };
 
     const filteredStudents = students.filter(student => {
-        const nameMatch = !filters.searchName || 
+        const nameMatch = !filters.searchName ||
             student.name.toLowerCase().includes(filters.searchName.toLowerCase());
         const levelMatch = !filters.level || student.level === filters.level;
         const groupMatch = !filters.group || student.group === filters.group;
-        
+
         return nameMatch && levelMatch && groupMatch;
     });
-  
+
     return (
         <div className="min-h-screen bg-orange-50">
             <Header />
