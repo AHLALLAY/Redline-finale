@@ -9,7 +9,7 @@ function LoginStaff() {
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const navigate = useNavigate('');
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,20 +27,26 @@ function LoginStaff() {
             });
 
             const data = await response.json();
-
+            
             if (!response.ok) {
                 throw new Error(data.message || 'Erreur de connexion');
             }
 
-            localStorage.setItem('authToken', data.data.token);
+            localStorage.setItem('token', data.data.token);
+            localStorage.setItem('role', data.data.staff.role);
             setSuccess('Connexion réussie! Redirection en cours...');
 
-            // Redirection après un délai pour laisser voir le message
+            // Créer le chemin de redirection
+            const rolePath = data.data.staff.role.toLowerCase();
+            const redirectPath = `/${rolePath}/dashboard`;
+            
+            // Redirection après un délai
             setTimeout(() => {
-                navigate(`/${data.data.staff.role.toLowerCase()}/dashboard`);
+                navigate(redirectPath);
             }, 1500);
 
         } catch (err) {
+            console.error('Erreur de connexion:', err);
             setError(err.message || 'Email ou mot de passe incorrect');
         } finally {
             setLoading(false);
