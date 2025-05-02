@@ -17,4 +17,8 @@ class Student extends Authenticatable implements JWTSubject
 
     public function getJWTIdentifier() { return $this->getKey(); }
     public function getJWTCustomClaims(){ return []; }
+
+    public function absences() { return $this->hasMany(Absence::class); }
+    public function grades() { return $this->hasMany(Grade::class); }
+    public function classe() { return $this->belongsTo(Classe::class); }
 }
