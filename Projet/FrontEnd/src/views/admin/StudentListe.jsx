@@ -22,7 +22,7 @@ export default function StudentList() {
   const [newStudent, setNewStudent] = useState({
     name: "",
     email: "",
-    password: "123456789",
+    password: "",
     birth_date: "",
     birth_place: "",
     gender: "",
