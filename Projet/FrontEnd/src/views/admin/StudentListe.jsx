@@ -486,6 +486,17 @@ function AddStudentModal({ isOpen, onClose, student, onChange, onSubmit, levels,
                       required
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm text-gray-700 mb-1">lieu de naissance*</label>
+                    <input
+                      type="text"
+                      name="birth_place"
+                      value={student.birth_place}
+                      onChange={onChange}
+                      className="w-full p-2 border border-gray-300 rounded-lg"
+                      required
+                    />
+                  </div>
                 </div>
                 
                 <div>
