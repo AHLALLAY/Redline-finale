@@ -517,7 +517,7 @@ function StudentList() {
         
         return nameMatch && levelMatch && groupMatch;
     });
-
+  
     return (
         <div className="min-h-screen bg-orange-50">
             <Header />
