@@ -21,11 +21,11 @@ class TeacherController extends Controller
     }
 
     // activities
-    public function AddExercice(ExerciceRequest $exerciceRequest)
+    public function addExercise(ExerciceRequest $exerciceRequest)
     {
         try {
             $validated_data = $exerciceRequest->validated();
-            $result = $this->teacherService->AddExercice($validated_data);
+            $result = $this->teacherService->addExercise($validated_data);
 
             return response()->json([
                 'message' => 'Exercice Assigned successfuly',
@@ -44,10 +44,10 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function ExercieDone($exerciceId)
+    public function markExerciseAsDone($exerciceId)
     {
         try {
-            $result = $this->teacherService->ExerciceDone($exerciceId);
+            $result = $this->teacherService->markExerciseAsDone($exerciceId);
             if ($result) {
                 return response()->json([
                     'message' => 'Exercice status has been changed',
@@ -62,11 +62,11 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function AddActivityToTextBox(TextBoxRequest $textBoxRequest)
+    public function addTextBoxActivity(TextBoxRequest $textBoxRequest)
     {
         try {
             $validated_data = $textBoxRequest->validated();
-            $this->teacherService->AddActivityToTextBox($validated_data);
+            $this->teacherService->addTextBoxActivity($validated_data);
 
             return response()->json([
                 'message' => 'Activity Added',
@@ -88,10 +88,10 @@ class TeacherController extends Controller
     }
 
     // student
-    public function DisplayMyStudents($level, $group)
+    public function getStudentsByLevelAndGroup($level, $group)
     {
         try {
-            $students = $this->teacherService->DisplayMyStudents($level, $group);
+            $students = $this->teacherService->getStudentsByLevelAndGroup($level, $group);
             return response()->json([
                 'message' => 'Étudiants récupérés avec succès',
                 'data' => $students,
@@ -106,10 +106,10 @@ class TeacherController extends Controller
         }
     }
 
-    public function AddAbsence(AbsenceRequest $absenceRequest) {
+    public function recordAbsence(AbsenceRequest $absenceRequest) {
         try{
             $validated_data = $absenceRequest->validated();
-            $this->teacherService->AddAbsence($validated_data);
+            $this->teacherService->recordAbsence($validated_data);
             return response()->json([
                 'message' => 'absent added',
                 'status' => 'success'
@@ -129,10 +129,10 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-    public function AddGrade(GradeRequest $gradeRequest) {
+    public function addGrade(GradeRequest $gradeRequest) {
         try{
             $validated_data = $gradeRequest->validated();
-            $this->teacherService->AddGrade($validated_data);
+            $this->teacherService->addGrade($validated_data);
             return response()->json([
                 'message' => 'grade added',
                 'status' => 'success'

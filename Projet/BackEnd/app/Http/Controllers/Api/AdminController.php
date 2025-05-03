@@ -9,6 +9,7 @@ use App\Http\Requests\OfferRequest;
 use App\Http\Requests\TimeTableRequest;
 use App\Services\AdminService;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\CssSelector\Node\FunctionNode;
 
 class AdminController extends Controller
 {
@@ -19,12 +20,11 @@ class AdminController extends Controller
     }
 
     // staff
-    public function AddStaff($staffData) {}
-
-    public function DisplayStaff()
+    public function addStaff(){}
+    public function getStaffList()
     {
         try {
-            $data = $this->adminService->DisplayStaff();
+            $data = $this->adminService->getStaffList();
             if ($data === null) {
                 return response()->json([
                     "message" => "No Stuff found",
@@ -43,10 +43,10 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function SuspendStaff($staffId)
+    public function suspendStaff($staffId)
     {
         try {
-            $result = $this->adminService->SuspendStaff($staffId);
+            $result = $this->adminService->suspendStaff($staffId);
 
             if (!$result) {
                 return response()->json([
@@ -63,10 +63,10 @@ class AdminController extends Controller
             throw $e;
         }
     }
-    public function ActivatStaff($staffId)
+    public function activateStaff($staffId)
     {
         try {
-            $result = $this->adminService->ActivatStaff($staffId);
+            $result = $this->adminService->activateStaff($staffId);
 
             if (!$result) {
                 return response()->json([
@@ -83,10 +83,10 @@ class AdminController extends Controller
             throw $e;
         }
     }
-    public function DeleteStaff($staffId)
+    public function deleteStaff($staffId)
     {
         try {
-            $result = $this->adminService->DeleteStaff($staffId);
+            $result = $this->adminService->deleteStaff($staffId);
             if ($result) {
                 return response()->json([
                     'message' => 'delete successive',
@@ -97,11 +97,11 @@ class AdminController extends Controller
             throw $e;
         }
     }
-    public function AddClasse(ClasseRequest $classeRequest)
+    public function addClass(ClasseRequest $classeRequest)
     {
         try {
             $validated_data = $classeRequest->validated();
-            $this->adminService->AddClasse($validated_data);
+            $this->adminService->addClass($validated_data);
             return response()->json([
                 'message' => 'Class Added',
                 'data' => $validated_data,
@@ -120,11 +120,11 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function AddGarde(GardeRequest $gardeRequest)
+    public function addGuard(GardeRequest $gardeRequest)
     {
         try {
             $validated_data = $gardeRequest->validated();
-            $this->adminService->AddGarde($validated_data);
+            $this->adminService->addGuard($validated_data);
             return response()->json([
                 'message' => 'Gard Added',
                 'data' => $validated_data,
@@ -143,10 +143,10 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function AddTimeTable(TimeTableRequest $timeTableRequest){
+    public function addTimeTable(TimeTableRequest $timeTableRequest){
         try{
             $validated_data = $timeTableRequest->validated();
-            $this->adminService->AddTimeTable($validated_data);
+            $this->adminService->addTimeTable($validated_data);
 
             return response()->json([
                 'message' => 'Time Table created',
@@ -168,10 +168,10 @@ class AdminController extends Controller
     }
 
     // student
-    public function DisplayStudents()
+    public function getStudentsList()
     {
         try {
-            $data = $this->adminService->DisplayStudents();
+            $data = $this->adminService->getStudentsList();
             if ($data === null) {
                 return response()->json([
                     "message" => "No Student found",
@@ -190,10 +190,10 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function DisplayAbsences()
+    public function getAbsencesList()
     {
         try {
-            $data = $this->adminService->DisplayAbsences();
+            $data = $this->adminService->getAbsencesList();
             if ($data === null) {
                 return response()->json([
                     "message" => "No Student found",
@@ -214,9 +214,9 @@ class AdminController extends Controller
     }
 
     // statistics
-    public function CountStaff(){
+    public function getStaffStatistics(){
         try{
-            $result = $this->adminService->CountStaff();
+            $result = $this->adminService->getStaffStatistics();
             if($result){
                 return response()->json([
                     'message' => 'Calcule Completed',
@@ -233,9 +233,9 @@ class AdminController extends Controller
         }
     }
 
-    public function CountStudent(){
+    public function getStudentStatistics(){
         try{
-            $result = $this->adminService->CountStudent();
+            $result = $this->adminService->getStudentStatistics();
             if($result){
                 return response()->json([
                     'message' => 'Calcule Completed',
@@ -252,11 +252,11 @@ class AdminController extends Controller
         }
     }
     // auther
-    public function AddOffer(OfferRequest $offerRequest)
+    public function addOffer(OfferRequest $offerRequest)
     {
         try {
             $validated_data = $offerRequest->validated();
-            $this->adminService->AddOffer($validated_data);
+            $this->adminService->addOffer($validated_data);
             return response()->json([
                 'message' => 'Offre Added',
                 'data' => $validated_data,
