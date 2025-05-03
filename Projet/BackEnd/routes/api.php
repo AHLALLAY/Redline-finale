@@ -7,47 +7,48 @@ use App\Http\Controllers\Api\TeacherController;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(AuthController::class)->group(function() {
-    Route::post('/login/staff','LoginStaff'); //done
-    Route::post('/login/student','LoginStudent'); //done
-    Route::post('/register/staff','RegisterStaff'); //done
-    Route::post('/register/student','RegisterStudent'); //done
-    Route::post('/logout','Logout'); //done
+    Route::post('/login/staff','loginStaff'); //done
+    Route::post('/login/student','loginStudent'); //done
+    Route::post('/register/staff','registerStaff'); //done
+    Route::post('/register/student','registerStudent'); //done
+    Route::post('/logout','logout'); //done
 });
 
 
 Route::controller(AccountantController::class)->group(function(){
-    Route::post('/accountant/journal/new','AddRecord'); //done
-    Route::post('/accountant/journal/statistics/{month}','CalculateStatisticsOfMonth'); //done
-    Route::get('/accountant/journal/all','GetAllRecord'); //done
+    Route::post('/accountant/journal/new','addRecord'); //done
+    Route::post('/accountant/journal/statistics/{month}','calculateMonthlyStatistics'); //done
+    Route::get('/accountant/journal/all','getAllRecords'); //done
 });
 
 
 Route::controller(AdminController::class)->group(function(){
     // staff
-    Route::get('/admin/staff','DisplayStaff'); //done
-    Route::patch('/admin/staff/suspend/{staffId}','SuspendStaff'); //done
-    Route::patch('/admin/staff/activat/{staffId}','ActivatStaff'); //done
-    Route::patch('/admin/staff/delete/{staffId}','DeleteStaff'); //done
-    Route::post('/admin/class/new','AddClasse'); //done
-    Route::post('/admin/gard/new','AddGarde'); //done
-    Route::post('/admin/timetable/new', 'AddTimeTable'); //done
+    Route::get('/admin/staff','getStaffList'); //done
+    Route::patch('/admin/staff/suspend/{staffId}','suspendStaff'); //done
+    Route::patch('/admin/staff/activat/{staffId}','activateStaff'); //done
+    Route::patch('/admin/staff/delete/{staffId}','deleteStaff'); //done
+    Route::post('/admin/class/new','addClass'); //done
+    Route::post('/admin/gard/new','addGuard'); //
+    Route::post('/admin/timetable/new', 'addTimeTable'); //done
     
     // student
-    Route::get('/admin/students','DisplayStudents'); //done
-    Route::get('/admin/absences','DisplayAbsences'); //done
+    Route::get('/admin/students','getStudentsList'); //done
+    Route::get('/admin/absences','getAbsencesList'); //done
     
     // statistics
-    Route::get('/admin/statistics/staff','CountStaff'); // done
-    Route::get('/admin/statistics/students','CountStudent'); // done
+    Route::get('/admin/statistics/staff','getStaffStatistics'); // done
+    Route::get('/admin/statistics/students','getStudentStatistics'); // done
+    
     // auther
-    Route::post('/admin/offer/new','AddOffer'); //done
+    Route::post('/admin/offer/new','addOffer'); //
 });
 
 Route::controller(TeacherController::class)->group(function(){
-    Route::post('/prof/exercice/new','AddExercice'); //done
-    Route::patch('/prof/exercice/done/{exerciceId}','ExercieDone'); //done
-    Route::post('/prof/activity/new','AddActivityToTextBox'); //done
-    Route::post('/prof/MyStudents/{Levels}_{group}','DisplayMyStudents'); //done
-    Route::post('/prof/absence/new','AddAbsence'); //done
-    Route::post('/prof/grade/new','AddGrade'); //done
+    Route::post('/prof/exercice/new','addExercise'); //done
+    Route::patch('/prof/exercice/done/{exerciceId}','markExerciseAsDone'); //done
+    Route::post('/prof/activity/new','addTextBoxActivity'); //done
+    Route::post('/prof/MyStudents/{Levels}_{group}','getStudentsByLevelAndGroup'); //done
+    Route::post('/prof/absence/new','recordAbsence'); //done
+    Route::post('/prof/grade/new','addGrade'); //done
 });
