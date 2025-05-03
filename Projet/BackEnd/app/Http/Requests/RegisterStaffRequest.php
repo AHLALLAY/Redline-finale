@@ -20,7 +20,7 @@ class RegisterStaffRequest extends FormRequest
             'phone' => ['required', 'string', 'regex:/^(\+212|0)[\s\-\.]?[5-7][\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}$/'],
             'last_diploma' =>['required', 'string'],
             'obtained_at' => ['required','date'],
-            'subject_id' => ['required','integer', 'min:1', 'exists:subjects:id'],
+            'subject_id' => ['required','integer', 'min:1', 'exists:subjects,id'],
             'teaching_level' => ['required','in:1ére année,2ème année,3ème année,4ème année,5ème année,6ème année'],
             'is_suspended' => ['required','boolean'],
             'is_deleted' => ['required','boolean'],
