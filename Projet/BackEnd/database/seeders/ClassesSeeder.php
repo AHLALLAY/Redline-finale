@@ -2,39 +2,37 @@
 
 namespace Database\Seeders;
 
-use App\Models\Classe;
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ClassesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        $teachers = User::where('role', 'Enseignant')->get()->values();
-        
-        if ($teachers->isEmpty()) {
-            $this->command->error('Aucun enseignant trouvé. Exécutez d\'abord UsersSeeder!');
-            return;
-        }
+        $classes = [
+            [
+                'level' => '1ére année',
+                'group' => 'A',
+                'teacher_id' => 2, // Professeur Math
+                'room_number' => 101,
+                'academic_year' => 2023,
+            ],
+            [
+                'level' => '2ème année',
+                'group' => 'B',
+                'teacher_id' => 2,
+                'room_number' => 102,
+                'academic_year' => 2023,
+            ],
+            [
+                'level' => '3ème année',
+                'group' => 'A',
+                'teacher_id' => 2,
+                'room_number' => 201,
+                'academic_year' => 2023,
+            ],
+        ];
 
-        $niveaux = ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année'];
-        $groups = ['A', 'B', 'C', 'D'];
-
-        $teacherIndex = 3;
-        foreach ($niveaux as $niveau) {
-            foreach ($groups as $group) {
-                $teacher = $teachers[$teacherIndex % $teachers->count()];
-                $teacherIndex++;
-
-                Classe::create([
-                    'niveau' => $niveau,
-                    'group' => $group,
-                    'teacher_id' => $teacher->id,
-                ]);
-            }
-        }
+        DB::table('classes')->insert($classes);
     }
 }

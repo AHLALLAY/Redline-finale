@@ -2,41 +2,62 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class StudentsSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $levels = ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année'];
-        $groups = ['A', 'B', 'C', 'D'];
-        $studentsPerGroup = 22;
-        $totalStudents = count($levels) * count($groups) * $studentsPerGroup; // 6*4*22 = 528
-
-        for ($i = 1; $i <= $totalStudents; $i++) {
-            $levelIndex = (int) (($i - 1) / (count($groups) * $studentsPerGroup));
-            $groupIndex = (int) ((($i - 1) % (count($groups) * $studentsPerGroup)) / $studentsPerGroup);
-            $studentInGroup = ($i - 1) % $studentsPerGroup + 1;
-
-            DB::table('students')->insert([
-                'name' => 'Élève ' . $i,
-                'email' => 'eleve' . $i . '@gmail.com',
+        $students = [
+            [
+                'name' => 'Ahmed Benali',
+                'email' => 'ahmed.benali@student.com',
                 'password' => Hash::make('123456789'),
-                'birth_date' => Carbon::now()->subYears(6 + $levelIndex)->subDays(rand(1, 365))->format('Y-m-d'),
-                'birth_place' => 'Ville ' . rand(1, 10),
-                'gender' => ($i % 2) ? 'Masculin' : 'Féminin',
-                'level' => $levels[$levelIndex],
-                'group' => $groups[$groupIndex],
-                'parent' => 'Parent ' . $i,
-                'cin' => 'S' . str_pad($i, 6, '0', STR_PAD_LEFT),
-                'address' => 'Adresse ' . $i,
-                'phone' => '06' . str_pad($i, 8, '0', STR_PAD_LEFT),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-        }
+                'birth_date' => '2010-03-15',
+                'birth_place' => 'Casablanca',
+                'gender' => 'Masculin',
+                'class_id' => 1,
+                'parent_name' => 'Mohamed Benali',
+                'parent_cin' => 'P123456',
+                'address' => '123 Rue Principale, Casablanca',
+                'phone' => '0611223344',
+                'decision' => 'progress',
+                'is_deleted' => false
+            ],
+            [
+                'name' => 'Fatima Zahra',
+                'email' => 'fatima.zahra@student.com',
+                'password' => Hash::make('123456789'),
+                'birth_date' => '2011-07-22',
+                'birth_place' => 'Rabat',
+                'gender' => 'Féminin',
+                'class_id' => 1,
+                'parent_name' => 'Khadija Elamrani',
+                'parent_cin' => 'P654321',
+                'address' => '456 Avenue Secondaire, Rabat',
+                'phone' => '0622334455',
+                'decision' => 'progress',
+                'is_deleted' => false
+            ],
+            [
+                'name' => 'Youssef El Mansouri',
+                'email' => 'youssef.mansouri@student.com',
+                'password' => Hash::make('123456789'),
+                'birth_date' => '2009-11-05',
+                'birth_place' => 'Marrakech',
+                'gender' => 'Masculin',
+                'class_id' => 2,
+                'parent_name' => 'Hassan El Mansouri',
+                'parent_cin' => 'P789012',
+                'address' => '789 Boulevard Tertiaire, Marrakech',
+                'phone' => '0633445566',
+                'decision' => 'progress',
+                'is_deleted' => false
+            ],
+        ];
+
+        DB::table('students')->insert($students);
     }
 }

@@ -2,32 +2,52 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class AbsencesSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        $statuses = ['Présent', 'Absent', 'Retard'];
-        $periods = ['Matin', 'Après-midi', 'Journée'];
-        $justifications = ['Non justifié', 'Justifié', 'En attente'];
-
-        for ($i = 1; $i <= 500; $i++) {
-            $status = $statuses[rand(0, 2)];
-            
-            DB::table('absences')->insert([
-                'student_id' => rand(1, 246),
-                'status' => $status,
-                'delay' => $status === 'Retard' ? rand(5, 60) : null,
-                'date' => Carbon::now()->subDays(rand(1, 90))->format('Y-m-d'),
-                'period' => $periods[rand(0, 2)],
-                'justification' => $status !== 'Présent' ? $justifications[rand(0, 2)] : null,
-                'recorded_by' => rand(4, 12), // Users IDs (9 enseignants)
+        $absences = [
+            [
+                'student_id' => 1,
+                'status' => 'Absent',
+                'delay_minutes' => null,
+                'date' => '2023-10-15',
+                'period' => 'Matin',
+                'justification' => 'Non justifié',
+                'recorded_by' => 3,
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]);
+            ],
+            [
+                'student_id' => 2,
+                'status' => 'Retard',
+                'delay_minutes' => 15,
+                'date' => '2023-10-16',
+                'period' => 'Matin',
+                'justification' => 'Justifié',
+                'recorded_by' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'student_id' => 3,
+                'status' => 'Présent',
+                'delay_minutes' => null,
+                'date' => '2023-10-17',
+                'period' => 'Journée',
+                'justification' => null,
+                'recorded_by' => 3,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ];
+
+        // Insertion un par un pour plus de fiabilité
+        foreach ($absences as $absence) {
+            DB::table('absences')->insert($absence);
         }
     }
 }

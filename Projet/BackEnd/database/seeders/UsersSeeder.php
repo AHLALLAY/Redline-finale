@@ -5,79 +5,65 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Carbon\Carbon;
-
 
 class UsersSeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
-        // Admin user
-        DB::table('users')->insert([
-            'name' => 'Admin User',
-            'cin' => 'A123456',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('123456789'),
-            'role' => 'Admin',
-            'birth_date' => '1985-03-15',
-            'phone' => '0600000001',
-            'last_diplomat' => 'Doctorat en Informatique',
-            'obtained_at' => '2010-06-20',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Comptable user
-        DB::table('users')->insert([
-            'name' => 'Comptable User',
-            'cin' => 'B123456',
-            'email' => 'comptable@gmail.com',
-            'password' => Hash::make('123456789'),
-            'role' => 'Comptable',
-            'birth_date' => '1988-07-25',
-            'phone' => '0600000002',
-            'last_diplomat' => 'Master en Finance',
-            'obtained_at' => '2012-06-15',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // Secrétaire user
-        DB::table('users')->insert([
-            'name' => 'Secrétaire User',
-            'cin' => 'C123456',
-            'email' => 'secretaire@gmail.com',
-            'password' => Hash::make('123456789'),
-            'role' => 'Secrétaire',
-            'birth_date' => '1990-11-10',
-            'phone' => '0600000003',
-            'last_diplomat' => 'Licence en Administration',
-            'obtained_at' => '2014-06-30',
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        // 9 Enseignants
-        $subjects = [
-            'Mathématiques', 'Français', 'Sciences', 'Histoire', 'Géographie',
-            'Physique', 'Chimie', 'Biologie', 'Informatique'
+        $users = [
+            // Admin (sans subject_id ni teaching_level)
+            [
+                'name' => 'Admin System',
+                'cin' => 'A123456',
+                'email' => 'admin@school.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Admin',
+                'birth_date' => '1980-01-15',
+                'phone' => '0612345678',
+                'last_diploma' => 'Master en Informatique',
+                'obtained_at' => '2005-06-30',
+                'subject_id' => null,
+                'teaching_level' => null,
+                'is_suspended' => false,
+                'is_deleted' => false,
+            ],
+            // Enseignant (avec subject_id et teaching_level)
+            [
+                'name' => 'Professeur Math',
+                'cin' => 'M654321',
+                'email' => 'math.teacher@school.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Enseignant',
+                'birth_date' => '1985-05-20',
+                'phone' => '0623456789',
+                'last_diploma' => 'Doctorat en Mathématiques',
+                'obtained_at' => '2010-07-15',
+                'subject_id' => 1,
+                'teaching_level' => '1ére année',
+                'is_suspended' => false,
+                'is_deleted' => false,
+            ],
+            // Secrétaire (sans subject_id ni teaching_level)
+            [
+                'name' => 'Secrétaire',
+                'cin' => 'S987654',
+                'email' => 'secretary@school.com',
+                'password' => Hash::make('password123'),
+                'role' => 'Secrétaire',
+                'birth_date' => '1990-11-10',
+                'phone' => '0634567890',
+                'last_diploma' => 'BTS Secrétariat',
+                'obtained_at' => '2015-06-20',
+                'subject_id' => null,
+                'teaching_level' => null,
+                'is_suspended' => false,
+                'is_deleted' => false,
+            ],
         ];
 
-        foreach ($subjects as $index => $subject) {
-            DB::table('users')->insert([
-                'name' => "Enseignant $subject",
-                'cin' => 'E' . str_pad($index + 1, 6, '0', STR_PAD_LEFT),
-                'email' => strtolower($subject) . '@gmail.com',
-                'password' => Hash::make('123456789'),
-                'role' => 'Enseignant',
-                'birth_date' => Carbon::now()->subYears(rand(30, 60))->subDays(rand(1, 365))->format('Y-m-d'),
-                'phone' => '06' . str_pad($index + 10, 8, '0', STR_PAD_LEFT),
-                'last_diplomat' => "Master en $subject",
-                'obtained_at' => Carbon::now()->subYears(rand(5, 20))->format('Y-m-d'),
-                'is_suspended' => false,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        // Insertion un par un pour éviter le problème de longueur différente
+        foreach ($users as $user) {
+            DB::table('users')->insert($user);
         }
     }
 }
