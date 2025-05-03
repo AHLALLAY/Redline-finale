@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('parent_cin');
             $table->string('address');
             $table->string('phone')->nullable();
-            $table->enum('decision', ['success', 'failed', 'excluded'])->nullable();
+            $table->enum('decision', ['progress', 'success', 'failed', 'excluded'])->default('progress');
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
         });
