@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
-            $table->text('description')->nullable();
-            $table->integer('weekly_hours')->default(1);
+            $table->integer('weekly_hours');
             $table->enum('category', ['Sciences', 'Langues', 'Mathématiques', 'Arts', 'Sport', 'Autre']);
             $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année']);
             $table->timestamps();
