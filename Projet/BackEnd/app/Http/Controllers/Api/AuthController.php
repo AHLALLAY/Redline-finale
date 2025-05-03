@@ -14,16 +14,13 @@ class AuthController extends Controller
 {
     protected $authService;
 
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
+    public function __construct(AuthService $authService){$this->authService = $authService;}
 
-    public function LoginStaff(LoginStaffRequest $loginStaffRequest)
+    public function loginStaff(LoginStaffRequest $loginStaffRequest)
     {
         try {
             $validated_data = $loginStaffRequest->validated();
-            $data = $this->authService->LoginStaff($validated_data);
+            $data = $this->authService->loginStaff($validated_data);
 
             if ($data === null) {
                 return response()->json([
@@ -51,11 +48,11 @@ class AuthController extends Controller
         }
     }
 
-    public function LoginStudent(LoginStudentRequest $loginStudentRequest)
+    public function loginStudent(LoginStudentRequest $loginStudentRequest)
     {
         try {
             $validated_data = $loginStudentRequest->validated();
-            $data = $this->authService->LoginStudent($validated_data);
+            $data = $this->authService->loginStudent($validated_data);
 
             if ($data === null) {
                 return response()->json([
@@ -84,11 +81,11 @@ class AuthController extends Controller
         }
     }
 
-    public function RegisterStaff(RegisterStaffRequest $registerStaffRequest)
+    public function registerStaff(RegisterStaffRequest $registerStaffRequest)
     {
         try {
             $validated_data = $registerStaffRequest->validated();
-            $user = $this->authService->RegisterStaff($validated_data);
+            $user = $this->authService->registerStaff($validated_data);
 
             return response()->json([
                 'message' => $validated_data['role'] . ' enregistré avec succès',
@@ -110,11 +107,11 @@ class AuthController extends Controller
         }
     }
 
-    public function RegisterStudent(RegisterStudentRequest $registerStudentRequest)
+    public function registerStudent(RegisterStudentRequest $registerStudentRequest)
     {
         try {
             $validated_data = $registerStudentRequest->validated();
-            $user = $this->authService->RegisterStudent($validated_data);
+            $user = $this->authService->registerStudent($validated_data);
 
             return response()->json([
                 'message' => 'Élève enregistré avec succès',
@@ -136,10 +133,10 @@ class AuthController extends Controller
         }
     }
 
-    public function Logout()
+    public function logout()
     {
         try {
-            $logoutResult = $this->authService->Logout();
+            $logoutResult = $this->authService->logout();
 
             if (!$logoutResult) {
                 return response()->json([
