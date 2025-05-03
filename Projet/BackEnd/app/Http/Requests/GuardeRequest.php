@@ -13,7 +13,6 @@ class GuardeRequest extends FormRequest
         return [
             'teacher_id' => ['required','integer','exists:users,id,role,Enseignant'],
             'date' => ['required','date_format:Y-m-d','after_or_equal:today'],
-            'start_time' => ['required', 'date_format:H:i']
         ];
     }
 }
