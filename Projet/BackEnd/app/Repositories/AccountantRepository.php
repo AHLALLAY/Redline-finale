@@ -25,10 +25,10 @@ class AccountantRepository implements AccountantInterface
             $start = Carbon::createFromFormat('m', $month)->startOfMonth();
             $end = $start->copy()->endOfMonth();
 
-            $charges = Transaction::where('type', 'Charge')
+            $charges = Transaction::where('type', 'Dépense')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();
-            $produits = Transaction::where('type', 'Produit')
+            $produits = Transaction::where('type', 'Revenu')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();
 
