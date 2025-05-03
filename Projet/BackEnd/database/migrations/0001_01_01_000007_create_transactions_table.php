@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('journals', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('label');
+            $table->string('description');
             $table->decimal('amount', 8, 2);
-            $table->enum('type',['Charge', 'Produit']);
-            $table->string('reference');
-            $table->string('ressource');
-            $table->enum('ressource_type',['Client', 'Fournisseur']);
+            $table->enum('type', ['Dépense', 'Revenu']);
+            $table->string('reference_number');
+            $table->string('entity_name');
+            $table->enum('entity_type', ['Etudiant', 'Personnel', 'Fournisseur', 'Autre']);
+            $table->foreignId('recorded_by')->constrained('users');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('journals');
+        Schema::dropIfExists('transactions');
     }
 };

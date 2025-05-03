@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->enum('contrat',['Stage', 'CDI', 'CDD']);
+            $table->enum('contract_type', ['Stage', 'CDI', 'CDD']);
+            $table->boolean('is_active')->default(true);
+            $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
         });
     }

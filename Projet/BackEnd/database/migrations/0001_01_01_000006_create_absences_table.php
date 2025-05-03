@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
             $table->enum('status', ['Présent', 'Absent', 'Retard'])->default('Présent');
-            $table->integer('delay')->nullable();
+            $table->integer('delay_minutes')->nullable();
             $table->date('date');
             $table->enum('period', ['Matin', 'Après-midi', 'Journée'])->nullable();
             $table->enum('justification', ['Non justifié', 'Justifié', 'En attente'])->nullable();

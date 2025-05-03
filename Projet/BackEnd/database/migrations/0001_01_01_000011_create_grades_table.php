@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('text_boxes', function (Blueprint $table) {
+        Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->enum('type',['Cours', 'Evaluation']);
-            $table->text('description');
+            $table->foreignId('student_id')->constrained('students')->onDelete('cascade');
+            $table->decimal('grade',4,2);
+            $table->integer('evaluation_number');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('text_boxes');
+        Schema::dropIfExists('grades');
     }
 };

@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use function Laravel\Prompts\table;
+
 return new class extends Migration
 {
     /**
@@ -11,14 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('time_tables', function (Blueprint $table) {
+        Schema::create('guardDuties', function (Blueprint $table) {
             $table->id();
-            $table->string('level');
-            $table->string('group');
-            $table->integer('class_room_N');
-            $table->time('start_time');
-            $table->time('end_time');
-            $table->string('subject_school');
+            $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->date('date');
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('time_tables');
+        Schema::dropIfExists('guardDuties');
     }
 };

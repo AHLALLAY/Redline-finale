@@ -4,8 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use function Laravel\Prompts\table;
-
 return new class extends Migration
 {
     /**
@@ -13,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gardes', function (Blueprint $table) {
+        Schema::create('exercices', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('description');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
-            $table->date('date');
-            $table->time('start_time');
+            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
+            $table->boolean('is_done')->default(false);
+            $table->timestamp('done_at')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('gardes');
+        Schema::dropIfExists('exercices');
     }
 };
