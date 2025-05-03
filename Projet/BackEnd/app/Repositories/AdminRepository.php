@@ -6,7 +6,7 @@ namespace App\Repositories;
 use App\Interfaces\AdminInterface;
 use App\Models\Absence;
 use App\Models\Classe;
-use App\Models\Garde;
+use App\Models\GuardDuty;
 use App\Models\Offer;
 use App\Models\Student;
 use App\Models\TimeTable;
@@ -14,9 +14,7 @@ use App\Models\User;
 
 class AdminRepository implements AdminInterface
 {
-
-    // staff
-    public function AddStaff($staffData)
+    public function addStaff(array $staffData)
     {
         try {
             return User::create($staffData);
@@ -24,7 +22,8 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function DisplayStaff()
+
+    public function getStaffList()
     {
         try {
             return User::where('role', 'Enseignant')->get();
@@ -32,7 +31,9 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function SuspendStaff($staffId)
+
+
+    public function suspendStaff(int $staffId)
     {
         try {
             $user = User::findOrFail($staffId);
@@ -42,7 +43,8 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function ActivatStaff($staffId)
+
+    public function activateStaff(int $staffId)
     {
         try {
             $user = User::findOrFail($staffId);
@@ -52,44 +54,47 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function DeleteStaff($staffId)
+
+    public function deleteStaff(int $staffId)
     {
         try {
-            $user = User::find($staffId);
+            $user = User::findOrFail($staffId);
             $user->is_deleted = true;
             return $user->save();
-            return true;
         } catch (\Exception $e) {
             report($e);
             return false;
         }
     }
-    public function AddClasse($classeData)
+
+    public function addClass(array $classData)
     {
         try {
-            return Classe::create($classeData);
+            return Classe::create($classData);
         } catch (\Exception $e) {
             throw $e;
         }
     }
-    public function AddGarde($gardData)
+
+    public function addGuard(array $guardData)
     {
         try {
-            return Garde::create($gardData);
+            return GuardDuty::create($guardData);
         } catch (\Exception $e) {
             throw $e;
         }
     }
-    public function AddTimeTable($data)
+
+    public function addTimeTable(array $timeTableData)
     {
-        try{
-            return TimeTable::create($data);
-        }catch(\Exception $e){
+        try {
+            return TimeTable::create($timeTableData);
+        } catch (\Exception $e) {
             throw $e;
         }
     }
-    // student
-    public function DisplayStudents()
+
+    public function getStudentsList()
     {
         try {
             return Student::all();
@@ -97,7 +102,8 @@ class AdminRepository implements AdminInterface
             throw $e;
         }
     }
-    public function DisplayAbsences()
+
+    public function getAbsencesList()
     {
         try {
             return Absence::all();
@@ -106,47 +112,35 @@ class AdminRepository implements AdminInterface
         }
     }
 
-    // statistics
-    public function CountStaff()
+    public function getStaffStatistics()
     {
         try {
-            $all = User::all()->count();
-            $admin = User::where('role', 'Admin')->count();
-            $teacher = User::where('role', 'Enseignant')->count();
-            $accountant = User::where('role', 'Comptable')->count();
-            $secretary = User::where('role', 'Secrétaire')->count();
-            
             return [
-                'total' => $all,
-                'admin' => $admin,
-                'teacher'=> $teacher,
-                'accoutant' => $accountant,
-                'Secretary' => $secretary
-            ];
-
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-    public function CountStudent()
-    {
-        try {
-            $all = Student::all()->count();
-            $male = Student::where('gender', 'Masculin')->count();
-            $female = Student::where('gender', 'Féminin')->count();
-
-            return [
-                'total' => $all,
-                'male' => $male,
-                'female' => $female
+                'total' => User::count(),
+                'admin' => User::where('role', 'Admin')->count(),
+                'teacher' => User::where('role', 'Enseignant')->count(),
+                'accountant' => User::where('role', 'Comptable')->count(),
+                'secretary' => User::where('role', 'Secrétaire')->count()
             ];
         } catch (\Exception $e) {
             throw $e;
         }
     }
 
-    // auther
-    public function AddOffer($offerData)
+    public function getStudentStatistics()
+    {
+        try {
+            return [
+                'total' => Student::count(),
+                'male' => Student::where('gender', 'Masculin')->count(),
+                'female' => Student::where('gender', 'Féminin')->count()
+            ];
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function addOffer(array $offerData)
     {
         try {
             Offer::create($offerData);
