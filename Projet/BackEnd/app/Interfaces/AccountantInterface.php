@@ -2,8 +2,9 @@
 
 namespace App\Interfaces;
 
-interface AccountantInterface{
-    public function AddRecord($RecordData);
-    public function CalculateStatisticsOfMonth($month);
-    public function GetAllRecord();
+interface AccountantInterface
+{
+    public function addRecord(array $recordData);
+    public function calculateMonthlyStatistics($month);
+    public function getAllRecords();
 }

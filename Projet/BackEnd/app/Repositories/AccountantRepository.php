@@ -3,31 +3,32 @@
 namespace App\Repositories;
 
 use App\Interfaces\AccountantInterface;
-use App\Models\Accountant;
+use App\Models\Transaction;
 use Carbon\Carbon;
 use InvalidArgumentException;
 
 class AccountantRepository implements AccountantInterface
 {
-    public function AddRecord($RecordData)
+
+    public function addRecord(array $recordData)
     {
         try {
-            return Accountant::create($RecordData);
+            return Transaction::create($recordData);
         } catch (\Exception $e) {
             throw $e;
         }
     }
 
-    public function CalculateStatisticsOfMonth($month)
+    public function calculateMonthlyStatistics($month)
     {
         try {
             $start = Carbon::createFromFormat('m', $month)->startOfMonth();
             $end = $start->copy()->endOfMonth();
 
-            $charges = Accountant::where('type', 'Charge')
+            $charges = Transaction::where('type', 'Charge')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();
-            $produits = Accountant::where('type', 'Produit')
+            $produits = Transaction::where('type', 'Produit')
                 ->whereBetween('created_at', [$start, $end])
                 ->get();
 
@@ -39,9 +40,9 @@ class AccountantRepository implements AccountantInterface
                     'stats' => [
                         'count' => $charges->count(),
                         'total' => round($charges->sum('amount'), 2),
-                        'average' => round($charges->avg('amount'), 2),
-                        'max' => $charges->max('amount'),
-                        'min' => $charges->min('amount')
+                        'average' => round($charges->avg('amount') ?? 0, 2),
+                        'max' => $charges->max('amount') ?? 0,
+                        'min' => $charges->min('amount') ?? 0
                     ]
                 ],
                 'produit' => [
@@ -49,9 +50,9 @@ class AccountantRepository implements AccountantInterface
                     'stats' => [
                         'count' => $produits->count(),
                         'total' => round($produits->sum('amount'), 2),
-                        'average' => round($produits->avg('amount'), 2),
-                        'max' => $produits->max('amount'),
-                        'min' => $produits->min('amount')
+                        'average' => round($produits->avg('amount') ?? 0, 2),
+                        'max' => $produits->max('amount') ?? 0,
+                        'min' => $produits->min('amount') ?? 0
                     ]
                 ]
             ];
@@ -60,11 +61,11 @@ class AccountantRepository implements AccountantInterface
         }
     }
 
-    public function GetAllRecord()
+    public function getAllRecords()
     {
-        try{
-            return Accountant::all();
-        }catch(\Exception $e){
+        try {
+            return Transaction::all();
+        } catch (\Exception $e) {
             throw $e;
         }
     }

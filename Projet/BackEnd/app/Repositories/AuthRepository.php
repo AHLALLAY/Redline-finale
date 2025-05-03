@@ -12,60 +12,60 @@ use Exception;
 
 class AuthRepository implements AuthInterface
 {
-    public function RegisterStaff($dataStaff)
+
+    public function registerStaff(array $staffData)
     {
         try {
-            $dataStaff['password'] = Hash::make($dataStaff['password']);
-            return User::create($dataStaff);
-        } catch (\Exception $e) {
+            $staffData['password'] = Hash::make($staffData['password']);
+            return User::create($staffData);
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function LoginStaff($identStaff)
+    public function loginStaff(array $credentials)
     {
         try {
-            // Spécifier le garde pour le personnel
-            Auth::guard('web')->attempt($identStaff);
+            Auth::guard('web')->attempt($credentials);
             
-            if (!$token = JWTAuth::attempt($identStaff)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return null;
             }
             
             $staff = Auth::user();
             if (!$staff) {
-                throw new Exception("Staff not found !!!");
-            } else {
-                return [
-                    'staff' => $staff,
-                    'token' => $token,
-                    'token_type' => 'bearer',
-                ];
+                throw new Exception("Staff not found!");
             }
-        } catch (\Exception $e) {
+            
+            return [
+                'staff' => $staff,
+                'token' => $token,
+                'token_type' => 'bearer',
+            ];
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function RegisterStudent($dataStudent)
+    public function registerStudent(array $studentData)
     {
         try {
-            $dataStudent['password'] = Hash::make($dataStudent['password']);
-            return Student::create($dataStudent);
-        } catch (\Exception $e) {
+            $studentData['password'] = Hash::make($studentData['password']);
+            return Student::create($studentData);
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function LoginStudent($identStudent)
+    public function loginStudent(array $credentials)
     {
         try {
             Auth::guard('student')->attempt([
-                'email' => $identStudent['email'],
-                'password' => $identStudent['password']
+                'email' => $credentials['email'],
+                'password' => $credentials['password']
             ]);
     
-            $student = Student::where('email', $identStudent['email'])->first();
+            $student = Student::where('email', $credentials['email'])->first();
             
             if (!$student) {
                 return null;
@@ -78,12 +78,12 @@ class AuthRepository implements AuthInterface
                 'token' => $token,
                 'token_type' => 'bearer',
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function Logout()
+    public function logout()
     {
         try {
             Auth::logout();

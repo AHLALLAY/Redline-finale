@@ -4,17 +4,17 @@ namespace App\Interfaces;
 
 interface TeacherInterface
 {
-    // activities
-    public function AddExercice($exerciceData);
-    public function ExerciceDone($exerciceId);
-    public function AddActivityToTextBox($activityData);
+    // Activitis
+    public function addExercise(array $exerciseData);
+    public function markExerciseAsDone(int $exerciseId);
+    public function addTextBoxActivity(array $activityData);
     
-    // student
-    public function DisplayMyStudents($level, $groupe);
-    public function AddAbsence($absnceData);
-    public function AddGrade($gradeData);
+    // Students
+    public function getStudentsByLevelAndGroup(string $level, string $group);
+    public function recordAbsence(array $absenceData);
+    public function addGrade(array $gradeData);
 
-    // educational document
+    // Educational document
     
 }
 
