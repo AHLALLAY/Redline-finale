@@ -28,12 +28,13 @@ class RegisterStudentRequest extends FormRequest
             'birth_date' => ['required', 'date', 'before:-6 years'],
             'birth_place' => ['required', 'string', 'max:50'],
             'gender' => ['required', 'in:Masculin,Féminin'],
-            'level' => ['required', 'in:1ére année,2ème année,3ème année,4ème année,5ème année,6ème année'],
-            'group' => ['required', 'in:A,B,C,D'],
-            'parent' => ['required', 'string', 'max:50'],
-            'cin' => ['required', 'string', 'max:9'],
+            'class_id' => ['required', 'min:1', 'exists:classes,id'],
+            'parent_name' => ['required', 'string', 'max:50'],
+            'parent_cin' => ['required', 'string', 'max:9'],
             'address' => ['required', 'string', 'max:150'],
             'phone' => ['required', 'string', 'regex:/^(\+212|0)[\s\-\.]?[5-7][\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}$/'],
+            'decision' => ['nullable', 'string', 'in:success,failed,excluded'],
+            'is_deleted' => ['nullable', 'boolean'],
         ];
     }
 }

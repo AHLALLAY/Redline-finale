@@ -6,26 +6,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GradeRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+    public function authorize(): bool { return true; }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'student_id' => ['required', 'integer', 'exists:students,id'],
             'grade' => ['required', 'numeric', 'min:0', 'max:20'],
-            'controle_N' => ['required', 'integer', 'min:1'],
-            'teacher_id' => ['required', 'integer', 'exists:users,id']
+            'evaluation_number' => ['required', 'integer', 'min:1'],
+            'teacher_id' => ['required', 'integer', 'exists:users,id'],
+            'subject_id' => ['required', 'integer', 'exists:subjects,id']
         ];
     }
 }

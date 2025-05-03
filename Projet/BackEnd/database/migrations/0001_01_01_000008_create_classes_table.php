@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('group', ['A', 'B', 'C', 'D']);
             $table->foreignId('teacher_id')->constrained('users')->onDelete('restrict');
             $table->integer('room_number');
-            $table->integer('academic_year');
+            $table->year('academic_year');
             $table->timestamps();
             $table->unique(['level', 'group', 'academic_year']);
         });

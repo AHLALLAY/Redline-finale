@@ -18,8 +18,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('weekly_hours')->default(1);
             $table->enum('category', ['Sciences', 'Langues', 'Mathématiques', 'Arts', 'Sport', 'Autre']);
-            $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année', 'Tous']);
-            $table->boolean('is_active')->default(true);
+            $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année']);
             $table->timestamps();
         });
     }
