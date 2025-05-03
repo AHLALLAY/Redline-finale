@@ -10,17 +10,14 @@ use Illuminate\Validation\ValidationException;
 class AccountantController extends Controller
 {
     protected $accountantService;
-    public function __construct(AccountantService $accountantService)
-    {
-        $this->accountantService = $accountantService;
-    }
+    public function __construct(AccountantService $accountantService) { $this->accountantService = $accountantService; }
 
-    public function AddRecord(AccountantRequest $accountantRequest)
+    public function addRecord(AccountantRequest $accountantRequest)
     {
         try {
             $validated_data = $accountantRequest->validated();
             if ($validated_data) {
-                $this->accountantService->AddRecord($validated_data);
+                $this->accountantService->addRecord($validated_data);
                 return response()->json([
                     'message' => 'enregistré avec succès',
                     'data' => $validated_data,
@@ -42,11 +39,11 @@ class AccountantController extends Controller
         }
     }
 
-    public function CalculateStatisticsOfMonth($month)
+    public function calculateMonthlyStatistics($month)
     {
         try {
 
-            $result = $this->accountantService->CalculateStatisticsOfMonth($month);
+            $result = $this->accountantService->calculateMonthlyStatistics($month);
 
             return response()->json([
                 'message' => 'Calcul effectué avec succès',
@@ -66,9 +63,9 @@ class AccountantController extends Controller
         }
     }
 
-    public function GetAllRecord(){
+    public function getAllRecords(){
         try{
-            $result = $this->accountantService->GetAllRecord();
+            $result = $this->accountantService->getAllRecords();
             return response()->json([
                 'message' => 'Donner trouvé avec succès',
                 'data' => $result,
