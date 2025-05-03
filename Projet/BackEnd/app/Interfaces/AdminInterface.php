@@ -4,24 +4,26 @@ namespace App\Interfaces;
 
 interface AdminInterface
 {
-    // staff
-    public function AddStaff($staffData);
-    public function DisplayStaff();
-    public function SuspendStaff($staffId);
-    public function ActivatStaff($staffId);
-    public function DeleteStaff($staffId);
-    public function AddClasse($classeData);
-    public function AddGarde($gardData);
-    public function AddTimeTable($data);
-    
-    // student
-    public function DisplayStudents();
-    public function DisplayAbsences();
+    // Staff
+    public function addStaff(array $staffData);
+    public function getStaffList();
+    public function suspendStaff(int $staffId);
+    public function activateStaff(int $staffId);
+    public function deleteStaff(int $staffId);
 
-    // statistics
-    public function CountStaff();
-    public function CountStudent();
+    // Classes & Guards & Times Table
+    public function addClass(array $classData);
+    public function addGuard(array $guardData);
+    public function addTimeTable(array $timeTableData);
 
-    // auther
-    public function AddOffer($offerData);
+    // Student
+    public function getStudentsList();
+    public function getAbsencesList();
+
+    // Statistics
+    public function getStaffStatistics();
+    public function getStudentStatistics();
+
+    // Autres fonctionnalités
+    public function addOffer(array $offerData);
 }
