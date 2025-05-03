@@ -4,23 +4,22 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClasseRequest;
-use App\Http\Requests\GardeRequest;
+use App\Http\Requests\GuardeRequest;
 use App\Http\Requests\OfferRequest;
 use App\Http\Requests\TimeTableRequest;
 use App\Services\AdminService;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\CssSelector\Node\FunctionNode;
+
 
 class AdminController extends Controller
 {
     protected $adminService;
-    public function __construct(AdminService $adminService)
-    {
-        $this->adminService = $adminService;
-    }
+    public function __construct(AdminService $adminService) { $this->adminService = $adminService; }
 
     // staff
-    public function addStaff(){}
+    public function addStaff(){
+        
+    }
     public function getStaffList()
     {
         try {
@@ -120,7 +119,7 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function addGuard(GardeRequest $gardeRequest)
+    public function addGuard(GuardeRequest $gardeRequest)
     {
         try {
             $validated_data = $gardeRequest->validated();

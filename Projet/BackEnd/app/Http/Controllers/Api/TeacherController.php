@@ -7,7 +7,6 @@ use App\Http\Requests\AbsenceRequest;
 use App\Http\Requests\ExerciceRequest;
 use App\Http\Requests\GradeRequest;
 use App\Http\Requests\TextBoxRequest;
-use App\Models\Student;
 use App\Services\teacherService;
 use Illuminate\Validation\ValidationException;
 
@@ -15,10 +14,7 @@ class TeacherController extends Controller
 {
     protected $teacherService;
 
-    public function __construct(TeacherService $teacherService)
-    {
-        $this->teacherService = $teacherService;
-    }
+    public function __construct(TeacherService $teacherService) { $this->teacherService = $teacherService; }
 
     // activities
     public function addExercise(ExerciceRequest $exerciceRequest)
