@@ -6,19 +6,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterStudentRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
+     public function authorize(): bool { return true; }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
@@ -33,7 +22,7 @@ class RegisterStudentRequest extends FormRequest
             'parent_cin' => ['required', 'string', 'max:9'],
             'address' => ['required', 'string', 'max:150'],
             'phone' => ['required', 'string', 'regex:/^(\+212|0)[\s\-\.]?[5-7][\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}[\s\-\.]?\d{2}$/'],
-            'decision' => ['nullable', 'string', 'in:success,failed,excluded'],
+            'decision' => ['nullable', 'string', 'in:progress,success,failed,excluded'],
             'is_deleted' => ['nullable', 'boolean'],
         ];
     }
