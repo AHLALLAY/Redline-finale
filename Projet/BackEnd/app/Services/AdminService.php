@@ -9,24 +9,26 @@ class AdminService {
     public function __construct(AdminInterface $adminRepository){ $this->adminRepository = $adminRepository; }
     
     // staff
-    public function AddStaff($staffData){}
-    public function DisplayStaff(){ return $this->adminRepository->DisplayStaff(); }
-    public function SuspendStaff($staffId){ return $this->adminRepository->SuspendStaff($staffId); }
-    public function ActivatStaff($staffId){ return $this->adminRepository->ActivatStaff($staffId); }
-    public function DeleteStaff($staffId){ return $this->adminRepository->DeleteStaff($staffId); }
-    public function AddClasse($classeData){ return $this->adminRepository->AddClasse($classeData); }
-    public function AddGarde($gardData){ return $this->adminRepository->AddGarde($gardData); }
-    public function AddTimeTable($data){ return $this->adminRepository->AddTimeTable($data); }
+    public function addStaff($staffData){ return $this->adminRepository->addStaff($staffData); }
+    public function getStaffList(){ return $this->adminRepository->getStaffList(); }
+    public function suspendStaff($staffId){ return $this->adminRepository->suspendStaff($staffId); }
+    public function activateStaff($staffId){ return $this->adminRepository->activateStaff($staffId); }
+    public function deleteStaff($staffId){ return $this->adminRepository->deleteStaff($staffId); }
+    
+    //classes
+    public function addClass($classeData){ return $this->adminRepository->addClass($classeData); }
+    public function addGuard($guardData){ return $this->adminRepository->addGuard($guardData); }
+    public function addTimeTable($timeTableData){ return $this->adminRepository->addTimeTable($timeTableData); }
     
     // student
-    public function DisplayStudents(){ return $this->adminRepository->DisplayStudents(); }
-    public function DisplayAbsences(){ return $this->adminRepository->DisplayAbsences(); }
+    public function getStudentsList(){ return $this->adminRepository->getStudentsList(); }
+    public function getAbsencesList(){ return $this->adminRepository->getAbsencesList(); }
     
     // statistics
-    public function CountStaff(){ return $this->adminRepository->CountStaff(); }
-    public function CountStudent(){ return $this->adminRepository->CountStudent(); }
+    public function getStaffStatistics(){ return $this->adminRepository->getStaffStatistics(); }
+    public function getStudentStatistics(){ return $this->adminRepository->getStudentStatistics(); }
 
     
     // auther
-    public function AddOffer($offerData){ return $this->adminRepository->AddOffer($offerData); }
+    public function addOffer($offerData){ return $this->adminRepository->addOffer($offerData); }
 }
