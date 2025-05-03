@@ -26,7 +26,7 @@ class AdminRepository implements AdminInterface
     public function getStaffList()
     {
         try {
-            return User::where('role', 'Enseignant')->get();
+            return User::where('role','<>','Admin')->get();
         } catch (\Exception $e) {
             throw $e;
         }
