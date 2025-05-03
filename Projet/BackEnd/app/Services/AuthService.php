@@ -8,32 +8,11 @@ class AuthService
 {
     protected $authRepository;
 
-    public function __construct(AuthInterface $authRepository)
-    {
-        return $this->authRepository = $authRepository;
-    }
+    public function __construct(AuthInterface $authRepository) { return $this->authRepository = $authRepository; }
 
-    public function RegisterStaff($dataStaff)
-    {
-        return $this->authRepository->RegisterStaff($dataStaff);
-    }
-
-    public function LoginStaff($identStaff)
-    {
-        return $this->authRepository->LoginStaff($identStaff);
-    }
-
-    public function RegisterStudent($dataStudent)
-    {
-        return $this->authRepository->RegisterStudent($dataStudent);
-    }
-    public function LoginStudent($identStudent)
-    {
-        return $this->authRepository->LoginStudent($identStudent);
-    }
-
-    public function Logout()
-    {
-        return $this->authRepository->Logout();
-    }
+    public function registerStaff($dataStaff){return $this->authRepository->registerStaff($dataStaff);}
+    public function loginStaff($identStaff){return $this->authRepository->loginStaff($identStaff);}
+    public function registerStudent($dataStudent){return $this->authRepository->registerStudent($dataStudent);}
+    public function loginStudent($identStudent){return $this->authRepository->loginStudent($identStudent);}
+    public function logout(){return $this->authRepository->logout();}
 }
