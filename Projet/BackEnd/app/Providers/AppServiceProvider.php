@@ -14,20 +14,22 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+    protected $arr = [
+        AuthInterface::class => AuthRepository::class,
+        AccountantInterface::class => AccountantRepository::class,
+        AdminInterface::class => AdminRepository::class,
+        TeacherInterface::class => TeacherRepository::class,
+    ];
+
     public function register(): void
     {
-        $this->app->bind(AuthInterface::class, AuthRepository::class);
-        $this->app->bind(AccountantInterface::class, AccountantRepository::class);
-        $this->app->bind(AdminInterface::class, AdminRepository::class);
-        $this->app->bind(TeacherInterface::class, TeacherRepository::class);
+        $repositoryList = array_values($this->arr);
+        $interfacesList = array_keys($this->arr);
+        for ($i = 0; $i < count($repositoryList); $i++) {
+            $this->app->bind($interfacesList[$i], $repositoryList[$i]);
+        }
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         //

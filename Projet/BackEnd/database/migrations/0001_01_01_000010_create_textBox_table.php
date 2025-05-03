@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('exercices', function (Blueprint $table) {
+        Schema::create('textBoxes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
-            $table->string('classe');
-            $table->enum('group',['A','B','C','D'])->default('A');
+            $table->enum('type',['Cours', 'Evaluation', 'Exercice']);
+            $table->text('description');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
-            $table->boolean('is_done')->default(false);
-            $table->timestamp('done_at')->nullable();
+            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('exercices');
+        Schema::dropIfExists('textBoxes');
     }
 };

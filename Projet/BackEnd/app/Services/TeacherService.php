@@ -12,12 +12,12 @@ class TeacherService {
     }
 
     // activities
-    public function AddExercice($exerciceData) { return $this->teacherRepository->AddExercice($exerciceData); }
-    public function ExerciceDone($exerciceId) { return $this->teacherRepository->ExerciceDone($exerciceId); }
-    public function AddActivityToTextBox($activityData) { return $this->teacherRepository->AddActivityToTextBox($activityData); }
+    public function addExercise($exerciseData) { return $this->teacherRepository->addExercise($exerciseData); }
+    public function markExerciseAsDone($exerciceId) { return $this->teacherRepository->markExerciseAsDone($exerciceId); }
+    public function addTextBoxActivity($activityData) { return $this->teacherRepository->addTextBoxActivity($activityData); }
 
     // student
-    public function DisplayMyStudents($level, $group) { return $this->teacherRepository->DisplayMyStudents($level, $group); }
-    public function AddAbsence($absnceData) { return $this->teacherRepository->AddAbsence($absnceData); }
-    public function AddGrade($gradeData) { return $this->teacherRepository->AddGrade($gradeData); }
+    public function getStudentsByLevelAndGroup($level, $group) { return $this->teacherRepository->getStudentsByLevelAndGroup($level, $group); }
+    public function recordAbsence($absnceData) { return $this->teacherRepository->recordAbsence($absnceData); }
+    public function addGrade($gradeData) { return $this->teacherRepository->addGrade($gradeData); }
 }

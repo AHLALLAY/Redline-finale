@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use function Laravel\Prompts\table;
+
 return new class extends Migration
 {
     /**
@@ -11,12 +13,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('text_boxes', function (Blueprint $table) {
+        Schema::create('guardDuties', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->enum('type',['Cours', 'Evaluation']);
-            $table->text('description');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->date('date');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('text_boxes');
+        Schema::dropIfExists('guardDuties');
     }
 };

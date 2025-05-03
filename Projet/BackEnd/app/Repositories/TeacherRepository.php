@@ -11,53 +11,61 @@ use App\Models\TextBox;
 
 class TeacherRepository implements TeacherInterface
 {
-    // activities
-    public function AddExercice($exerciceData)
+    public function addExercise(array $exerciseData)
     {
         try {
-            return Exercice::create($exerciceData);
+            return Exercice::create($exerciseData);
         } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
-    public function ExerciceDone($exerciceId)
-    {
-        try{
-            $exercice = Exercice::findOrFail($exerciceId);
-            $exercice->is_done = true;
-            $exercice->done_at = now();
-            return $exercice->save();
-        }catch(\Exception $e){
-            throw $e;
-        }
-    }
-    public function AddActivityToTextBox($activityData) {
-        try{
-            return TextBox::create($activityData);
-        }catch(\Exception $e){
             throw $e;
         }
     }
 
-    // student
-    public function DisplayMyStudents($level, $group) {
-        try{
-            return Student::where('level', $level)->where('group', $group)->get();
-        }catch(\Exception $e){
-            return $e->getMessage();
-        }
-    }
-    public function AddAbsence($absnceData) {
-        try{
-            return Absence::create($absnceData);
-        }catch(\Exception $e){
+    public function markExerciseAsDone(int $exerciseId)
+    {
+        try {
+            $exercice = Exercice::findOrFail($exerciseId);
+            $exercice->is_done = true;
+            $exercice->done_at = now();
+            return $exercice->save();
+        } catch (\Exception $e) {
             throw $e;
         }
     }
-    public function AddGrade($gradeData) {
-        try{
+
+    public function addTextBoxActivity(array $activityData)
+    {
+        try {
+            return TextBox::create($activityData);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getStudentsByLevelAndGroup(string $level, string $group)
+    {
+        try {
+            return Student::where('level', $level)
+                ->where('group', $group)
+                ->get();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function recordAbsence(array $absenceData)
+    {
+        try {
+            return Absence::create($absenceData);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function addGrade(array $gradeData)
+    {
+        try {
             return Grade::create($gradeData);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }

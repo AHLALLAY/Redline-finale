@@ -20,8 +20,10 @@ return new class extends Migration
             $table->enum('role', ['Enseignant', 'Comptable', 'Secrétaire', 'Admin']);
             $table->date('birth_date');
             $table->string('phone')->nullable();
-            $table->string('last_diplomat');
+            $table->string('last_diploma');
             $table->date('obtained_at');
+            $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('cascade');
+            $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année'])->nullable();
             $table->boolean('is_suspended')->default(false);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
