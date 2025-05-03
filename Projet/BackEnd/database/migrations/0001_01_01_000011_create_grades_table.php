@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('grade',4,2);
             $table->integer('evaluation_number');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('subject_id')->constrained('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }
