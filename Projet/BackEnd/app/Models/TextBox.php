@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class TextBox extends Model
 {
-    protected $fillable = ['title', 'type', 'description', 'teacher_id'];
+    protected $fillable = ['title', 'type', 'description', 'teacher_id','class_id'];
 
-    public function user(){ return $this->belongsTo(User::class); }
+    public function teacher(){ return $this->belongsTo(User::class, 'teacher_id'); }
+    public function classe(){ return $this->belongsTo(Classe::class, 'class_id'); }
 }
