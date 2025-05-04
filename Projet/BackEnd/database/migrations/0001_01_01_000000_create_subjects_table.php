@@ -16,9 +16,7 @@ return new class extends Migration
             $table->enum('nom', [
                 'Langue Arabe',
                 'Langue Française',
-                'Langue Amazighe',
                 'Langue Anglaise',
-                'Langue Espagnole',
                 'Éducation Islamique',
                 'Mathématiques',
                 'Activité Scientifique',
@@ -26,9 +24,6 @@ return new class extends Migration
                 'Sciences Sociales',
                 'Éducation Artistique',
                 'Éducation Physique',
-                'Éducation Musicale',
-                'Robotique',
-                'Éducation Financière',
             ]);
             $table->string('code')->unique();
             $table->integer('weekly_hours');
