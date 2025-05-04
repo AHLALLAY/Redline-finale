@@ -10,7 +10,7 @@ class StudentRepository implements StudentInterface {
     public function getGrades(int $studentId)
     {
         try{
-            return Grade::where('student_id', $studentId);
+            return Grade::where('student_id', $studentId)->get();
         }catch(\Exception $e){
             throw $e;
         }
@@ -19,7 +19,7 @@ class StudentRepository implements StudentInterface {
     public function getExercises(int $classId)
     {
         try{
-            return Exercice::where('class_id', $classId);
+            return Exercice::where('class_id', $classId)->get();
         }catch(\Exception $e){
             throw $e;
         }

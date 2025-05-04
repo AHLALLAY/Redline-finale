@@ -10,7 +10,7 @@ class StudentService{
 
     public function __construct(StudentInterface $studentrepository) { $this->studentrepository = $studentrepository; }
 
-    public function getGrades($studentId){ $this->studentrepository->getGrades($studentId); }
-    public function getExrcises($classId){ $this->studentrepository->getExercises($classId); }
-    
+    public function getGrades($studentId){ return $this->studentrepository->getGrades($studentId); }
+    public function getExrcises($classId){ return $this->studentrepository->getExercises($classId); }
+
 }
