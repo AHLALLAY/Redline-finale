@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccountantController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use Illuminate\Support\Facades\Route;
 
@@ -51,4 +52,10 @@ Route::controller(TeacherController::class)->group(function(){
     Route::post('/prof/MyStudents/{classId}','getStudentsByLevelAndGroup'); //done
     Route::post('/prof/absence/new','recordAbsence'); //done
     Route::post('/prof/grade/new','addGrade'); //done
+});
+
+
+Route::controller(StudentController::class)->group(function(){
+    Route::get('/student/grades','getGrades');
+    Route::get('/student/exercises','getExercises');
 });
