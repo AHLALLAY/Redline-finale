@@ -19,7 +19,8 @@ return new class extends Migration
             $table->date('birth_date');
             $table->string('birth_place');
             $table->enum('gender', ['Masculin', 'Féminin']);
-            $table->foreignId('class_id')->constrainted('classes')->onDelete('restrict');
+            $table->enum('level',['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année']);
+            $table->enum('group',['A', 'B', 'C', 'D']);
             $table->string('parent_name');
             $table->string('parent_cin');
             $table->string('address');
