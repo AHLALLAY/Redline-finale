@@ -9,6 +9,7 @@ use App\Models\Classe;
 use App\Models\GuardDuty;
 use App\Models\Offer;
 use App\Models\Student;
+use App\Models\Subject;
 use App\Models\TimeTable;
 use App\Models\User;
 
@@ -26,7 +27,29 @@ class AdminRepository implements AdminInterface
     public function getStaffList()
     {
         try {
-            return User::where('role', '<>', 'Admin')->get();
+            $oldUser = User::all();
+            $newUser = $oldUser->map(function ($s) {
+                return [
+                    'id'            => $s->id,
+                    'name'          => $s->name,
+                    'cin'           => $s->cin,
+                    'email'         => $s->email,
+                    'role'          => $s->role,
+                    'birth_date'    => $s->birth_date,
+                    'phone'         => $s->phone,
+                    'level'         => $s->classe->level,
+                    'group'         => $s->classe->group,
+                    'last_diploma'  => $s->last_diploma,
+                    'obtained_at'   => $s->obtained_at,
+                    'subject_id'    => $s->subject_id,
+                    'teaching_level'=> $s->teaching_level,
+                    'is_suspended'  => $s->is_suspended,
+                    'is_deleted'    => $s->is_deleted,
+                    'created_at'    => $s->created_at,
+                    'updated_at'    => $s->updated_at,
+                ];
+            });
+            return $newUser;
         } catch (\Exception $e) {
             throw $e;
         }
@@ -97,28 +120,7 @@ class AdminRepository implements AdminInterface
     public function getStudentsList()
     {
         try {
-            $oldStudent = Student::all();
-            $newStudent = $oldStudent->map(function ($s) {
-                return [
-                    'id'            => $s->id,
-                    'name'          => $s->name,
-                    'email'         => $s->email,
-                    'birth_date'    => $s->birth_date,
-                    'birth_place'   => $s->birth_place,
-                    'gender'        => $s->gender,
-                    'level'         => $s->classe->level,
-                    'group'         => $s->classe->group,
-                    'parent_name'   => $s->parent_name,
-                    'parent_cin'    => $s->parent_cin,
-                    'address'       => $s->address,
-                    'phone'         => $s->phone,
-                    'decision'      => $s->decision,
-                    'is_deleted'    => $s->is_deleted,
-                    'created_at'    => $s->created_at,
-                    'updated_at'    => $s->updated_at,
-                ];
-            });
-            return $newStudent;
+            return Student::all();
         } catch (\Exception $e) {
             throw $e;
         }
@@ -167,6 +169,15 @@ class AdminRepository implements AdminInterface
             Offer::create($offerData);
             return true;
         } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getSubjects()
+    {
+        try{
+            return Subject::all();
+        }catch(\Exception $e){
             throw $e;
         }
     }

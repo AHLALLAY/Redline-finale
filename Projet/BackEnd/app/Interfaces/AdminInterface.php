@@ -26,4 +26,5 @@ interface AdminInterface
 
     // Autres fonctionnalités
     public function addOffer(array $offerData);
+    public function getSubjects();
 }

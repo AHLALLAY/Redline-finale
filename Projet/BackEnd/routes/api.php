@@ -43,6 +43,7 @@ Route::controller(AdminController::class)->group(function(){
     
     // auther
     Route::post('/admin/offer/new','addOffer'); //done
+    Route::get('/admin/subjects/all','getSubjects'); //
 });
 
 Route::controller(TeacherController::class)->group(function(){
