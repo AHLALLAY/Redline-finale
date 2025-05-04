@@ -26,7 +26,7 @@ class AdminRepository implements AdminInterface
     public function getStaffList()
     {
         try {
-            return User::where('role','<>','Admin')->get();
+            return User::where('role', '<>', 'Admin')->get();
         } catch (\Exception $e) {
             throw $e;
         }
@@ -97,7 +97,28 @@ class AdminRepository implements AdminInterface
     public function getStudentsList()
     {
         try {
-            return Student::all();
+            $oldStudent = Student::all();
+            $newStudent = $oldStudent->map(function ($s) {
+                return [
+                    'id'            => $s->id,
+                    'name'          => $s->name,
+                    'email'         => $s->email,
+                    'birth_date'    => $s->birth_date,
+                    'birth_place'   => $s->birth_place,
+                    'gender'        => $s->gender,
+                    'level'         => $s->classe->level,
+                    'group'         => $s->classe->group,
+                    'parent_name'   => $s->parent_name,
+                    'parent_cin'    => $s->parent_cin,
+                    'address'       => $s->address,
+                    'phone'         => $s->phone,
+                    'decision'      => $s->decision,
+                    'is_deleted'    => $s->is_deleted,
+                    'created_at'    => $s->created_at,
+                    'updated_at'    => $s->updated_at,
+                ];
+            });
+            return $newStudent;
         } catch (\Exception $e) {
             throw $e;
         }
