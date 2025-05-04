@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-
 return new class extends Migration
 {
     /**
@@ -12,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('guardDuties', function (Blueprint $table) {
+        Schema::create('text_boxes', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->enum('type',['Cours', 'Evaluation', 'Exercice']);
+            $table->text('description');
             $table->foreignId('teacher_id')->constrained('users')->onDelete('cascade');
-            $table->date('date');
+            $table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('guardDuties');
+        Schema::dropIfExists('text_boxes');
     }
 };

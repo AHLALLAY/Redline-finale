@@ -12,10 +12,10 @@ class TimeTableRequest extends FormRequest
     {
         return [
             'class_id' => ['required', 'integer', 'min:1','exists:classes,id'],
-            'class_room_N' => ['required', 'integer', 'min:1', 'max:50'],
+            'teacher_id' => ['required', 'integer', 'exists:users,id'],
+            'day_of_week' => ['required', 'string', 'in:Lundi,Mardi,Mercredi,Jeudi,Vendredi'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i','after:start_time'],
-            'subject_school' => ['required', 'string', 'max:100']
         ];
     }
 }

@@ -29,7 +29,7 @@ Route::controller(AdminController::class)->group(function(){
     Route::patch('/admin/staff/activat/{staffId}','activateStaff'); //done
     Route::patch('/admin/staff/delete/{staffId}','deleteStaff'); //done
     Route::post('/admin/class/new','addClass'); //done
-    Route::post('/admin/gard/new','addGuard'); //
+    Route::post('/admin/guard/new','addGuard'); //
     Route::post('/admin/timetable/new', 'addTimeTable'); //done
     
     // student
@@ -41,7 +41,7 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/statistics/students','getStudentStatistics'); // done
     
     // auther
-    Route::post('/admin/offer/new','addOffer'); //
+    Route::post('/admin/offer/new','addOffer'); //done
 });
 
 Route::controller(TeacherController::class)->group(function(){
