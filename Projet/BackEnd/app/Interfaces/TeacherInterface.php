@@ -10,7 +10,7 @@ interface TeacherInterface
     public function addTextBoxActivity(array $activityData);
     
     // Students
-    public function getStudentsByLevelAndGroup(string $level, string $group);
+    public function getStudentsByLevelAndGroup(int $classId);
     public function recordAbsence(array $absenceData);
     public function addGrade(array $gradeData);
 

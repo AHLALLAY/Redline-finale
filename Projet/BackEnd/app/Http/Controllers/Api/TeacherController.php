@@ -84,10 +84,10 @@ class TeacherController extends Controller
     }
 
     // student
-    public function getStudentsByLevelAndGroup($level, $group)
+    public function getStudentsByLevelAndGroup($classId)
     {
         try {
-            $students = $this->teacherService->getStudentsByLevelAndGroup($level, $group);
+            $students = $this->teacherService->getStudentsByLevelAndGroup($classId);
             return response()->json([
                 'message' => 'Étudiants récupérés avec succès',
                 'data' => $students,

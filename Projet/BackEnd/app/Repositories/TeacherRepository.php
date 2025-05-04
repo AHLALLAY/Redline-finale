@@ -41,12 +41,10 @@ class TeacherRepository implements TeacherInterface
         }
     }
 
-    public function getStudentsByLevelAndGroup(string $level, string $group)
+    public function getStudentsByLevelAndGroup(int $classId)
     {
         try {
-            return Student::where('level', $level)
-                ->where('group', $group)
-                ->get();
+            return Student::where('class_id', $classId)->get();
         } catch (\Exception $e) {
             throw $e;
         }
