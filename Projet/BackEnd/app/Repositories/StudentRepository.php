@@ -3,15 +3,25 @@
 namespace App\Repositories;
 
 use App\Interfaces\StudentInterface;
+use App\Models\Exercice;
+use App\Models\Grade;
 
 class StudentRepository implements StudentInterface {
     public function getGrades(int $studentId)
     {
-        
+        try{
+            return Grade::where('student_id', $studentId);
+        }catch(\Exception $e){
+            throw $e;
+        }
     }
 
     public function getExercises(int $classId)
     {
-        
+        try{
+            return Exercice::where('class_id', $classId);
+        }catch(\Exception $e){
+            throw $e;
+        }
     }
 }
