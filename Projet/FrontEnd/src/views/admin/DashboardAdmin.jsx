@@ -39,7 +39,7 @@ const menu_dashboard = [
     titre: "Élèves",
     icone: <FaUserGraduate className="text-orange-600 text-3xl" />,
     couleur: "bg-orange-50 hover:bg-orange-100",
-    chemin: "/admin/student",
+    chemin: "/admin/students",
     description: "Gérer les élèves",
   },
 ];
@@ -77,6 +77,7 @@ function DashboardAdmin() {
       const reponsePersonnel = await fetch("http://127.0.0.1:8000/api/admin/statistics/staff");
       if (reponsePersonnel.ok) {
         const resultPersonnel = await reponsePersonnel.json();
+        console.log(resultPersonnel);
         setDonneePersonnel(resultPersonnel);
       }
 
