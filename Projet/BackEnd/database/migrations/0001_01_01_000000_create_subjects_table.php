@@ -13,11 +13,25 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->enum('nom', [
+                'Langue Arabe',
+                'Langue Française',
+                'Langue Amazighe',
+                'Langue Anglaise',
+                'Langue Espagnole',
+                'Éducation Islamique',
+                'Mathématiques',
+                'Activité Scientifique',
+                'Informatique',
+                'Sciences Sociales',
+                'Éducation Artistique',
+                'Éducation Physique',
+                'Éducation Musicale',
+                'Robotique',
+                'Éducation Financière',
+            ]);
             $table->string('code')->unique();
             $table->integer('weekly_hours');
-            $table->enum('category', ['Sciences', 'Langues', 'Mathématiques', 'Arts', 'Sport', 'Autre']);
-            $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année']);
             $table->timestamps();
         });
     }
