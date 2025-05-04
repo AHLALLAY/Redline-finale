@@ -26,7 +26,7 @@ class AuthRepository implements AuthInterface
     public function loginStaff(array $credentials)
     {
         try {
-            Auth::guard('web')->attempt($credentials);
+            Auth::guard('api')->attempt($credentials);
             
             if (!$token = JWTAuth::attempt($credentials)) {
                 return null;
