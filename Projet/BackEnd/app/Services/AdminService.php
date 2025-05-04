@@ -31,4 +31,5 @@ class AdminService {
     
     // auther
     public function addOffer($offerData){ return $this->adminRepository->addOffer($offerData); }
+    public function getSubjects(){ return $this->adminRepository->getSubjects(); }
 }

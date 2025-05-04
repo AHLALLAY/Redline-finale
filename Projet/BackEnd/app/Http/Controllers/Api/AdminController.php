@@ -274,4 +274,21 @@ class AdminController extends Controller
             ], 500);
         }
     }
+    public function getSubjects()
+    {
+        try {
+            $subjects = $this->adminService->getSubjects();
+            return response()->json([
+                'message' => 'Subjects found',
+                'subjects' => $subjects,
+                'status' => 'success'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected Error',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
 }
