@@ -119,13 +119,13 @@ class AdminController extends Controller
             ], 500);
         }
     }
-    public function addGuard(GuardeRequest $gardeRequest)
+    public function addGuard(GuardeRequest $guardeRequest)
     {
         try {
-            $validated_data = $gardeRequest->validated();
+            $validated_data = $guardeRequest->validated();
             $this->adminService->addGuard($validated_data);
             return response()->json([
-                'message' => 'Gard Added',
+                'message' => 'Guard Added',
                 'data' => $validated_data,
                 'status' => 'success'
             ], 201);
