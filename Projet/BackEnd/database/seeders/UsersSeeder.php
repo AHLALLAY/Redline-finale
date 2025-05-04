@@ -11,12 +11,11 @@ class UsersSeeder extends Seeder
     public function run()
     {
         $users = [
-            // Admin (sans subject_id ni teaching_level)
             [
                 'name' => 'Admin System',
                 'cin' => 'A123456',
-                'email' => 'admin@school.com',
-                'password' => Hash::make('password123'),
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('123456789'),
                 'role' => 'Admin',
                 'birth_date' => '1980-01-15',
                 'phone' => '0612345678',
@@ -27,12 +26,11 @@ class UsersSeeder extends Seeder
                 'is_suspended' => false,
                 'is_deleted' => false,
             ],
-            // Enseignant (avec subject_id et teaching_level)
             [
                 'name' => 'Professeur Math',
                 'cin' => 'M654321',
-                'email' => 'math.teacher@school.com',
-                'password' => Hash::make('password123'),
+                'email' => 'math.teacher@gmail.com',
+                'password' => Hash::make('123456789'),
                 'role' => 'Enseignant',
                 'birth_date' => '1985-05-20',
                 'phone' => '0623456789',
@@ -43,12 +41,11 @@ class UsersSeeder extends Seeder
                 'is_suspended' => false,
                 'is_deleted' => false,
             ],
-            // Secrétaire (sans subject_id ni teaching_level)
             [
                 'name' => 'Secrétaire',
                 'cin' => 'S987654',
-                'email' => 'secretary@school.com',
-                'password' => Hash::make('password123'),
+                'email' => 'secretary@gmail.com',
+                'password' => Hash::make('123456789'),
                 'role' => 'Secrétaire',
                 'birth_date' => '1990-11-10',
                 'phone' => '0634567890',
@@ -61,7 +58,6 @@ class UsersSeeder extends Seeder
             ],
         ];
 
-        // Insertion un par un pour éviter le problème de longueur différente
         foreach ($users as $user) {
             DB::table('users')->insert($user);
         }
