@@ -59,6 +59,7 @@ Route::controller(TeacherController::class)->group(function(){
 Route::controller(StudentController::class)->group(function(){
     Route::get('/student/grades/{studentId}','getGrades');
     Route::get('/student/exercises/{classId}','getExercises');
+    Route::post('/student/details/{studentId}','getStudentDetails');
 });
 
 Route::controller(OffreController::class)->group( function (){

@@ -47,4 +47,21 @@ class StudentController extends Controller
             ], 500);
         }
     }
+    public function getStudentDetails($studentId){
+        try{
+            $student = $this->studentService->getStudentDetails($studentId);
+
+            return response()->json([
+                'message' => 'data found',
+                'student' => $student,
+                'status' => 'success'
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexpected Error',
+                'status' => 'failed'
+            ], 500);
+        }
+    }
 }
+// 
