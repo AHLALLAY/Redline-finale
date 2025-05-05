@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaTimes, FaEye, FaPlus, FaFilter, FaToggleOn, FaToggleOff } from "react-icons/fa";
+import { FaTimes, FaEye, FaPlus, FaFilter, FaToggleOn, FaToggleOff, FaChalkboardTeacher } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // Header
@@ -175,7 +175,7 @@ function Filter({ onFilterChange }) {
   );
 }
 
-// Add Staff ModaL
+// Add Staff Modal
 function AddStaff({ onStaffAdded }) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -192,7 +192,6 @@ function AddStaff({ onStaffAdded }) {
     teaching_level: ""
   });
 
-
   const handleChange = (e) => {
     const name = e.target.name;
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -202,7 +201,6 @@ function AddStaff({ onStaffAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation des champs requis
     if (!formData.name || !formData.cin || !formData.email || !formData.password ||
       !formData.role || !formData.birth_date || !formData.last_diploma || !formData.obtained_at) {
       alert("Veuillez remplir tous les champs obligatoires");
@@ -292,7 +290,6 @@ function AddStaff({ onStaffAdded }) {
               </div>
 
               <form onSubmit={handleSubmit}>
-                {/* Informations personnelles */}
                 <div className="mb-6">
                   <h3 className="text-md font-medium text-orange-700 mb-3">Informations personnelles</h3>
 
@@ -383,7 +380,6 @@ function AddStaff({ onStaffAdded }) {
                   </div>
                 </div>
 
-                {/* Informations professionnelles */}
                 <div className="mb-6">
                   <h3 className="text-md font-medium text-orange-700 mb-3">Informations professionnelles</h3>
 
@@ -433,11 +429,8 @@ function AddStaff({ onStaffAdded }) {
                       />
                     </div>
                   </div>
-
-
                 </div>
 
-                {/* Boutons */}
                 <div className="pt-4 border-t border-gray-200 flex justify-end gap-3">
                   <button
                     type="button"
@@ -451,6 +444,227 @@ function AddStaff({ onStaffAdded }) {
                     className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 transition"
                   >
                     Enregistrer
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Assign Class Modal
+function AssignClassModal() {
+  const [open, setOpen] = useState(false);
+  const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    level: "",
+    group: "",
+    teacher_id: "",
+    room_number: "",
+    academic_year: new Date().getFullYear()
+  });
+
+  // Static levels and groups based on migration
+  const levels = [
+    '1ére année', 
+    '2ème année', 
+    '3ème année', 
+    '4ème année', 
+    '5ème année', 
+    '6ème année'
+  ];
+
+  const groups = ['A', 'B', 'C', 'D'];
+
+  useEffect(() => {
+    if (open) {
+      // Fetch teachers
+      fetch("http://127.0.0.1:8000/api/admin/staff", {
+        credentials: 'include'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === "success") {
+            const teacherList = data.data.filter(staff => staff.role === "Enseignant");
+            setTeachers(teacherList);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching teachers:", error);
+        });
+    }
+  }, [open]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({...formData, [name]: value});
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/admin/class/new", {
+        method: "POST",
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData)
+      });
+      
+      const data = await response.json();
+      
+      if (data.status === "success") {
+        alert("Classe assignée avec succès");
+        setOpen(false);
+        setFormData({
+          level: "",
+          group: "",
+          teacher_id: "",
+          room_number: "",
+          academic_year: new Date().getFullYear()
+        });
+      } else {
+        alert(data.message || "Erreur lors de l'assignation");
+      }
+    } catch (error) {
+      console.error("Erreur:", error);
+      alert("Erreur de connexion");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setOpen(true)}
+        className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition shadow hover:shadow-md"
+      >
+        <FaChalkboardTeacher />
+        <span>Assigner classe</span>
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4 border-b pb-3">
+                <h2 className="text-lg font-semibold text-gray-800">Assigner une classe à un professeur</h2>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Professeur*
+                  </label>
+                  <select
+                    name="teacher_id"
+                    value={formData.teacher_id}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  >
+                    <option value="">Sélectionner un professeur</option>
+                    {teachers.map(teacher => (
+                      <option key={teacher.id} value={teacher.id}>{teacher.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Niveau*
+                  </label>
+                  <select
+                    name="level"
+                    value={formData.level}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  >
+                    <option value="">Sélectionner un niveau</option>
+                    {levels.map(level => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Groupe*
+                  </label>
+                  <select
+                    name="group"
+                    value={formData.group}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    required
+                  >
+                    <option value="">Sélectionner un groupe</option>
+                    {groups.map(group => (
+                      <option key={group} value={group}>{group}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Numéro de salle*
+                  </label>
+                  <input
+                    type="number"
+                    name="room_number"
+                    value={formData.room_number}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    required
+                    min="1"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Année académique*
+                  </label>
+                  <input
+                    type="number"
+                    name="academic_year"
+                    value={formData.academic_year}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
+                    required
+                    min="2000"
+                    max="2100"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 mt-6">
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="px-3 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-3 py-1 text-sm bg-orange-600 text-white hover:bg-orange-700 rounded"
+                    disabled={loading}
+                  >
+                    {loading ? "En cours..." : "Assigner"}
                   </button>
                 </div>
               </form>
@@ -563,6 +777,7 @@ function StaffCard({ staff, onStatusChanged }) {
 // root
 function StaffList() {
   const [staffMembers, setStaffMembers] = useState([]);
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     role: "",
@@ -570,25 +785,39 @@ function StaffList() {
     searchName: ""
   });
 
-  const fetchStaffMembers = async () => {
+  const fetchStaffData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/admin/staff", {
-        credentials: 'include',
-        headers: {
-          'Accept': 'application/json',
-        }
-      });
-      const data = await response.json();
+      const [staffResponse, statsResponse] = await Promise.all([
+        fetch("http://127.0.0.1:8000/api/admin/staff", {
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+          }
+        }),
+        fetch("http://127.0.0.1:8000/api/admin/statistics/staff", {
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+          }
+        })
+      ]);
 
-      if (data.status === "success") {
-        const sortedData = [...data.data].sort((a, b) => a.id - b.id);
+      const staffData = await staffResponse.json();
+      const statsData = await statsResponse.json();
+
+      if (staffData.status === "success") {
+        const sortedData = [...staffData.data].sort((a, b) => a.id - b.id);
         setStaffMembers(sortedData);
       } else {
         setStaffMembers([]);
       }
+
+      if (statsData.status === "success") {
+        setStats(statsData.data);
+      }
     } catch (error) {
-      console.error("Erreur lors de la récupération du personnel:", error);
+      console.error("Erreur:", error);
       setStaffMembers([]);
     } finally {
       setLoading(false);
@@ -596,7 +825,7 @@ function StaffList() {
   };
 
   useEffect(() => {
-    fetchStaffMembers();
+    fetchStaffData();
   }, []);
 
   const handleFilterChange = (newFilters) => {
@@ -619,17 +848,28 @@ function StaffList() {
 
       <main className="flex-1 p-4 md:p-6 mt-16">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Gestion du personnel
-          </h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              Gestion du personnel
+            </h2>
+            <AssignClassModal />
+          </div>
 
           <div className="mb-8 bg-white p-4 md:p-6 rounded-lg shadow-md">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-bold text-gray-800">Liste du personnel</h3>
+              <div>
+                <h3 className="text-xl font-bold text-gray-800">Liste du personnel</h3>
+                {stats && (
+                  <p className="text-sm text-gray-500">
+                    Total: {stats.total} | Admins: {stats.admin} | Enseignants: {stats.teacher} | 
+                    Comptables: {stats.accountant} | Secrétaires: {stats.secretary}
+                  </p>
+                )}
+              </div>
 
               <div className="flex space-x-4">
                 <Filter onFilterChange={handleFilterChange} />
-                <AddStaff onStaffAdded={fetchStaffMembers} />
+                <AddStaff onStaffAdded={fetchStaffData} />
               </div>
             </div>
 
@@ -643,7 +883,7 @@ function StaffList() {
                   <StaffCard 
                     key={staff.id} 
                     staff={staff} 
-                    onStatusChanged={fetchStaffMembers} 
+                    onStatusChanged={fetchStaffData} 
                   />
                 ))}
               </div>
