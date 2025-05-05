@@ -13,15 +13,15 @@ class UsersSeeder extends Seeder
         $users = [
             // Admin
             [
-                'name' => 'Admin',
-                'cin' => 'A123456',
-                'email' => 'admin@gmail.com',
+                'name' => 'Abderrahmane Ahlallay',
+                'cin' => 'IE31859',
+                'email' => 'abderrahmanahlalay76@gmail.com',
                 'password' => Hash::make('123456789'),
                 'role' => 'Admin',
-                'birth_date' => '1980-01-15',
-                'phone' => '0612345678',
+                'birth_date' => '1997-07-10',
+                'phone' => '0606581612',
                 'last_diploma' => 'Master en Administration',
-                'obtained_at' => '2005-06-30',
+                'obtained_at' => '2025-01-01',
                 'subject_id' => null,
                 'teaching_level' => null,
                 'is_suspended' => false,
@@ -29,15 +29,15 @@ class UsersSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            
+
             // Secrétaire
             [
-                'name' => 'Secrétaire Scolaire',
-                'cin' => 'S654321',
-                'email' => 'secretaire@gmail.com',
+                'name' => 'Nezha Barghote',
+                'cin' => 'IE54321',
+                'email' => 'nazhaBarghot02@gmail.com',
                 'password' => Hash::make('123456789'),
                 'role' => 'Secrétaire',
-                'birth_date' => '1990-03-25',
+                'birth_date' => '2000-03-25',
                 'phone' => '0623456789',
                 'last_diploma' => 'BTS Assistant de Direction',
                 'obtained_at' => '2015-06-20',
@@ -55,7 +55,7 @@ class UsersSeeder extends Seeder
             1 => 'Langue Arabe',
             2 => 'Langue Française',
             3 => 'Langue Anglaise',
-            4 =>'Éducation Islamique',
+            4 => 'Éducation Islamique',
             5 => 'Mathématiques',
             6 => 'Activité Scientifique',
             7 => 'Informatique',
@@ -66,7 +66,7 @@ class UsersSeeder extends Seeder
 
         $levels = [
             '1ére année',
-            '2ème année', 
+            '2ème année',
             '3ème année',
             '4ème année',
             '5ème année',
@@ -77,15 +77,15 @@ class UsersSeeder extends Seeder
         for ($i = 1; $i <= 60; $i++) {
             $subjectId = ($i % 10) + 1; // Répartition cyclique sur les 10 matières
             $levelIndex = ($i % 6); // Répartition sur les 6 niveaux
-            
+
             $users[] = [
-                'name' => 'Professeur '.$subjects[$subjectId].' '.$i,
-                'cin' => 'E'.str_pad($i, 5, '0', STR_PAD_LEFT),
-                'email' => 'prof'.$i.'@gmail.com',
+                'name' => 'Professeur ' . $subjects[$subjectId] . ' ' . $i,
+                'cin' => 'E' . str_pad($i, 5, '0', STR_PAD_LEFT),
+                'email' => 'prof' . $i . '@gmail.com',
                 'password' => Hash::make('123456789'),
                 'role' => 'Enseignant',
                 'birth_date' => $this->generateBirthDate(),
-                'phone' => '06'.str_pad(rand(10000000, 99999999), 8, '0'),
+                'phone' => '06' . str_pad(rand(10000000, 99999999), 8, '0'),
                 'last_diploma' => $this->generateDiploma($subjects[$subjectId]),
                 'obtained_at' => $this->generateObtainedDate(),
                 'subject_id' => $subjectId,
@@ -108,7 +108,7 @@ class UsersSeeder extends Seeder
         return sprintf('%d-%02d-%02d', $year, $month, $day);
     }
 
-    private function generateObtainedDate() 
+    private function generateObtainedDate()
     {
         $year = rand(2000, 2020);
         $month = rand(1, 12);
@@ -119,11 +119,11 @@ class UsersSeeder extends Seeder
     private function generateDiploma($subject)
     {
         $diplomas = [
-            'Licence en '.$subject,
-            'Master en '.$subject,
-            'Doctorat en '.$subject,
-            'Diplôme de Professeur de '.$subject,
-            'Certificat d\'enseignement de '.$subject
+            'Licence en ' . $subject,
+            'Master en ' . $subject,
+            'Doctorat en ' . $subject,
+            'Diplôme de Professeur de ' . $subject,
+            'Certificat d\'enseignement de ' . $subject
         ];
         return $diplomas[array_rand($diplomas)];
     }
