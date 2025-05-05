@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaTimes, FaEdit } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 
 // Header
 function Header() {
@@ -48,6 +48,16 @@ function Header() {
     );
 }
 
+// Composant pour afficher une information
+function InfoCard({ label, value }) {
+    return (
+        <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
+            <p className="text-sm text-orange-600 font-medium">{label}</p>
+            <p className="text-gray-800 font-semibold">{value || 'Non renseigné'}</p>
+        </div>
+    );
+}
+
 // Section des informations de l'élève
 function StudentInfoSection({ student }) {
     const navigate = useNavigate();
@@ -82,16 +92,6 @@ function StudentInfoSection({ student }) {
                 <InfoCard label="Adresse" value={student.address} />
                 <InfoCard label="Téléphone" value={student.phone} />
             </div>
-        </div>
-    );
-}
-
-// Composant pour afficher une information
-function InfoCard({ label, value }) {
-    return (
-        <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
-            <p className="text-sm text-orange-600 font-medium">{label}</p>
-            <p className="text-gray-800 font-semibold">{value || 'Non renseigné'}</p>
         </div>
     );
 }
@@ -174,9 +174,13 @@ function StudentDetails() {
                 setLoading(true);
                 
                 // Récupération des informations de l'élève
-                const studentResponse = await fetch(`http://127.0.0.1:8000/api/students/${id}`, {
+                const studentResponse = await fetch(`http://127.0.0.1:8000/api/student/details/${id}`, {
+                    method: 'POST',
+                    credentials: 'include',
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
                 
@@ -184,23 +188,59 @@ function StudentDetails() {
                     throw new Error('Erreur lors de la récupération des données de l\'élève');
                 }
                 
-                const studentData = await studentResponse.json();
+                const responseData = await studentResponse.json();
                 
-                // Récupération des notes de l'élève (n'est pas encors implémente)
-                const gradesResponse = await fetch(`http://127.0.0.1:8000/api/students/${id}/grades`, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
-                });
-                
-                let gradesData = [];
-                if (gradesResponse.ok) {
-                    const data = await gradesResponse.json();
-                    gradesData = data.grades || [];
+                if (responseData.status !== 'success') {
+                    throw new Error(responseData.message || 'Erreur lors de la récupération des données');
                 }
                 
-                setStudent(studentData.student);
-                setGrades(gradesData);
+                const studentData = responseData.student[0];
+                
+                const mockGrades = [
+                    {
+                        semester: "Semestre 1",
+                        subject: "Mathématiques",
+                        teacher: "Prof. Ahmed",
+                        control1: 15,
+                        control2: 14,
+                        activity: 16
+                    },
+                    {
+                        semester: "Semestre 1",
+                        subject: "Langue Arabe",
+                        teacher: "Prof. Fatima",
+                        control1: 13,
+                        control2: 12,
+                        activity: 14
+                    },
+                    {
+                        semester: "Semestre 1",
+                        subject: "Langue Française",
+                        teacher: "Prof. Jean",
+                        control1: 16,
+                        control2: 17,
+                        activity: 15
+                    },
+                    {
+                        semester: "Semestre 2",
+                        subject: "Mathématiques",
+                        teacher: "Prof. Ahmed",
+                        control1: 14,
+                        control2: 16,
+                        activity: 15
+                    },
+                    {
+                        semester: "Semestre 2",
+                        subject: "Langue Arabe",
+                        teacher: "Prof. Fatima",
+                        control1: 12,
+                        control2: 13,
+                        activity: 14
+                    }
+                ];
+                
+                setStudent(studentData);
+                setGrades(mockGrades);
                 setError(null);
             } catch (err) {
                 setError(err.message);
@@ -264,11 +304,6 @@ function StudentDetails() {
             <Header />
             <main className="flex-1 p-4 md:p-6 mt-16">
                 <div className="max-w-7xl mx-auto">
-                    <div className="mb-4">
-                        <h1 className="text-2xl font-bold text-gray-800">
-                            Fiche de l'élève: <span className="text-orange-600">{student.name}</span>
-                        </h1>
-                    </div>
                     
                     <StudentInfoSection student={student} />
                     <GradesSection grades={grades} />
