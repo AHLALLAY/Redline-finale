@@ -5,11 +5,13 @@ namespace App\Providers;
 use App\Interfaces\AccountantInterface;
 use App\Interfaces\AdminInterface;
 use App\Interfaces\AuthInterface;
+use App\Interfaces\OffreInterface;
 use App\Interfaces\StudentInterface;
 use App\Interfaces\TeacherInterface;
 use App\Repositories\AccountantRepository;
 use App\Repositories\AdminRepository;
 use App\Repositories\AuthRepository;
+use App\Repositories\OffreRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\TeacherRepository;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
         AdminInterface::class => AdminRepository::class,
         TeacherInterface::class => TeacherRepository::class,
         StudentInterface::class => StudentRepository::class,
+        OffreInterface::class => OffreRepository::class,
     ];
 
     public function register(): void
