@@ -63,5 +63,5 @@ Route::controller(StudentController::class)->group(function(){
 
 Route::controller(OffreController::class)->group( function (){
     Route::post('/admin/offer/new','addOffer'); //done
-    Route::get('/offers','getOffres');
+    Route::get('/offers','getOffers');
 });

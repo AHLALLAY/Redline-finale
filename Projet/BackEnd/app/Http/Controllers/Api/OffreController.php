@@ -11,10 +11,7 @@ class OffreController extends Controller
 {
     protected $offerService;
 
-    public function __construct(OffreService $offerService)
-    {
-        $this->offerService = $offerService;
-    }
+    public function __construct(OffreService $offerService) { $this->offerService = $offerService; }
 
     public function addOffer(OfferRequest $offerRequest)
     {
