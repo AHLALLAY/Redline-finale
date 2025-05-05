@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaTimes, FaEye, FaPlus, FaFilter } from "react-icons/fa";
+import { FaTimes, FaEye, FaPlus, FaFilter, FaToggleOn, FaToggleOff } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 // Header
@@ -462,8 +462,66 @@ function AddStaff({ onStaffAdded }) {
   );
 }
 
+// Toggle Status Button
+function ToggleStatusButton({ staff, onStatusChanged }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const toggleStatus = async () => {
+    setIsLoading(true);
+    try {
+      const endpoint = staff.is_suspended
+        ? `http://127.0.0.1:8000/api/admin/staff/activat/${staff.id}`
+        : `http://127.0.0.1:8000/api/admin/staff/suspend/${staff.id}`;
+
+      const response = await fetch(endpoint, {
+        method: "PATCH",
+        credentials: 'include',
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.status === "success") {
+        onStatusChanged();
+      } else {
+        alert(data.message || `Erreur lors de la ${staff.is_suspended ? 'réactivation' : 'suspension'} du membre du personnel`);
+      }
+    } catch (error) {
+      console.error("Erreur de connexion:", error);
+      alert("Erreur de connexion au serveur. Veuillez vérifier votre connexion ou contacter l'administrateur.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={toggleStatus}
+      disabled={isLoading}
+      className={`flex items-center gap-1 ${
+        staff.is_suspended
+          ? "text-green-600 hover:text-green-800"
+          : "text-red-600 hover:text-red-800"
+      } transition text-sm font-medium`}
+    >
+      {isLoading ? (
+        <div className="h-4 w-4 border-t-2 border-r-2 border-orange-600 rounded-full animate-spin"></div>
+      ) : staff.is_suspended ? (
+        <FaToggleOff className="text-lg" />
+      ) : (
+        <FaToggleOn className="text-lg" />
+      )}
+      <span>{staff.is_suspended ? "Activer" : "Suspendre"}</span>
+    </button>
+  );
+}
+
 // Staff Card
-function StaffCard({ staff }) {
+function StaffCard({ staff, onStatusChanged }) {
   const navigate = useNavigate();
 
   const viewDetails = () => {
@@ -471,19 +529,28 @@ function StaffCard({ staff }) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition transform hover:-translate-y-1">
-      <h3 className="font-semibold text-lg text-orange-800 mb-2">{staff.name}</h3>
-      <div className="text-gray-600 space-y-1">
+    <div className={`${staff.is_suspended ? "bg-gray-100" : "bg-white"} rounded-lg shadow-md p-4 hover:shadow-lg transition transform hover:-translate-y-1`}>
+      <div className="flex justify-between items-start mb-2">
+        <h3 className={`font-semibold text-lg ${staff.is_suspended ? "text-gray-500" : "text-orange-800"}`}>
+          {staff.name}
+        </h3>
+        {staff.is_suspended && (
+          <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Suspendu</span>
+        )}
+      </div>
+      <div className={`${staff.is_suspended ? "text-gray-500" : "text-gray-600"} space-y-1`}>
         <p className="text-sm">Rôle: <span className="font-medium">{staff.role}</span></p>
         {staff.role === "Enseignant" && (
           <p className="text-sm">Matière: <span className="font-medium">{staff.subject?.name || 'N/A'}</span></p>
         )}
         <p className="text-sm">CIN: <span className="font-medium">{staff.cin}</span></p>
       </div>
-      <div className="mt-4 flex justify-end">
+      <div className="mt-4 flex justify-between items-center">
+        <ToggleStatusButton staff={staff} onStatusChanged={onStatusChanged} />
+        
         <button
           onClick={viewDetails}
-          className="flex items-center gap-1 text-orange-600 hover:text-orange-800 transition text-sm font-medium"
+          className={`flex items-center gap-1 ${staff.is_suspended ? "text-gray-500 hover:text-gray-700" : "text-orange-600 hover:text-orange-800"} transition text-sm font-medium`}
         >
           <FaEye />
           <span>Voir détails</span>
@@ -515,7 +582,8 @@ function StaffList() {
       const data = await response.json();
 
       if (data.status === "success") {
-        setStaffMembers(data.data);
+        const sortedData = [...data.data].sort((a, b) => a.id - b.id);
+        setStaffMembers(sortedData);
       } else {
         setStaffMembers([]);
       }
@@ -572,7 +640,11 @@ function StaffList() {
             ) : filteredStaffMembers.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredStaffMembers.map(staff => (
-                  <StaffCard key={staff.id} staff={staff} />
+                  <StaffCard 
+                    key={staff.id} 
+                    staff={staff} 
+                    onStatusChanged={fetchStaffMembers} 
+                  />
                 ))}
               </div>
             ) : (
