@@ -25,6 +25,5 @@ interface AdminInterface
     public function getStudentStatistics();
 
     // Autres fonctionnalités
-    public function addOffer(array $offerData);
     public function getSubjects();
 }

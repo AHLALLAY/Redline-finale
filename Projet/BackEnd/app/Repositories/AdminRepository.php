@@ -141,16 +141,6 @@ class AdminRepository implements AdminInterface
         }
     }
 
-    public function addOffer(array $offerData)
-    {
-        try {
-            Offer::create($offerData);
-            return true;
-        } catch (\Exception $e) {
-            throw $e;
-        }
-    }
-
     public function getSubjects()
     {
         try{
