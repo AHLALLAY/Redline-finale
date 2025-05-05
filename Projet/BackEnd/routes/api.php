@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AccountantController;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\OffreController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use Illuminate\Support\Facades\Route;
@@ -42,7 +43,6 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/admin/statistics/students','getStudentStatistics'); // done
     
     // auther
-    Route::post('/admin/offer/new','addOffer'); //done
     Route::get('/admin/subjects/all','getSubjects'); //
 });
 
@@ -59,4 +59,9 @@ Route::controller(TeacherController::class)->group(function(){
 Route::controller(StudentController::class)->group(function(){
     Route::get('/student/grades/{studentId}','getGrades');
     Route::get('/student/exercises/{classId}','getExercises');
+});
+
+Route::controller(OffreController::class)->group( function (){
+    Route::post('/admin/offer/new','addOffer'); //done
+    Route::get('/offers','getOffres');
 });
