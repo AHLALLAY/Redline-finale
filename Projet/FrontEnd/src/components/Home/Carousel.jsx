@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function Carousel (){
+function Carousel() {
     const images = [
         "/img/1.jpg",
         "/img/2.jpg",
@@ -8,22 +8,22 @@ function Carousel (){
     ];
     
     const [currentImage, setCurrentImage] = useState(0);
-    useEffect (() => {
+    useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentImage(prev => (prev + 1)% images.length)
+            setCurrentImage(prev => (prev + 1) % images.length)
         }, 5000);
         return () => clearInterval(interval);
     }, [images.length]);
 
     return (
-        <div className="relative h-96 overflow-hidden mt-16">
+        <div className="relative h-96 overflow-hidden">
             {images.map((img, index) => {
                 return (
-                 <img
-                    key={index}
-                    src={img}
-                    alt={`slide ${index + 1}`}
-                    className={`absolute w-full h-full object-cover transition-opacity duration-300 ${index === currentImage ? 'opacity-100' : 'opacity-0'}`}
+                    <img
+                        key={index}
+                        src={img}
+                        alt={`slide ${index + 1}`}
+                        className={`absolute w-full h-full object-cover transition-opacity duration-300 ${index === currentImage ? 'opacity-100' : 'opacity-0'}`}
                     />
                 )
             })}

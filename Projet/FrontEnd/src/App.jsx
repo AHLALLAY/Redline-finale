@@ -5,15 +5,14 @@ import Offres from './components/Home/Offres'
 import Propos from './components/Home/Propos'
 
 function App() {
-
   return (
-    <>
+    <div className="bg-orange-50">
       <Header />
       <Carousel />
       <Offres />
       <Propos />
       <Footer />
-    </>
+    </div>
   )
 }
 
