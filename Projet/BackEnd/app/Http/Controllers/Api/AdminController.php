@@ -251,29 +251,6 @@ class AdminController extends Controller
         }
     }
     // auther
-    public function addOffer(OfferRequest $offerRequest)
-    {
-        try {
-            $validated_data = $offerRequest->validated();
-            $this->adminService->addOffer($validated_data);
-            return response()->json([
-                'message' => 'Offre Added',
-                'data' => $validated_data,
-                'status' => 'success'
-            ], 201);
-        } catch (ValidationException $e) {
-            return  response()->json([
-                'message' => 'Erreur lors la validation',
-                'error' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Unexpected Error',
-                'error' => $e->getMessage(),
-                'status' => 'error'
-            ], 500);
-        }
-    }
     public function getSubjects()
     {
         try {
