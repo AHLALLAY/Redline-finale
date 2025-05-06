@@ -14,10 +14,10 @@ class AccountantRequest extends FormRequest
             'description' => ['required', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'between:0,999999.99'],
             'type' => ['required', 'string', 'in:Dépense,Revenu'],
-            'reference_number' => ['required', 'string', 'max:50', 'unique:journals'],
+            'reference_number' => ['required', 'string', 'max:50', 'unique:transactions'],
             'entity_name' => ['required', 'string', 'max:255'],
             'entity_type' => ['required', 'string', 'in:Etudiant,Personnel,Fournisseur,Autre'],
-            'recorded_by' => ['required', 'integer']
+            'recorded_by' => ['nullable', 'integer']
         ];
     }
 }
