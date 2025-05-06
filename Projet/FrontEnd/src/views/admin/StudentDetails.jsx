@@ -60,23 +60,17 @@ function InfoCard({ label, value }) {
 
 // Section des informations de l'élève
 function StudentInfoSection({ student }) {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     
-    const handleEdit = () => {
-        navigate(`/admin/students/edit/${student.id}`);
-    };
+    // const handleEdit = () => {
+    //     navigate(`/admin/students/edit/${student.id}`);
+    // };
 
     return (
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-bold text-orange-800">Informations de l'élève</h2>
-                <button
-                    onClick={handleEdit}
-                    className="flex items-center gap-2 bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg transition shadow hover:shadow-md"
-                >
-                    <FaEdit />
-                    <span>Modifier</span>
-                </button>
+                
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
