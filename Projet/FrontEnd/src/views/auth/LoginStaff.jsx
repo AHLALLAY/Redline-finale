@@ -36,6 +36,7 @@ function LoginStaff() {
             localStorage.setItem('token', data.data.token);
             localStorage.setItem('role', data.data.staff.role);
             localStorage.setItem('username', data.data.staff.name || 'Utilisateur');
+            localStorage.setItem('id', data.data.staff.id);
             setSuccess('Connexion réussie! Redirection en cours...');
 
             // Créer le chemin de redirection
