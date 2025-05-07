@@ -84,6 +84,22 @@ class TeacherController extends Controller
     }
 
     // student
+    public function getClasses($teacherId){
+        try{
+            $result = $this->teacherService->getClasses($teacherId);
+            return response()->json([
+                'message' => 'Classes found',
+                'classes' => $result,
+                'status' => 'success'
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexepected Error',
+                'error' => $e->getMessage(),
+                'status' => 'faild'
+            ], 500);
+        }
+    }
     public function getStudentsByLevelAndGroup($classId)
     {
         try {

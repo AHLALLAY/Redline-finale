@@ -17,6 +17,7 @@ class TeacherService {
     public function addTextBoxActivity($activityData) { return $this->teacherRepository->addTextBoxActivity($activityData); }
 
     // student
+    public function getClasses($teacherId){ return $this->teacherRepository->getClasses($teacherId); }
     public function getStudentsByLevelAndGroup($classId) { return $this->teacherRepository->getStudentsByLevelAndGroup($classId); }
     public function recordAbsence($absnceData) { return $this->teacherRepository->recordAbsence($absnceData); }
     public function addGrade($gradeData) { return $this->teacherRepository->addGrade($gradeData); }
