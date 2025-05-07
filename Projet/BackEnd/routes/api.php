@@ -49,10 +49,13 @@ Route::controller(AdminController::class)->group(function(){
 Route::controller(TeacherController::class)->group(function(){
     Route::post('/prof/exercice/new','addExercise'); //done
     Route::patch('/prof/exercice/done/{exerciceId}','markExerciseAsDone'); //done
+    Route::get('/prof/exercices/{teacherId}','getMyExercise'); //done
     Route::post('/prof/activity/new','addTextBoxActivity'); //done
+    Route::get('/prof/classes/{teacherId}','getClasses'); //done
     Route::post('/prof/MyStudents/{classId}','getStudentsByLevelAndGroup'); //done
     Route::post('/prof/absence/new','recordAbsence'); //done
     Route::post('/prof/grade/new','addGrade'); //done
+    Route::get('/prof/timetable/{teacherId}','getTimeTable'); //done
 });
 
 

@@ -40,6 +40,22 @@ class TeacherController extends Controller
             ], 500);
         }
     }
+    public function getMyExercise($teacherId)
+    {
+        try {
+            $result = $this->teacherService->getMyExercise($teacherId);
+            return response()->json([
+                'message' => 'Exercice Assigned',
+                'data' => $result,
+                'status' => 'success'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function markExerciseAsDone($exerciceId)
     {
         try {
@@ -84,6 +100,22 @@ class TeacherController extends Controller
     }
 
     // student
+    public function getClasses($teacherId){
+        try{
+            $result = $this->teacherService->getClasses($teacherId);
+            return response()->json([
+                'message' => 'Classes found',
+                'classes' => $result,
+                'status' => 'success'
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                'message' => 'Unexepected Error',
+                'error' => $e->getMessage(),
+                'status' => 'faild'
+            ], 500);
+        }
+    }
     public function getStudentsByLevelAndGroup($classId)
     {
         try {
@@ -101,7 +133,7 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-
+    
     public function recordAbsence(AbsenceRequest $absenceRequest) {
         try{
             $validated_data = $absenceRequest->validated();
@@ -143,6 +175,24 @@ class TeacherController extends Controller
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
+    
+    public function getTimeTable($teacherId)
+    {
+        try {
+            $timeTable = $this->teacherService->getTimeTable($teacherId);
+            return response()->json([
+                'message' => 'Emploit de temps récupérés avec succès',
+                'data' => $timeTable,
+                'status' => 'success'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération de l\'emplois de temps',
                 'error' => $e->getMessage(),
                 'status' => 'error'
             ], 500);

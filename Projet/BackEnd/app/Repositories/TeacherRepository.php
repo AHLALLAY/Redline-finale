@@ -4,10 +4,12 @@ namespace App\Repositories;
 
 use App\Interfaces\TeacherInterface;
 use App\Models\Absence;
+use App\Models\Classe;
 use App\Models\Exercice;
 use App\Models\Grade;
 use App\Models\Student;
 use App\Models\TextBox;
+
 
 class TeacherRepository implements TeacherInterface
 {
@@ -15,6 +17,14 @@ class TeacherRepository implements TeacherInterface
     {
         try {
             return Exercice::create($exerciseData);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+    public function getMyExercise(int $teacherId)
+    {
+        try {
+            return Exercice::where('teacher_id',$teacherId)->get();
         } catch (\Exception $e) {
             throw $e;
         }
@@ -40,7 +50,13 @@ class TeacherRepository implements TeacherInterface
             throw $e;
         }
     }
-
+    public function getClasses(int $teacherId){
+        try{
+            return Classe::where('teacher_id', $teacherId)->get();
+        }catch(\Exception $e){
+            throw $e;
+        }
+    }
     public function getStudentsByLevelAndGroup(int $classId)
     {
         try {
@@ -63,6 +79,15 @@ class TeacherRepository implements TeacherInterface
     {
         try {
             return Grade::create($gradeData);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getTimeTable(int $teacherId)
+    {
+        try {
+            return Classe::where('teacher_id', $teacherId)->get();
         } catch (\Exception $e) {
             throw $e;
         }
