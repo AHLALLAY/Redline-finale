@@ -21,6 +21,14 @@ class TeacherRepository implements TeacherInterface
             throw $e;
         }
     }
+    public function getMyExercise(int $teacherId)
+    {
+        try {
+            return Exercice::where('teacher_id',$teacherId)->get();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 
     public function markExerciseAsDone(int $exerciseId)
     {

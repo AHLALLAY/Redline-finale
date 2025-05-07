@@ -13,6 +13,7 @@ class TeacherService {
 
     // activities
     public function addExercise($exerciseData) { return $this->teacherRepository->addExercise($exerciseData); }
+    public function getMyExercise($teacherId) { return $this->teacherRepository->getMyExercise($teacherId); }
     public function markExerciseAsDone($exerciceId) { return $this->teacherRepository->markExerciseAsDone($exerciceId); }
     public function addTextBoxActivity($activityData) { return $this->teacherRepository->addTextBoxActivity($activityData); }
 

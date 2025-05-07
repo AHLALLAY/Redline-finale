@@ -40,6 +40,22 @@ class TeacherController extends Controller
             ], 500);
         }
     }
+    public function getMyExercise($teacherId)
+    {
+        try {
+            $result = $this->teacherService->getMyExercise($teacherId);
+            return response()->json([
+                'message' => 'Exercice Assigned',
+                'data' => $result,
+                'status' => 'success'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Unexpected error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function markExerciseAsDone($exerciceId)
     {
         try {

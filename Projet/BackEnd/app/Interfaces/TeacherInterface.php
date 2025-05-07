@@ -6,6 +6,7 @@ interface TeacherInterface
 {
     // Activitis
     public function addExercise(array $exerciseData);
+    public function getMyExercise(int $teacherId);
     public function markExerciseAsDone(int $exerciseId);
     public function addTextBoxActivity(array $activityData);
     
