@@ -66,7 +66,6 @@ function DashboardEnseignant() {
 
         // Récupérer la matière
         setMatiere(localStorage.getItem('subject') || "Matière non définie");
-
       } catch (error) {
         displayMessage("error", "Erreur de chargement des données : " + error);
       } finally {
@@ -263,7 +262,7 @@ function DashboardEnseignant() {
                         <div className="flex justify-between items-center">
                           <div>
                             <h4 className="font-medium">{exercise.title}</h4>
-                            <p className="text-sm text-gray-600">Classe: {exercise.class_id}</p>
+                            <p className="text-sm text-gray-600">Classe: {exercise.class_id || "Non définie"}</p>
                           </div>
                           <button
                             onClick={() => navigate(`/enseignant/exercice/${exercise.id}`)}
@@ -321,15 +320,6 @@ function DashboardEnseignant() {
                 ></textarea>
               </div>
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date limite</label>
-                <input
-                  type="date"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  value={newExercise.deadline}
-                  onChange={(e) => setNewExercise({...newExercise, deadline: e.target.value})}
-                />
-              </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Classe</label>
