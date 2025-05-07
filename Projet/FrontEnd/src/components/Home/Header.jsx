@@ -21,7 +21,7 @@ function Header() {
     };
 
     const navigateToLogin = () => {
-        navigate('/Login/staff');
+        navigate('/Login/student');
     }
 
     return (
@@ -39,15 +39,22 @@ function Header() {
 
                     {/* Menu Desktop */}
                     <nav className="hidden md:flex space-x-8 items-center">
-                        {menuItems.map(item => (
-                            <button
-                                className="text-gray-800 hover:text-orange-600 font-medium transition-colors"
-                                key={item.id}
-                                onClick={() => scrollToSection(item.id)}
-                            >
-                                {item.label}
-                            </button>
-                        ))}
+                        {(() => {
+                            const buttons = [];
+                            for (let index = 0; index < menuItems.length; index++) {
+                                buttons.push(
+                                    <button
+                                        className="text-gray-800 hover:text-orange-600 font-medium transition-colors"
+                                        key={menuItems[index].id}
+                                        onClick={() => scrollToSection(menuItems[index].id)}
+                                    >
+                                        {menuItems[index].label}
+                                    </button>
+                                );
+                            }
+                            return buttons;
+                        })()}
+                        
                         <button 
                             onClick={navigateToLogin} 
                             className="bg-orange-600 text-white rounded-full px-4 py-2 hover:bg-orange-700 transition-colors duration-200 shadow hover:shadow-md"
@@ -58,7 +65,7 @@ function Header() {
                 </div>
 
                 {/* Menu Mobile */}
-                <div className="flex justify-between items-center md:hidden">
+                <div className="flex justify-between items-center md:hidden absolute top-4 right-4">
                     {/* Bouton Mobile */}
                     <button
                         className="text-gray-800"
@@ -74,18 +81,24 @@ function Header() {
             {mobileMenuOpen && (
                 <div className="md:hidden bg-white shadow-lg rounded-lg mt-2">
                     <nav className="flex flex-col space-y-3 p-4">
-                        {menuItems.map(item => (
-                            <button
-                                className="text-left py-2 text-gray-800 hover:text-orange-600 font-medium"
-                                key={item.id}
-                                onClick={() => {
-                                    scrollToSection(item.id);
-                                    setMobileMenuOpen(false);
-                                }}
-                            >
-                                {item.label}
-                            </button>
-                        ))}
+                        {(() => {
+                            const mobileButtons = [];
+                            for (let index = 0; index < menuItems.length; index++) {
+                                mobileButtons.push(
+                                    <button
+                                        className="text-left py-2 text-gray-800 hover:text-orange-600 font-medium"
+                                        key={menuItems[index].id}
+                                        onClick={() => {
+                                            scrollToSection(menuItems[index].id);
+                                            setMobileMenuOpen(false);
+                                        }}
+                                    >
+                                        {menuItems[index].label}
+                                    </button>
+                                );
+                            }
+                            return mobileButtons;
+                        })()}
                         <button 
                             onClick={navigateToLogin}
                             className="bg-orange-600 text-white rounded-lg px-4 py-2 hover:bg-orange-700 transition-colors duration-200"

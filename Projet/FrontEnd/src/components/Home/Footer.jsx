@@ -29,8 +29,8 @@ function Footer() {
                                 </a>
                             </li>
                             <li>
-                                <a href="/login/staff" className="text-gray-400 hover:text-orange-500 transition-colors">
-                                    Espace personnel
+                                <a href="/login/student" className="text-gray-400 hover:text-orange-500 transition-colors">
+                                    Espace Etudiant
                                 </a>
                             </li>
                         </ul>
