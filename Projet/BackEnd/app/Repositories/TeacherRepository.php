@@ -10,6 +10,7 @@ use App\Models\Grade;
 use App\Models\Student;
 use App\Models\TextBox;
 
+
 class TeacherRepository implements TeacherInterface
 {
     public function addExercise(array $exerciseData)
@@ -70,6 +71,15 @@ class TeacherRepository implements TeacherInterface
     {
         try {
             return Grade::create($gradeData);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function getTimeTable(int $teacherId)
+    {
+        try {
+            return Classe::where('teacher_id', $teacherId)->get();
         } catch (\Exception $e) {
             throw $e;
         }

@@ -16,6 +16,8 @@ interface TeacherInterface
     public function addGrade(array $gradeData);
 
     // Educational document
-    
+
+    // Autre
+    public function getTimeTable(int $teacherId);
 }
 

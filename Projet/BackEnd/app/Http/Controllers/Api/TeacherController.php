@@ -117,7 +117,7 @@ class TeacherController extends Controller
             ], 500);
         }
     }
-
+    
     public function recordAbsence(AbsenceRequest $absenceRequest) {
         try{
             $validated_data = $absenceRequest->validated();
@@ -159,6 +159,24 @@ class TeacherController extends Controller
         }catch(\Exception $e){
             return response()->json([
                 'message' => 'unexpected error',
+                'error' => $e->getMessage(),
+                'status' => 'error'
+            ], 500);
+        }
+    }
+    
+    public function getTimeTable($teacherId)
+    {
+        try {
+            $timeTable = $this->teacherService->getTimeTable($teacherId);
+            return response()->json([
+                'message' => 'Emploit de temps récupérés avec succès',
+                'data' => $timeTable,
+                'status' => 'success'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erreur lors de la récupération de l\'emplois de temps',
                 'error' => $e->getMessage(),
                 'status' => 'error'
             ], 500);

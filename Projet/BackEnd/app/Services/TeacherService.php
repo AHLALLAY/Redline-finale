@@ -21,4 +21,7 @@ class TeacherService {
     public function getStudentsByLevelAndGroup($classId) { return $this->teacherRepository->getStudentsByLevelAndGroup($classId); }
     public function recordAbsence($absnceData) { return $this->teacherRepository->recordAbsence($absnceData); }
     public function addGrade($gradeData) { return $this->teacherRepository->addGrade($gradeData); }
+
+    // autre
+    public function getTimeTable($teacherId){ return $this->teacherRepository->getTimeTable($teacherId); }
 }
