@@ -21,7 +21,6 @@ class RegisterStaffRequest extends FormRequest
             'last_diploma' =>['required', 'string'],
             'obtained_at' => ['required','date'],
             'subject_id' => ['nullable','integer', 'min:1', 'exists:subjects,id'],
-            'teaching_level' => ['nullable','in:1ére année,2ème année,3ème année,4ème année,5ème année,6ème année'],
             'is_suspended' => ['required','boolean'],
             'is_deleted' => ['required','boolean'],
         ];

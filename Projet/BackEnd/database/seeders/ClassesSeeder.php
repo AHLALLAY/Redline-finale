@@ -14,21 +14,18 @@ class ClassesSeeder extends Seeder
                 'level' => '1ére année',
                 'group' => 'A',
                 'teacher_id' => 2, // Professeur Math
-                'room_number' => 101,
                 'academic_year' => 2023,
             ],
             [
                 'level' => '2ème année',
                 'group' => 'B',
                 'teacher_id' => 2,
-                'room_number' => 102,
                 'academic_year' => 2023,
             ],
             [
                 'level' => '3ème année',
                 'group' => 'A',
                 'teacher_id' => 2,
-                'room_number' => 201,
                 'academic_year' => 2023,
             ],
         ];

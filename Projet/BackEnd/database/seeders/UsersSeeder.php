@@ -23,7 +23,6 @@ class UsersSeeder extends Seeder
                 'last_diploma' => 'Master en Administration',
                 'obtained_at' => '2025-01-01',
                 'subject_id' => null,
-                'teaching_level' => null,
                 'is_suspended' => false,
                 'is_deleted' => false,
                 'created_at' => now(),
@@ -42,7 +41,6 @@ class UsersSeeder extends Seeder
                 'last_diploma' => 'BTS Assistant de Direction',
                 'obtained_at' => '2015-06-20',
                 'subject_id' => null,
-                'teaching_level' => null,
                 'is_suspended' => false,
                 'is_deleted' => false,
                 'created_at' => now(),
@@ -64,19 +62,10 @@ class UsersSeeder extends Seeder
             10 => 'Éducation Physique'
         ];
 
-        $levels = [
-            '1ére année',
-            '2ème année',
-            '3ème année',
-            '4ème année',
-            '5ème année',
-            '6ème année'
-        ];
 
         // Génération de 60 enseignants
         for ($i = 1; $i <= 60; $i++) {
             $subjectId = ($i % 10) + 1; // Répartition cyclique sur les 10 matières
-            $levelIndex = ($i % 6); // Répartition sur les 6 niveaux
 
             $users[] = [
                 'name' => 'Professeur ' . $subjects[$subjectId] . ' ' . $i,
@@ -89,7 +78,6 @@ class UsersSeeder extends Seeder
                 'last_diploma' => $this->generateDiploma($subjects[$subjectId]),
                 'obtained_at' => $this->generateObtainedDate(),
                 'subject_id' => $subjectId,
-                'teaching_level' => $levels[$levelIndex],
                 'is_suspended' => false,
                 'is_deleted' => false,
                 'created_at' => now(),
