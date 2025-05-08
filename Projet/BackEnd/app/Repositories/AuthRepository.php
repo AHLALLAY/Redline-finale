@@ -27,18 +27,24 @@ class AuthRepository implements AuthInterface
     {
         try {
             Auth::guard('api')->attempt($credentials);
-            
+
             if (!$token = JWTAuth::attempt($credentials)) {
                 return null;
             }
-            
+
             $staff = Auth::user();
             if (!$staff) {
                 throw new Exception("Staff not found!");
             }
-            
+
+            $staffWithDetails = User::where('users.id', $staff->id)
+                ->leftJoin('classes as c', 'users.id', '=', 'c.teacher_id')
+                ->leftJoin('subjects as s', 'users.subject_id', '=', 's.id')
+                ->select('users.*', 'c.level', 'c.group', 's.nom as subject_name')
+                ->first();
+
             return [
-                'staff' => $staff,
+                'staff' => $staffWithDetails,
                 'token' => $token,
                 'token_type' => 'bearer',
             ];
@@ -64,15 +70,15 @@ class AuthRepository implements AuthInterface
                 'email' => $credentials['email'],
                 'password' => $credentials['password']
             ]);
-    
+
             $student = Student::where('email', $credentials['email'])->first();
-            
+
             if (!$student) {
                 return null;
             }
-            
+
             $token = JWTAuth::fromUser($student);
-            
+
             return [
                 'student' => $student,
                 'token' => $token,
