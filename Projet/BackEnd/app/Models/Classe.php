@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Classe extends Model
 {
     
-    protected $fillable = [ 'level', 'group',  'teacher_id', 'room_number', 'academic_year' ];
+    protected $fillable = [ 'level', 'group',  'teacher_id', 'academic_year' ];
 
     public function teacher() {return $this->belongsTo(User::class, 'teacher_id');}
     public function students() { return $this->hasMany(Student::class, 'class_id'); }

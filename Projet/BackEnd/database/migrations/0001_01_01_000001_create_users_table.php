@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('last_diploma');
             $table->date('obtained_at');
             $table->foreignId('subject_id')->nullable()->constrained('subjects')->nullable()->onDelete('cascade');
-            $table->enum('teaching_level', ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année'])->nullable();
             $table->boolean('is_suspended')->default(false);
             $table->boolean('is_deleted')->default(false);
             $table->timestamps();
