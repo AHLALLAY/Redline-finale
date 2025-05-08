@@ -40,7 +40,7 @@ class AuthRepository implements AuthInterface
             $staffWithDetails = User::where('users.id', $staff->id)
                 ->leftJoin('classes as c', 'users.id', '=', 'c.teacher_id')
                 ->leftJoin('subjects as s', 'users.subject_id', '=', 's.id')
-                ->select('users.*', 'c.level', 'c.group', 's.nom as subject_name')
+                ->select('users.name','users.email','users.cin','users.role','users.birth_date','users.phone','users.last_diploma','users.obtained_at', 'c.level', 'c.group', 's.nom as subject_name')
                 ->first();
 
             return [
