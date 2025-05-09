@@ -24,14 +24,18 @@ class AdminRepository implements AdminInterface
         }
     }
 
-    public function getStaffList()
-    {
-        try {
-            return User::all();
-        } catch (\Exception $e) {
-            throw $e;
-        }
+public function getStaffList()
+{
+    try {
+        return User::select('users.*', 'classes.level', 'classes.group', 'subjects.nom')
+            ->join('classes', 'users.id', '=', 'classes.teacher_id')
+            ->join('subjects', 'users.subject_id', '=', 'subjects.id')
+            ->get();
+    } catch (\Exception $e) {
+        throw $e;
     }
+}
+
 
 
     public function suspendStaff(int $staffId)
