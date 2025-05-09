@@ -169,7 +169,7 @@ function DashboardAdmin() {
       {/* En-tête fixe */}
       <Header />
 
-      {/* Contenu principal avec padding pour compenser le header fixe */}
+      {/* Contenu principal */}
       <main className="flex-1 p-4 md:p-6 mt-16">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
@@ -356,15 +356,15 @@ function DashboardAdmin() {
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-gray-700">Comptables</span>
                             <span className="font-bold text-orange-500">
-                              {donneePersonnel.data.accoutant || 0}
+                              {donneePersonnel.data.accountant || 0}
                             </span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
                             <div
                               className="bg-orange-500 h-2 rounded-full"
                               style={{
-                                width: `${donneePersonnel.data.total > 0 && donneePersonnel.data.accoutant > 0
-                                  ? (donneePersonnel.data.accoutant / donneePersonnel.data.total) * 100
+                                width: `${donneePersonnel.data.total > 0 && donneePersonnel.data.accountant > 0
+                                  ? (donneePersonnel.data.accountant / donneePersonnel.data.total) * 100
                                   : 0}%`,
                               }}
                             ></div>
