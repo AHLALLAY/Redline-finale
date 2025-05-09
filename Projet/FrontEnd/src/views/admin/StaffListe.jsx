@@ -178,6 +178,8 @@ function Filter({ onFilterChange }) {
 // Add Staff Modal
 function AddStaff({ onStaffAdded }) {
   const [open, setOpen] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const [loadingSubjects, setLoadingSubjects] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     cin: "",
@@ -193,10 +195,32 @@ function AddStaff({ onStaffAdded }) {
   });
 
   const handleChange = (e) => {
-    const name = e.target.name;
-    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+    const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  useEffect(() => {
+    const fetchSubjects = async () => {
+      if (open && formData.role === "Enseignant") {
+        setLoadingSubjects(true);
+        try {
+          const response = await fetch('http://127.0.0.1:8000/api/admin/subjects/all');
+          if (response.ok) {
+            const data = await response.json();
+            if (data.status === "success") {
+              setSubjects(data.subjects);
+            }
+          }
+        } catch (error) {
+          console.error("Erreur lors de la récupération des matières:", error);
+        } finally {
+          setLoadingSubjects(false);
+        }
+      }
+    };
+
+    fetchSubjects();
+  }, [open, formData.role]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -204,6 +228,11 @@ function AddStaff({ onStaffAdded }) {
     if (!formData.name || !formData.cin || !formData.email || !formData.password ||
       !formData.role || !formData.birth_date || !formData.last_diploma || !formData.obtained_at) {
       alert("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+
+    if (formData.role === "Enseignant" && (!formData.subject_id)) {
+      alert("Pour les enseignants, veuillez sélectionner une matière");
       return;
     }
 
@@ -219,10 +248,8 @@ function AddStaff({ onStaffAdded }) {
       obtained_at: formData.obtained_at,
       is_suspended: false,
       is_deleted: false,
-
       ...(formData.role === "Enseignant" && {
         subject_id: formData.subject_id,
-        teaching_level: formData.teaching_level
       })
     };
 
@@ -253,7 +280,6 @@ function AddStaff({ onStaffAdded }) {
           last_diploma: "",
           obtained_at: "",
           subject_id: "",
-          teaching_level: ""
         });
         onStaffAdded();
       } else {
@@ -429,6 +455,30 @@ function AddStaff({ onStaffAdded }) {
                       />
                     </div>
                   </div>
+
+                  {formData.role === "Enseignant" && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label htmlFor="subject_id" className="block text-sm text-gray-700 mb-1">Matière*</label>
+                        <select
+                          id="subject_id"
+                          name="subject_id"
+                          value={formData.subject_id}
+                          onChange={handleChange}
+                          className="w-full p-2 border border-gray-300 rounded focus:ring-orange-500 focus:border-orange-500"
+                          required
+                          disabled={loadingSubjects}
+                        >
+                          <option value="">{loadingSubjects ? "Chargement..." : "Sélectionner une matière"}</option>
+                          {subjects.map(subject => (
+                            <option key={subject.id} value={subject.id}>
+                              {subject.nom}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-4 border-t border-gray-200 flex justify-end gap-3">
@@ -773,8 +823,8 @@ function StaffCard({ staff, onStatusChanged }) {
         <button
           onClick={viewDetails}
           className={`flex items-center gap-2 ${staff.is_suspended
-              ? "text-gray-500 hover:text-gray-700"
-              : "text-orange-600 hover:text-orange-800"
+            ? "text-gray-500 hover:text-gray-700"
+            : "text-orange-600 hover:text-orange-800"
             } transition text-sm font-medium px-3 py-1 rounded-full hover:bg-orange-50`}
         >
           <FaEye className="text-xs" />
