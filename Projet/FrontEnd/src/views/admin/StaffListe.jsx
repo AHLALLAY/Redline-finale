@@ -464,20 +464,10 @@ function AssignClassModal() {
     level: "",
     group: "",
     teacher_id: "",
-    room_number: "",
     academic_year: new Date().getFullYear()
   });
 
-  // Static levels and groups based on migration
-  const levels = [
-    '1ére année', 
-    '2ème année', 
-    '3ème année', 
-    '4ème année', 
-    '5ème année', 
-    '6ème année'
-  ];
-
+  const levels = ['1ére année', '2ème année', '3ème année', '4ème année', '5ème année', '6ème année'];
   const groups = ['A', 'B', 'C', 'D'];
 
   useEffect(() => {
@@ -501,13 +491,13 @@ function AssignClassModal() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({...formData, [name]: value});
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/admin/class/new", {
         method: "POST",
@@ -517,9 +507,9 @@ function AssignClassModal() {
         },
         body: JSON.stringify(formData)
       });
-      
+
       const data = await response.json();
-      
+
       if (data.status === "success") {
         alert("Classe assignée avec succès");
         setOpen(false);
@@ -527,7 +517,6 @@ function AssignClassModal() {
           level: "",
           group: "",
           teacher_id: "",
-          room_number: "",
           academic_year: new Date().getFullYear()
         });
       } else {
@@ -622,21 +611,6 @@ function AssignClassModal() {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Numéro de salle*
-                  </label>
-                  <input
-                    type="number"
-                    name="room_number"
-                    value={formData.room_number}
-                    onChange={handleChange}
-                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-orange-500 focus:border-orange-500"
-                    required
-                    min="1"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Année académique*
                   </label>
                   <input
@@ -716,11 +690,10 @@ function ToggleStatusButton({ staff, onStatusChanged }) {
     <button
       onClick={toggleStatus}
       disabled={isLoading}
-      className={`flex items-center gap-1 ${
-        staff.is_suspended
-          ? "text-green-600 hover:text-green-800"
-          : "text-red-600 hover:text-red-800"
-      } transition text-sm font-medium`}
+      className={`flex items-center gap-1 ${staff.is_suspended
+        ? "text-green-600 hover:text-green-800"
+        : "text-red-600 hover:text-red-800"
+        } transition text-sm font-medium`}
     >
       {isLoading ? (
         <div className="h-4 w-4 border-t-2 border-r-2 border-orange-600 rounded-full animate-spin"></div>
@@ -742,38 +715,75 @@ function StaffCard({ staff, onStatusChanged }) {
     navigate(`/admin/staff/${staff.id}`);
   };
 
+  const roleConfig = {
+    "Enseignant": { bgColor: "bg-blue-300", letter: "E" },
+    "Admin": { bgColor: "bg-purple-300", letter: "A" },
+    "Comptable": { bgColor: "bg-green-300", letter: "C" },
+    "Secrétaire": { bgColor: "bg-yellow-300", letter: "S" }
+  };
+
+  const { bgColor, letter } = roleConfig[staff.role] || { bgColor: "bg-gray-400", letter: "?" };
+
   return (
-    <div className={`${staff.is_suspended ? "bg-gray-100" : "bg-white"} rounded-lg shadow-md p-4 hover:shadow-lg transition transform hover:-translate-y-1`}>
-      <div className="flex justify-between items-start mb-2">
-        <h3 className={`font-semibold text-lg ${staff.is_suspended ? "text-gray-500" : "text-orange-800"}`}>
-          {staff.name}
-        </h3>
-        {staff.is_suspended && (
-          <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">Suspendu</span>
-        )}
+    <div
+      className={`${staff.is_suspended ? "bg-gray-100" : "bg-white"} 
+      rounded-lg shadow-md p-5 hover:shadow-lg transition duration-300 
+      transform hover:-translate-y-1 border ${staff.is_suspended ? "border-gray-200" : "border-orange-100"}`}
+    >
+      <div className="flex items-start gap-4">
+        {/* Avatar du rôle */}
+        <div className={`${bgColor} w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0`}>
+          <span className="text-white font-medium">{letter}</span>
+        </div>
+
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className={`font-semibold text-lg ${staff.is_suspended ? "text-gray-500" : "text-orange-800"}`}>
+              {staff.name}
+            </h3>
+            {staff.is_suspended && (
+              <span className="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full font-medium">
+                Suspendu
+              </span>
+            )}
+          </div>
+
+          <div className={`${staff.is_suspended ? "text-gray-500" : "text-gray-600"} space-y-2`}>
+            <p className="text-sm">
+              <span className="text-gray-400">CIN:</span> <span className="font-medium">{staff.cin}</span>
+            </p>
+            {staff.role === "Enseignant" && (
+              <p className="text-sm">
+                <span className="text-gray-400">Matière:</span> <span className="font-medium">{staff.nom}</span>
+              </p>
+            )}
+          </div>
+        </div>
       </div>
-      <div className={`${staff.is_suspended ? "text-gray-500" : "text-gray-600"} space-y-1`}>
-        <p className="text-sm">Rôle: <span className="font-medium">{staff.role}</span></p>
-        {staff.role === "Enseignant" && (
-          <p className="text-sm">Matière: <span className="font-medium">{staff.subject?.name || 'N/A'}</span></p>
-        )}
-        <p className="text-sm">CIN: <span className="font-medium">{staff.cin}</span></p>
-      </div>
-      <div className="mt-4 flex justify-between items-center">
-        <ToggleStatusButton staff={staff} onStatusChanged={onStatusChanged} />
-        
+
+      <div className="mt-6 flex justify-between items-center pt-3 border-t border-gray-100">
+        <div>
+          {staff.role !== "Admin" ? (
+            <ToggleStatusButton staff={staff} onStatusChanged={onStatusChanged} />
+          ) : (
+            <div></div>
+          )}
+        </div>
+
         <button
           onClick={viewDetails}
-          className={`flex items-center gap-1 ${staff.is_suspended ? "text-gray-500 hover:text-gray-700" : "text-orange-600 hover:text-orange-800"} transition text-sm font-medium`}
+          className={`flex items-center gap-2 ${staff.is_suspended
+              ? "text-gray-500 hover:text-gray-700"
+              : "text-orange-600 hover:text-orange-800"
+            } transition text-sm font-medium px-3 py-1 rounded-full hover:bg-orange-50`}
         >
-          <FaEye />
+          <FaEye className="text-xs" />
           <span>Voir détails</span>
         </button>
       </div>
     </div>
   );
 }
-
 // root
 function StaffList() {
   const [staffMembers, setStaffMembers] = useState([]);
@@ -837,7 +847,7 @@ function StaffList() {
       staff.name.toLowerCase().includes(filters.searchName.toLowerCase());
     const roleMatch = !filters.role || staff.role === filters.role;
     const subjectMatch = !filters.subject ||
-      (staff.subject && staff.subject.name === filters.subject);
+      (staff.role === "Enseignant" && staff.nom === filters.subject);
 
     return nameMatch && roleMatch && subjectMatch;
   });
@@ -861,7 +871,7 @@ function StaffList() {
                 <h3 className="text-xl font-bold text-gray-800">Liste du personnel</h3>
                 {stats && (
                   <p className="text-sm text-gray-500">
-                    Total: {stats.total} | Admins: {stats.admin} | Enseignants: {stats.teacher} | 
+                    Total: {stats.total} | Admins: {stats.admin} | Enseignants: {stats.teacher} |
                     Comptables: {stats.accountant} | Secrétaires: {stats.secretary}
                   </p>
                 )}
@@ -880,10 +890,10 @@ function StaffList() {
             ) : filteredStaffMembers.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredStaffMembers.map(staff => (
-                  <StaffCard 
-                    key={staff.id} 
-                    staff={staff} 
-                    onStatusChanged={fetchStaffData} 
+                  <StaffCard
+                    key={staff.id}
+                    staff={staff}
+                    onStatusChanged={fetchStaffData}
                   />
                 ))}
               </div>
