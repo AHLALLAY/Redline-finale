@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 
 const ProtecteEnseignantDashboard = ({ children }) => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('user');
     
     if (!token) {
         // Redirige vers /login/staff si non authentifié
