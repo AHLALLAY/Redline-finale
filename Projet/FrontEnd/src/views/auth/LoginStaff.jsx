@@ -33,17 +33,18 @@ function LoginStaff() {
                 throw new Error(data.message || 'Erreur de connexion');
             }
 
-            localStorage.setItem('token', data.data.token);
-            localStorage.setItem('role', data.data.staff.role);
-            localStorage.setItem('username', data.data.staff.name || 'Utilisateur');
-            localStorage.setItem('id', data.data.staff.id);
+            const userData = {
+                token: data.data.token,
+                ...data.data.staff
+            };
+
+            localStorage.setItem('user', JSON.stringify(userData));
+
             setSuccess('Connexion réussie! Redirection en cours...');
 
-            // Créer le chemin de redirection
             const rolePath = data.data.staff.role.toLowerCase();
             const redirectPath = `/${rolePath}/dashboard`;
-            
-            // Redirection après un délai
+
             setTimeout(() => {
                 navigate(redirectPath);
             }, 1500);
@@ -90,7 +91,7 @@ function LoginStaff() {
                             <h3 className="text-2xl font-bold text-gray-800">Connexion Personnel</h3>
                             <p className="text-gray-600 mt-1">Accédez à votre espace de travail</p>
                         </div>
-                        
+
                         <div className="bg-white border border-orange-200 rounded-lg p-6 shadow-md">
                             {/* Messages d'erreur/succès */}
                             <div className="mb-6">
@@ -194,8 +195,8 @@ function LoginStaff() {
                                 </button>
                             </div>
                             <div className="mt-6 flex justify-center">
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     onClick={() => navigate('/login/student')}
                                     className="flex items-center text-sm text-orange-600 hover:text-orange-800"
                                 >
