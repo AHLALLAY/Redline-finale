@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Ajout de useEffect
 import { useNavigate } from 'react-router-dom';
 import FooterGlobal from '../../components/Global/FooterGlobal';
-import { FaUserTie, FaLock, FaSchool } from 'react-icons/fa';
+import { FaUserTie, FaLock, FaSchool, FaExclamationTriangle, FaHome, FaArrowLeft } from 'react-icons/fa';
+
+
 
 function LoginStaff() {
     const [email, setEmail] = useState('');
@@ -11,6 +13,17 @@ function LoginStaff() {
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+
+    // Vérifier si l'utilisateur est déjà connecté avec un compte suspendu/supprimé
+    useEffect(() => {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            const user = JSON.parse(userData);
+            if (user.is_suspended || user.is_deleted) {
+                localStorage.removeItem('user');
+            }
+        }
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,14 +41,31 @@ function LoginStaff() {
             });
 
             const data = await response.json();
-            
+
             if (!response.ok) {
                 throw new Error(data.message || 'Erreur de connexion');
             }
 
+            // Vérification plus stricte du statut du compte
+            if (data.data.staff.is_deleted || data.data.staff.is_suspended) {
+                localStorage.removeItem('user'); // Nettoyage au cas où
+                return navigate('/404', { state: { from: 'login' } });
+            }
+
             const userData = {
                 token: data.data.token,
-                ...data.data.staff
+                id: data.data.staff.id,
+                email: data.data.staff.email,
+                name: data.data.staff.name,
+                role: data.data.staff.role,
+                birth_date: data.data.staff.birth_date,
+                phone: data.data.staff.phone,
+                cin: data.data.staff.cin,
+                obtained_at: data.data.staff.obtained_at,
+                subject_id: data.data.staff.subject_id,
+                is_suspended: data.data.staff.is_suspended,
+                is_deleted: data.data.staff.is_deleted,
+                created_at: data.data.staff.created_at,
             };
 
             localStorage.setItem('user', JSON.stringify(userData));
@@ -208,52 +238,19 @@ function LoginStaff() {
                     </form>
                 </div>
 
-                {/* Image */}
-                <div className="hidden md:block md:w-1/2 bg-orange-100">
-                    <div className="h-full flex items-center justify-center p-8">
-                        <div className="bg-white p-6 rounded-lg shadow-lg max-w-md">
-                            <div className="flex items-center justify-center mb-4">
-                                <span className="text-3xl font-bold text-orange-600 mr-2">Ω</span>
-                                <h2 className="text-2xl font-bold text-gray-800">MEGA SCHOOL</h2>
-                            </div>
-                            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200 mb-4">
-                                <h3 className="font-bold text-orange-700 mb-2">Bienvenue sur votre portail professionnel</h3>
-                                <p className="text-gray-700">
-                                    Accédez à toutes les fonctionnalités nécessaires pour gérer efficacement votre travail au sein de notre établissement.
-                                </p>
-                            </div>
-                            <div className="space-y-3">
-                                <div className="flex items-start">
-                                    <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <p className="ml-3 text-sm text-gray-700">
-                                        Gérer les profils des étudiants
-                                    </p>
+                {/* Section Omega (remplace l'image) */}
+                <div className="hidden md:flex md:w-1/2 bg-orange-100 items-center justify-center">
+                    <div className="text-center p-8">
+                        <span className="text-[25rem] font-bold text-orange-600 leading-none">Ω</span>
+                        <div className="flex justify-center space-x-2">
+                            {'school'.split('').map((letter, index) => (
+                                <div
+                                    key={index}
+                                    className="w-10 h-10 rounded-full bg-orange-300 flex items-center justify-center shadow-md"
+                                >
+                                    <span className="text-white font-bold text-lg">{letter}</span>
                                 </div>
-                                <div className="flex items-start">
-                                    <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <p className="ml-3 text-sm text-gray-700">
-                                        Suivre les performances scolaires
-                                    </p>
-                                </div>
-                                <div className="flex items-start">
-                                    <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <p className="ml-3 text-sm text-gray-700">
-                                        Communiquer avec les parents et collègues
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>

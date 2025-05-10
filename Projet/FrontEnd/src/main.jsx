@@ -18,6 +18,7 @@ import Register from './views/auth/register.jsx'
 import StudentDashboard from './views/Student/Student_dashboard.jsx'
 import StudentDetails from './views/admin/StudentDetails.jsx'
 import Finance from './views/admin/Finance.jsx'
+import NotFound from './components/404/NotFound.jsx'
 
 
 createRoot(document.getElementById('root')).render(
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
+        <Route path="/404" element={<NotFound />}/>
         <Route path="/login/staff" element={<LoginStaff />} />
         <Route path="/login/student" element={<LoginStudent />} />
         <Route path="/admin/dashboard" element={
