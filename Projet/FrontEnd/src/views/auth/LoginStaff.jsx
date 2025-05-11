@@ -97,12 +97,18 @@ function LoginStaff() {
                             <span className="text-2xl font-bold text-orange-900">Ω</span>
                             <span className="text-xl font-bold hidden sm:inline-block">MEGA SCHOOL</span>
                         </div>
-                        <div>
+                        <div className="flex space-x-2">
                             <button
                                 onClick={() => navigate('/')}
                                 className="bg-white text-orange-600 hover:bg-orange-50 px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow hover:shadow-md"
                             >
                                 Accueil
+                            </button>
+                            <button
+                                onClick={() => navigate('/register')}
+                                className="bg-white text-orange-600 hover:bg-orange-50 px-3 py-1 rounded-lg text-sm font-semibold transition-colors duration-200 shadow hover:shadow-md"
+                            >
+                                Inscrire autant qu'admin
                             </button>
                         </div>
                     </div>
