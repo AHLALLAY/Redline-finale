@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaChartBar, FaCalendarAlt } from "react-icons/fa";
 
 // Header
 function Header() {
@@ -12,8 +12,8 @@ function Header() {
         navigate('/login/staff');
     }
 
-    const role = localStorage.getItem('role') || 'Administrateur';
-    const username = localStorage.getItem('username') || 'Utilisateur';
+    const user = JSON.parse(localStorage.getItem('user'));
+    
 
     return (
         <header className="w-full bg-gradient-to-r from-orange-600 to-orange-500 text-white fixed top-0 left-0 right-0 z-50 shadow-lg h-16 flex items-center">
@@ -31,8 +31,8 @@ function Header() {
 
                     <div className="flex items-center space-x-6">
                         <div className="text-sm md:text-base text-orange-100">
-                            <p className="font-medium">{username}</p>
-                            <p className="text-xs text-orange-200">{role}</p>
+                            <p className="font-medium">{user.name}</p>
+                            <p className="text-xs text-orange-200">{user.role}</p>
                         </div>
 
                         <button
@@ -51,33 +51,26 @@ function Header() {
 // Composant pour afficher une information
 function InfoCard({ label, value }) {
     return (
-        <div className="bg-orange-50 p-4 rounded-lg border border-orange-100">
-            <p className="text-sm text-orange-600 font-medium">{label}</p>
-            <p className="text-gray-800 font-semibold">{value || 'Non renseigné'}</p>
+        <div className="bg-orange-50 p-3 rounded-lg border border-orange-100 hover:bg-orange-100 transition-colors duration-200 mb-2">
+            <p className="text-xs text-orange-600 font-medium truncate">{label}</p>
+            <p className="text-gray-800 font-semibold text-sm truncate">{value || '-'}</p>
         </div>
     );
 }
 
 // Section des informations de l'élève
 function StudentInfoSection({ student }) {
-    // const navigate = useNavigate();
-    
-    // const handleEdit = () => {
-    //     navigate(`/admin/students/edit/${student.id}`);
-    // };
-
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-orange-800">Informations de l'élève</h2>
-                
+        <div className="bg-white rounded-lg shadow-md p-4 mb-4 lg:mb-0 lg:w-64 lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-5rem)] lg:overflow-y-auto">
+            <div className="flex justify-between items-center mb-3">
+                <h2 className="text-lg font-bold text-orange-800">Informations</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 gap-2 lg:grid-cols-1">
                 <InfoCard label="Nom complet" value={student.name} />
                 <InfoCard label="Email" value={student.email} />
-                <InfoCard label="Date de naissance" value={student.birth_date} />
-                <InfoCard label="Lieu de naissance" value={student.birth_place} />
+                <InfoCard label="Date naiss." value={student.birth_date} />
+                <InfoCard label="Lieu naiss." value={student.birth_place} />
                 <InfoCard label="Genre" value={student.gender} />
                 <InfoCard label="Niveau" value={student.level} />
                 <InfoCard label="Groupe" value={student.group} />
@@ -154,11 +147,60 @@ function GradesSection({ grades }) {
     );
 }
 
+// Section des absences
+function AbsenceSection({ absences }) {
+    if (!absences || absences.length === 0) {
+        return (
+            <div className="bg-white rounded-lg shadow-md p-6">
+                <h2 className="text-xl font-bold text-orange-800 mb-4">Absences</h2>
+                <p className="text-gray-500">Aucune absence enregistrée pour cet élève</p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold text-orange-800 mb-4">Absences</h2>
+            
+            <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-orange-50">
+                        <tr>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-orange-600 uppercase tracking-wider">Date</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-orange-600 uppercase tracking-wider">Matière</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-orange-600 uppercase tracking-wider">Professeur</th>
+                            <th className="px-4 py-3 text-left text-xs font-medium text-orange-600 uppercase tracking-wider">Justification</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {absences.map((absence, index) => (
+                            <tr key={index} className="hover:bg-orange-50">
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">{absence.date}</td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">{absence.subject}</td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">{absence.teacher}</td>
+                                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800">
+                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                        absence.justified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                    }`}>
+                                        {absence.justified ? 'Justifiée' : 'Non justifiée'}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+}
+
 // root
 function StudentDetails() {
     const { id } = useParams();
     const [student, setStudent] = useState(null);
     const [grades, setGrades] = useState([]);
+    const [absences, setAbsences] = useState([]);
+    const [activeTab, setActiveTab] = useState('grades');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -190,6 +232,7 @@ function StudentDetails() {
                 
                 const studentData = responseData.student[0];
                 
+                // Données mockées pour les notes
                 const mockGrades = [
                     {
                         semester: "Semestre 1",
@@ -233,8 +276,31 @@ function StudentDetails() {
                     }
                 ];
                 
+                // Données mockées pour les absences
+                const mockAbsences = [
+                    {
+                        date: "2023-10-15",
+                        subject: "Mathématiques",
+                        teacher: "Prof. Ahmed",
+                        justified: true
+                    },
+                    {
+                        date: "2023-11-02",
+                        subject: "Langue Arabe",
+                        teacher: "Prof. Fatima",
+                        justified: false
+                    },
+                    {
+                        date: "2023-11-10",
+                        subject: "Physique",
+                        teacher: "Prof. Karim",
+                        justified: true
+                    }
+                ];
+                
                 setStudent(studentData);
                 setGrades(mockGrades);
+                setAbsences(mockAbsences);
                 setError(null);
             } catch (err) {
                 setError(err.message);
@@ -296,11 +362,48 @@ function StudentDetails() {
     return (
         <div className="min-h-screen bg-gradient-to-b from-orange-50 to-orange-100">
             <Header />
-            <main className="flex-1 p-4 md:p-6 mt-16">
+            <main className="flex-1 p-4 md:p-6 pt-20 mt-12">
                 <div className="max-w-7xl mx-auto">
-                    
-                    <StudentInfoSection student={student} />
-                    <GradesSection grades={grades} />
+                    {/* Conteneur flexible pour la mise en page bureau */}
+                    <div className="lg:flex lg:gap-6">
+                        {/* Sidebar avec les informations de l'élève */}
+                        <StudentInfoSection student={student} />
+                        
+                        {/* Contenu principal */}
+                        <div className="flex-1">
+                            <div className="flex space-x-4 mb-4">
+                                <button
+                                    onClick={() => setActiveTab('grades')}
+                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                                        activeTab === 'grades' 
+                                            ? 'bg-orange-600 text-white shadow-md' 
+                                            : 'bg-white text-orange-600 hover:bg-orange-50 shadow'
+                                    }`}
+                                >
+                                    <FaChartBar />
+                                    <span>Notes</span>
+                                </button>
+                                
+                                <button
+                                    onClick={() => setActiveTab('absences')}
+                                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-200 ${
+                                        activeTab === 'absences' 
+                                            ? 'bg-orange-600 text-white shadow-md' 
+                                            : 'bg-white text-orange-600 hover:bg-orange-50 shadow'
+                                    }`}
+                                >
+                                    <FaCalendarAlt />
+                                    <span>Absences</span>
+                                </button>
+                            </div>
+                            
+                            {activeTab === 'grades' ? (
+                                <GradesSection grades={grades} />
+                            ) : (
+                                <AbsenceSection absences={absences} />
+                            )}
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>

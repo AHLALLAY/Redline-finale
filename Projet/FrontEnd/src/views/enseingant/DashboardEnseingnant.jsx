@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaChalkboardTeacher, FaIdCard, FaPhone, FaGraduationCap, FaBook, FaUsers, FaCalendarAlt, FaPlus } from "react-icons/fa";
+import { FaChalkboardTeacher, FaIdCard, FaPhone, FaGraduationCap, FaBook, FaUsers, FaCalendarAlt, FaPlus, FaTimes } from "react-icons/fa";
 
 function Header() {
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ function ClassesCard() {
   const [message, setMessage] = useState({ type: "", text: "" });
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem('user')) || {};
-  const teacherId = userData.id;
+
 
   const displayMessage = (type, text) => {
     setMessage({ type, text });
@@ -88,7 +88,7 @@ function ClassesCard() {
 
   useEffect(() => {
     const fetchClasses = async () => {
-      if (!teacherId) {
+      if (!userData.id) {
         displayMessage("error", "ID enseignant non trouvé");
         setLoading(false);
         return;
@@ -96,7 +96,7 @@ function ClassesCard() {
 
       try {
         setLoading(true);
-        const response = await fetch(`http://127.0.0.1:8000/api/prof/classes/${teacherId}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/prof/classes/${userData.id}`);
         if (response.ok) {
           const data = await response.json();
           setClasses(data.classes || []);
@@ -111,7 +111,7 @@ function ClassesCard() {
     };
 
     fetchClasses();
-  }, [teacherId]);
+  }, [userData.id]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
@@ -164,7 +164,7 @@ function ScheduleCard() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ type: "", text: "" });
   const userData = JSON.parse(localStorage.getItem('user')) || {};
-  const teacherId = userData.id;
+
 
   const displayMessage = (type, text) => {
     setMessage({ type, text });
@@ -173,7 +173,7 @@ function ScheduleCard() {
 
   useEffect(() => {
     const fetchSchedule = async () => {
-      if (!teacherId) {
+      if (!userData.id) {
         displayMessage("error", "ID enseignant non trouvé");
         setLoading(false);
         return;
@@ -181,7 +181,7 @@ function ScheduleCard() {
 
       try {
         setLoading(true);
-        const response = await fetch(`http://127.0.0.1:8000/api/prof/timetable/${teacherId}`);
+        const response = await fetch(`http://127.0.0.1:8000/api/prof/timetable/${userData.id}`);
         if (response.ok) {
           const data = await response.json();
           setSchedule(data.schedule || []);
@@ -196,7 +196,7 @@ function ScheduleCard() {
     };
 
     fetchSchedule();
-  }, [teacherId]);
+  }, [userData.id]);
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
@@ -248,388 +248,290 @@ function ScheduleCard() {
 
 function ExercisesTable() {
   const [exercises, setExercises] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState({ type: "", text: "" });
-  const [showModal, setShowModal] = useState(false);
   const [classes, setClasses] = useState([]);
-  const [levels, setLevels] = useState([]);
-  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState({ type: "", text: "" });
   const [newExercise, setNewExercise] = useState({
-    title: '',
-    description: '',
-    class_id: '',
-    is_done: false,
-    done_at: null
+    title: "",
+    description: "",
+    class_id: "",
+    group: ""
   });
 
+  // Récupérer les données de l'utilisateur
   const userData = JSON.parse(localStorage.getItem('user')) || {};
-  const teacherId = userData.id;
-  const token = localStorage.getItem('token') || userData.token;
 
-  const displayMessage = (type, text) => {
+  // Afficher un message temporaire
+  const showMessage = (type, text) => {
     setMessage({ type, text });
     setTimeout(() => setMessage({ type: "", text: "" }), 3000);
   };
 
-  const fetchExercises = useCallback(async () => {
-    if (!teacherId) {
-      displayMessage("error", "ID enseignant non trouvé");
-      setLoading(false);
-      return;
-    }
-
+  // Charger les exercices depuis l'API
+  const loadExercises = useCallback(async () => {
     try {
-      setLoading(true);
-      const response = await fetch(`http://127.0.0.1:8000/api/prof/exercices/${teacherId}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/prof/exercices/${userData.id}`);
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        setExercises(data.data || []);
+        setExercises(data.exercises || []);
       } else {
-        displayMessage("error", "Erreur de chargement des exercices");
+        showMessage("error", "Erreur lors du chargement des exercices");
       }
     } catch (error) {
-      displayMessage("error", "Erreur de connexion : " + error);
-    } finally {
-      setLoading(false);
+      showMessage("error", "Problème de connexion : "+error);
     }
-  }, [teacherId]);
+  },[userData.id]);
 
-  // Récupérer les classes assignées à l'enseignant
-  const fetchClasses = useCallback(async () => {
-    if (!teacherId) {
-      return;
-    }
-
+  // Charger les classes
+  const loadClasses = useCallback(async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/api/prof/classes/${teacherId}`);
+      const response = await fetch(`http://127.0.0.1:8000/api/prof/classes/${userData.id}`);
+      const data = await response.json();
       if (response.ok) {
-        const data = await response.json();
-        setClasses(data.classes || []);
-
-        // Extraire les niveaux uniques
-        const uniqueLevels = [...new Set(data.classes.map(c => c.level))];
-        setLevels(uniqueLevels);
-      }
-    } catch (error) {
-      console.error("Erreur lors du chargement des classes:", error);
-    }
-  }, [teacherId]);
-
-  useEffect(() => {
-    fetchExercises();
-    fetchClasses();
-  }, [fetchExercises, fetchClasses]);
-
-  // Mettre à jour les groupes disponibles lorsque le niveau change
-  const handleLevelChange = (selectedLevel) => {
-    const filteredGroups = classes
-      .filter(c => c.level === selectedLevel)
-      .map(c => c.group);
-
-    setGroups(filteredGroups);
-    setNewExercise({
-      ...newExercise,
-      level: selectedLevel,
-      group: '',
-      class_id: ''
-    });
-  };
-
-  // Mettre à jour class_id lorsque le groupe change
-  const handleGroupChange = (selectedGroup) => {
-    const selectedClass = classes.find(
-      c => c.level === newExercise.level && c.group === selectedGroup
-    );
-
-    if (selectedClass) {
-      setNewExercise({
-        ...newExercise,
-        group: selectedGroup,
-        class_id: selectedClass.id
-      });
-    }
-  };
-
-  const handleAddExercise = async () => {
-    if (!teacherId) {
-      displayMessage("error", "ID enseignant non trouvé");
-      return;
-    }
-
-    try {
-      const exerciseData = {
-        title: newExercise.title,
-        description: newExercise.description,
-        teacher_id: teacherId,
-        class_id: newExercise.class_id,
-        is_done: newExercise.is_done,
-        done_at: newExercise.done_at
-      };
-
-      const response = await fetch("http://127.0.0.1:8000/api/prof/exercice/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(exerciseData),
-      });
-
-      if (response.ok) {
-        displayMessage("success", "Exercice ajouté avec succès");
-        setShowModal(false);
-        setNewExercise({
-          title: '',
-          description: '',
-          level: '',
-          group: '',
-          class_id: '',
-          is_done: false,
-          done_at: null
+        // Filtrer les doublons de classes
+        const uniqueClasses = [];
+        const seen = new Set();
+        
+        data.classes.forEach(classe => {
+          const key = `${classe.level}-${classe.group}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueClasses.push(classe);
+          }
         });
-        fetchExercises();
-      } else {
-        const errorData = await response.json();
-        displayMessage("error", errorData.message || "Erreur lors de l'ajout");
+        
+        setClasses(uniqueClasses);
       }
     } catch (error) {
-      displayMessage("error", "Erreur de connexion : " + error);
+      console.error("Erreur de chargement des classes", error);
     }
-  };
-
-  // Fonction améliorée pour marquer un exercice comme terminé
-  const handleDoneExercise = async (exerciseId) => {
+  },[userData.id]);
+  // Basculer le statut d'un exercice
+  const toggleStatus = async (exerciseId) => {
     try {
-      setLoading(true);
-      const response = await fetch(`http://127.0.0.1:8000/api/prof/exercice/done/${exerciseId}`, {
-        method: 'PATCH',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
+      const response = await fetch(
+        `http://127.0.0.1:8000/api/prof/exercice/done/${exerciseId}`,
+        { method: "PATCH" }
+      );
       
       if (response.ok) {
-        const data = await response.json();
-        
-        // Mise à jour de l'état local pour refléter le changement sans nouvelle requête
-        setExercises(prevExercises => 
-          prevExercises.map(exercise => 
-            exercise.id === exerciseId 
-              ? { ...exercise, is_done: true, done_at: data.done_at || new Date().toISOString() } 
-              : exercise
-          )
-        );
-        
-        displayMessage("success", "Exercice marqué comme corrigé");
+        loadExercises();
+        showMessage("success", "Statut mis à jour");
       } else {
-        const errorData = await response.json();
-        displayMessage("error", errorData.message || "Erreur lors de la mise à jour");
+        showMessage("error", "Échec de la mise à jour");
       }
     } catch (error) {
-      displayMessage("error", "Erreur de connexion : " + error);
-    } finally {
-      setLoading(false);
+      showMessage("error", "Problème de connexion : "+error);
     }
   };
 
-  // Fonction pour formater les dates
-  const formatDate = (dateString) => {
-    if (!dateString) return "Non définie";
+  // Ajouter un nouvel exercice
+  const addExercise = async (e) => {
+    e.preventDefault();
     
     try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('fr-FR', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+      const response = await fetch("http://127.0.0.1:8000/api/prof/exercice/new", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newExercise.title,
+          description: newExercise.description,
+          class_id: newExercise.class_id,
+          group: newExercise.group,
+          teacher_id: userData.id,
+          is_done: false,
+          done_at: null
+        })
       });
+
+      if (response.ok) {
+        showMessage("success", "Exercice ajouté !");
+        loadExercises();
+        setShowModal(false);
+        setNewExercise({
+          title: "",
+          description: "",
+          class_id: "",
+          group: ""
+        });
+      } else {
+        showMessage("error", "Erreur lors de l'ajout");
+      }
     } catch (error) {
-      return dateString + error;
+      showMessage("error", "Problème de connexion : "+error);
     }
   };
 
+  // Charger les données au démarrage
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      await Promise.all([loadExercises(), loadClasses()]);
+      setLoading(false);
+    };
+
+    if (userData.id) {
+      loadData();
+    } else {
+      showMessage("error", "ID enseignant manquant");
+    }
+  }, [loadExercises,loadClasses, userData.id]);
+
   return (
-    <>
-      <div className="bg-white rounded-lg shadow-md p-4 md:p-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-          <div>
-            <h3 className="text-lg font-bold">Exercices</h3>
-            <p className="text-sm text-gray-600">Total: {exercises.length}</p>
-          </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="flex items-center space-x-2 bg-orange-600 text-white px-3 py-2 rounded-lg text-sm"
-          >
-            <FaPlus />
-            <span>Nouvel exercice</span>
-          </button>
-        </div>
-
-        {message.text && (
-          <div className={`p-2 mb-4 rounded-lg text-sm ${message.type === "error" ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"}`}>
-            {message.text}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-600"></div>
-          </div>
-        ) : (
-          <div className="overflow-x-auto -mx-4 md:mx-0">
-            <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Titre</th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Classe</th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date d'affectation</th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date de correction</th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                  <th className="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {exercises.length > 0 ? (
-                  exercises.map((exercise) => (
-                    <tr key={exercise.id} className="hover:bg-gray-50">
-                      <td className="px-3 md:px-6 py-4">
-                        <div className="font-medium text-sm md:text-base">{exercise.title}</div>
-                        <div className="text-xs md:text-sm text-gray-500 truncate max-w-full md:max-w-xs">{exercise.description}</div>
-                      </td>
-                      <td className="px-3 md:px-6 py-4 text-xs md:text-sm text-gray-500">
-                        {exercise.class_id} {exercise.class_group}
-                      </td>
-                      <td className="px-3 md:px-6 py-4 text-xs md:text-sm text-gray-500">
-                        {formatDate(exercise.created_at)}
-                      </td>
-                      <td className="px-3 md:px-6 py-4 text-xs md:text-sm text-gray-500">
-                        {exercise.is_done ? formatDate(exercise.done_at) : "-"}
-                      </td>
-                      <td className="px-3 md:px-6 py-4 text-xs md:text-sm">
-                        <span className={`px-2 py-1 rounded-full text-xs ${exercise.is_done ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}>
-                          {exercise.is_done ? "Terminé" : "En cours"}
-                        </span>
-                      </td>
-                      <td className="px-3 md:px-6 py-4 text-xs md:text-sm">
-                        {!exercise.is_done && (
-                          <button
-                            onClick={() => handleDoneExercise(exercise.id)}
-                            className="px-2 py-1 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
-                          >
-                            Marquer corrigé
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="px-3 md:px-6 py-4 text-center text-gray-500">
-                      Aucun exercice
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+    <div className="bg-white rounded-lg shadow-md p-4 md:p-6 mb-6">
+      {/* En-tête */}
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold text-gray-800">Exercices Assignés</h3>
+        <button
+          onClick={() => setShowModal(true)}
+          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
+        >
+          <FaPlus /> Nouvel exercice
+        </button>
       </div>
 
-      {/* Modal pour ajouter un exercice */}
+      {/* Messages d'alerte */}
+      {message.text && (
+        <div className={`p-3 mb-4 rounded-lg ${message.type === "error" ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>
+          {message.text}
+        </div>
+      )}
+
+      {/* Chargement */}
+      {loading ? (
+        <div className="flex justify-center py-8">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-orange-600"></div>
+        </div>
+      ) : (
+        /* Tableau des exercices */
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-orange-50">
+              <tr>
+                <th className="px-4 py-3 text-left text-orange-800">Titre</th>
+                <th className="px-4 py-3 text-left text-orange-800">Classe</th>
+                <th className="px-4 py-3 text-left text-orange-800">Date</th>
+                <th className="px-4 py-3 text-left text-orange-800">Statut</th>
+                <th className="px-4 py-3 text-left text-orange-800">Corrigé le</th>
+                <th className="px-4 py-3 text-left text-orange-800">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {exercises.length > 0 ? (
+                exercises.map((ex) => (
+                  <tr key={ex.id} className="border-b hover:bg-orange-50">
+                    <td className="px-4 py-3">{ex.title}</td>
+                    <td className="px-4 py-3">{ex.level} {ex.group}</td>
+                    <td className="px-4 py-3">{new Date(ex.created_at).toLocaleDateString()}</td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-xs ${ex.status === "done" ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}`}>
+                        {ex.status === "done" ? "Corrigé" : "À corriger"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      {ex.correction_date ? new Date(ex.correction_date).toLocaleDateString() : "-"}
+                    </td>
+                    <td className="px-4 py-3">
+                      <button
+                        onClick={() => toggleStatus(ex.id)}
+                        className={`px-3 py-1 rounded text-sm ${ex.status === "done" ? "bg-gray-200 text-gray-700" : "bg-orange-600 text-white"}`}
+                      >
+                        {ex.status === "done" ? "Annuler" : "Terminer"}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="px-4 py-6 text-center text-gray-500">
+                    Aucun exercice trouvé
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal d'ajout d'un exercice */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Nouvel exercice</h2>
-              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700 text-xl">
-                ×
+          <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
+            <div className="flex justify-between items-center border-b p-4">
+              <h3 className="text-lg font-bold">Ajouter un exercice</h3>
+              <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-gray-700">
+                <FaTimes />
               </button>
             </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Titre*</label>
+            
+            <form onSubmit={addExercise} className="p-4">
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Titre*</label>
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   value={newExercise.title}
-                  onChange={(e) => setNewExercise({ ...newExercise, title: e.target.value })}
+                  onChange={(e) => setNewExercise({...newExercise, title: e.target.value})}
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500"
                   required
                 />
               </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+              
+              <div className="mb-4">
+                <label className="block text-gray-700 mb-2">Description*</label>
                 <textarea
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  rows="3"
                   value={newExercise.description}
-                  onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
+                  onChange={(e) => setNewExercise({...newExercise, description: e.target.value})}
+                  rows="3"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500"
                   required
                 ></textarea>
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Niveau*</label>
+                  <label className="block text-gray-700 mb-2">Classe*</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    value={newExercise.level || ""}
-                    onChange={(e) => handleLevelChange(e.target.value)}
+                    value={newExercise.class_id}
+                    onChange={(e) => setNewExercise({...newExercise, class_id: e.target.value})}
+                    className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500"
                     required
                   >
-                    <option value="">Sélectionner</option>
-                    {levels.map(level => (
-                      <option key={level} value={level}>
-                        {level}
-                      </option>
+                    <option value="">Choisir...</option>
+                    {classes.map((classe) => (
+                      <option key={classe.id} value={classe.id}>{classe.level}</option>
                     ))}
                   </select>
                 </div>
+                
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Groupe*</label>
+                  <label className="block text-gray-700 mb-2">Groupe*</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    value={newExercise.group || ""}
-                    onChange={(e) => handleGroupChange(e.target.value)}
-                    disabled={!newExercise.level}
+                    value={newExercise.group}
+                    onChange={(e) => setNewExercise({...newExercise, group: e.target.value})}
+                    className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500"
                     required
                   >
-                    <option value="">Sélectionner</option>
-                    {groups.map(group => (
-                      <option key={group} value={group}>
-                        {group}
-                      </option>
-                    ))}
+                    <option value="">Choisir...</option>
+                    <option value="A">Groupe A</option>
+                    <option value="B">Groupe B</option>
+                    <option value="C">Groupe C</option>
+                    <option value="D">Groupe D</option>
                   </select>
                 </div>
               </div>
-
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={handleAddExercise}
-                  className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
-                  disabled={!newExercise.title || !newExercise.description || !newExercise.class_id}
-                >
-                  Ajouter
-                </button>
-              </div>
-            </div>
+              
+              <button
+                type="submit"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded"
+              >
+                Enregistrer
+              </button>
+            </form>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
