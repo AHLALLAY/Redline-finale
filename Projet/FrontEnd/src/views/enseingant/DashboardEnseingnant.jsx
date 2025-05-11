@@ -516,6 +516,7 @@ function ExercisesTable() {
                     <option value="A">Groupe A</option>
                     <option value="B">Groupe B</option>
                     <option value="C">Groupe C</option>
+                    <option value="D">Groupe D</option>
                   </select>
                 </div>
               </div>
