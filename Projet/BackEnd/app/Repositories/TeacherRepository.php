@@ -24,7 +24,20 @@ class TeacherRepository implements TeacherInterface
     public function getMyExercise(int $teacherId)
     {
         try {
-            return Exercice::where('teacher_id',$teacherId)->get();
+            return Exercice::select(
+                'classes.group',
+                'classes.level',
+                'exercices.id',
+                'exercices.title',
+                'exercices.description',
+                'exercices.is_done',
+                'exercices.done_at',
+                'exercices.created_at'
+            )
+                ->join('users', 'users.id', '=', 'exercices.teacher_id')
+                ->join('classes', 'users.id', '=', 'classes.teacher_id')
+                ->where('users.id', $teacherId)
+                ->get();
         } catch (\Exception $e) {
             throw $e;
         }
@@ -50,10 +63,11 @@ class TeacherRepository implements TeacherInterface
             throw $e;
         }
     }
-    public function getClasses(int $teacherId){
-        try{
+    public function getClasses(int $teacherId)
+    {
+        try {
             return Classe::where('teacher_id', $teacherId)->get();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
