@@ -14,15 +14,16 @@ function DashboardComptable() {
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const username = localStorage.getItem('username') || 'Comptable';
+
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
-    type: 'Dépense',
+    type: '',
     reference_number: '',
     entity_name: '',
-    entity_type: 'Fournisseur'
+    entity_type: '',
   });
 
   const handleLogout = () => {
@@ -58,6 +59,7 @@ function DashboardComptable() {
         headers: { "Content-Type": "application/json", "Accept":"application/json" },
         body: JSON.stringify(formData)
       });
+      const data = await response.json();
 
       if (response.ok) {
         setMessage("Transaction ajoutée avec succès");
@@ -66,16 +68,22 @@ function DashboardComptable() {
         setFormData({
           description: '',
           amount: '',
-          type: 'Dépense',
+          type: '',
           reference_number: '',
           entity_name: '',
-          entity_type: 'Fournisseur'
+          entity_type: '',
         });
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Erreur lors de l'ajout");
+        if (response.status === 422) {
+          console.log("Validation Errors:", data.errors);
+          const errorMessages = Object.values(data.errors || {}).flat().join(', ');
+          setMessage(errorMessages || "Erreur de validation");
+        } else {
+          setMessage(data.message || "Erreur lors de l'ajout de la transaction");
+        }
       }
     } catch (error) {
+      console.error('Error:', error);
       setMessage(error.message);
     }
   };
@@ -119,8 +127,8 @@ function DashboardComptable() {
           </div>
           <div className="flex items-center space-x-6">
             <div>
-              <p className="font-medium">{username}</p>
-              <p className="text-xs text-orange-200">Comptable</p>
+              <p className="font-medium">{user.name}</p>
+              <p className="text-xs text-orange-200">{user.role}</p>
             </div>
             <button onClick={handleLogout} className="bg-white text-orange-600 px-3 py-1 rounded-lg flex items-center space-x-2">
               <FaSignOutAlt />
@@ -290,6 +298,7 @@ function DashboardComptable() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                     required
                   >
+                    <option value="">Choisi ...</option>
                     <option value="Dépense">Dépense</option>
                     <option value="Revenu">Revenu</option>
                   </select>
@@ -337,7 +346,8 @@ function DashboardComptable() {
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
                     required
                   >
-                    <option value="Etudiant">Étudiant</option>
+                    <option value="">Choisi ...</option>
+                    <option value="Etudiant">Etudiant</option>
                     <option value="Personnel">Personnel</option>
                     <option value="Fournisseur">Fournisseur</option>
                     <option value="Autre">Autre</option>
