@@ -302,10 +302,8 @@ function AddOffer() {
       const userData = {
         ...form,
         is_active: true,
-        created_by: admin.id // Utiliser directement l'ID utilisateur
+        created_by: admin.id
       };
-
-      console.log("Données envoyées:", userData); // Pour déboguer
 
       const response = await fetch("http://127.0.0.1:8000/api/admin/offer/new", {
         method: "POST",
