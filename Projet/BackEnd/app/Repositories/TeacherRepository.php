@@ -66,11 +66,7 @@ class TeacherRepository implements TeacherInterface
     public function getClasses(int $teacherId)
     {
         try {
-    public function getClasses(int $teacherId)
-    {
-        try {
             return Classe::where('teacher_id', $teacherId)->get();
-        } catch (\Exception $e) {
         } catch (\Exception $e) {
             throw $e;
         }
@@ -111,4 +107,3 @@ class TeacherRepository implements TeacherInterface
         }
     }
 }
-
