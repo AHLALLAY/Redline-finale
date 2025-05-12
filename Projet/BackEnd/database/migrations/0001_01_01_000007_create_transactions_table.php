@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('reference_number');
             $table->string('entity_name');
             $table->enum('entity_type', ['Etudiant', 'Personnel', 'Fournisseur', 'Autre']);
-            $table->foreignId('recorded_by')->constrained('users');
             $table->timestamps();
         });
     }

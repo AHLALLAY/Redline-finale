@@ -17,7 +17,6 @@ class AccountantRequest extends FormRequest
             'reference_number' => ['required', 'string', 'max:50', 'unique:transactions'],
             'entity_name' => ['required', 'string', 'max:255'],
             'entity_type' => ['required', 'string', 'in:Etudiant,Personnel,Fournisseur,Autre'],
-            'recorded_by' => ['nullable', 'integer']
         ];
     }
 }
