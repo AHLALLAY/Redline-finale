@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // Ajout de useEffect
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FooterGlobal from '../../components/Global/FooterGlobal';
 import { FaUserTie, FaLock, FaSchool, FaExclamationTriangle, FaHome, FaArrowLeft } from 'react-icons/fa';
@@ -46,9 +46,8 @@ function LoginStaff() {
                 throw new Error(data.message || 'Erreur de connexion');
             }
 
-            // Vérification plus stricte du statut du compte
             if (data.data.staff.is_deleted || data.data.staff.is_suspended) {
-                localStorage.removeItem('user'); // Nettoyage au cas où
+                localStorage.removeItem('user');
                 return navigate('/404', { state: { from: 'login' } });
             }
 
@@ -61,8 +60,9 @@ function LoginStaff() {
                 birth_date: data.data.staff.birth_date,
                 phone: data.data.staff.phone,
                 cin: data.data.staff.cin,
+                last_diploma: data.data.staff.last_diploma,
                 obtained_at: data.data.staff.obtained_at,
-                subject_id: data.data.staff.subject_id,
+                subject_name: data.data.staff.subject_name,
                 is_suspended: data.data.staff.is_suspended,
                 is_deleted: data.data.staff.is_deleted,
                 created_at: data.data.staff.created_at,
