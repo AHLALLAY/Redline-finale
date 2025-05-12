@@ -13,8 +13,7 @@ function Header() {
     navigate('/login/staff');
   }
 
-  const role = localStorage.getItem('role') || 'Administrateur';
-  const username = localStorage.getItem('username') || 'Utilisateur';
+  const user = JSON.parse(localStorage.getItem('user'))
 
   return (
     <header className="w-full bg-gradient-to-r from-orange-600 to-orange-500 text-white fixed top-0 left-0 right-0 z-50 shadow-lg h-16 flex items-center">
@@ -32,8 +31,8 @@ function Header() {
 
           <div className="flex items-center space-x-6">
             <div className="text-sm md:text-base text-orange-100">
-              <p className="font-medium">{username}</p>
-              <p className="text-xs text-orange-200">{role}</p>
+              <p className="font-medium">{user.name}</p>
+              <p className="text-xs text-orange-200">{user.role}</p>
             </div>
 
             <button
